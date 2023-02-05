@@ -1,13 +1,10 @@
-import React from 'react'; 
-import Logo from '../components/Logo';
-
+import React from "react";
 const Map = () => {
   return (
     <div>
-      <Logo />
       <div className="bg-darkgrey text-yellow">Map</div>
     </div>
   );
-}
+};
 
-export default Map
+export default Map;

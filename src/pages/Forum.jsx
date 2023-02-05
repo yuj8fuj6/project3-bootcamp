@@ -1,13 +1,11 @@
-import React from 'react'; 
-import Logo from '../components/Logo'; 
+import React from "react";
 
 const Forum = () => {
   return (
     <div>
-      <Logo />
       <div className="bg-darkgrey text-yellow">Forum</div>
     </div>
   );
-}
+};
 
-export default Forum
+export default Forum;

@@ -1,13 +1,11 @@
-import React from 'react'; 
-import Logo from '../components/Logo';
+import React from "react";
 
 const Profile = () => {
   return (
     <div>
-      <Logo />
       <div className="bg-darkgrey text-yellow">Profile</div>
     </div>
   );
-}
+};
 
-export default Profile
+export default Profile;

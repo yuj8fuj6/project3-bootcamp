@@ -1,13 +1,11 @@
-import React from 'react'; 
-import Logo from '../components/Logo';
+import React from "react";
 
 const Login = () => {
   return (
     <div>
-      <Logo />
       <div className="bg-darkgrey text-yellow">Login</div>
     </div>
   );
-}
+};
 
-export default Login
+export default Login;
