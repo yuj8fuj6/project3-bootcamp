@@ -1,9 +1,10 @@
 import React from "react";
+import Dashboard from "../components/messengerComponents/Dashboard";
 
 const Messenger = () => {
   return (
     <div>
-      <div className="bg-darkgrey text-yellow">Messenger</div>
+      <Dashboard />
     </div>
   );
 };
