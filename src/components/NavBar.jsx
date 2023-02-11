@@ -57,7 +57,7 @@ export default function Navbar() {
           </Link>
         </li>
         <li>
-          <Link to="/logout" className="justify-center-link">
+          <Link to="/login" className="justify-center-link">
             <LogoutSVG />
             Logout
           </Link>
