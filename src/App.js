@@ -7,6 +7,7 @@ import Messenger from "./pages/Messenger";
 import Contact from "./pages/Contact";
 import Map from "./pages/Map";
 import Login from "./pages/Login";
+import Modal from "./components/Modal";
 import { Route, Routes } from "react-router-dom";
 import { UserContextProvider } from "./contexts/UserContext";
 import { CourseContextProvider } from "./contexts/CourseContext";

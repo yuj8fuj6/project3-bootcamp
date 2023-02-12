@@ -1,11 +1,34 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { Backend_URL } from "../Backend_URL";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+import { Typography } from "antd";
 
 export default function ModalBody() {
+  const [course, setCourse] = useState([]);
+  const [course_id, setCourse_id] = useState();
+  const params = useParams();
+
+  useEffect(() => {
+    axios.get(`${Backend_URL}/course/${course_id}`).then((response) => {
+      console.log(`hihi`, response.data);
+      setCourse(response.data);
+    });
+  }, [course_id]);
+
+  if (course_id !== params.course_id) setCourse_id(params.course_id);
+
+  // const courseDetails = Object.entries(course).map((courses) => (
+  //   <div>
+  //     <Typography>Course code:</Typography>
+  //     <Typography>{course.school}</Typography>
+  //   </div>
+  // ));
+
   return (
     <div className="sm:flex">
       <div className="mt-2">
-        <h1 className="text-sm">Course Code</h1>
-        <p className="text-sm text-gray-500">EE123</p>
+        {/* <div>{courseDetails}</div> */}
         <h1 className="text-sm">Course Title</h1>
         <p className="text-sm text-gray-500">Data Structures and Algorithms</p>
         <h1 className="text-sm">Course Location</h1>
