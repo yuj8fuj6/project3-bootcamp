@@ -8,21 +8,24 @@ import Contact from "./pages/Contact";
 import Map from "./pages/Map";
 import Login from "./pages/Login";
 import { Route, Routes } from "react-router-dom";
+import { UserContextProvider } from "./contexts/UserContext";
 
 const App = () => {
   return (
     <>
       <Navbar />
       <div className="App">
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/forum" element={<Forum />} />
-          <Route path="/messenger" element={<Messenger />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/map" element={<Map />} />
-          <Route path="/login" element={<Login />} />
-        </Routes>
+        <UserContextProvider>
+          <Routes>
+            <Route path="/" element={<Landing />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/forum" element={<Forum />} />
+            <Route path="/messenger" element={<Messenger />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/map" element={<Map />} />
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </UserContextProvider>
       </div>
     </>
   );
