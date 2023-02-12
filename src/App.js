@@ -7,6 +7,7 @@ import Messenger from "./pages/Messenger";
 import Contact from "./pages/Contact";
 import Map from "./pages/Map";
 import Login from "./pages/Login";
+import Modal from "./components/Modal";
 import { Route, Routes } from "react-router-dom";
 
 const App = () => {
@@ -22,6 +23,7 @@ const App = () => {
           <Route path="/contact" element={<Contact />} />
           <Route path="/map" element={<Map />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/course/:course_id" element={Modal} />
         </Routes>
       </div>
     </>

@@ -9,13 +9,16 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <Auth0Provider
-      domain="dev-u8fivmuxrql5gvqk.us.auth0.com"
-      clientId="NmCojb06tiHPMsZVeiiPYhoP7nRnD6hr"
+      domain={process.env.REACT_APP_DOMAIN}
+      clientId={process.env.REACT_APP_CLIENT_ID}
       authorizationParams={{
         redirect_uri: window.location.origin,
-        audience: "https://project3-bootcamp/api",
+        audience: process.env.REACT_APP_AUDIENCE,
         scope: "read:current_user update:current_user_metadata",
       }}
+      // redirect_uri={window.location.origin}
+      // audience={process.env.REACT_APP_AUDIENCE}
+      // scope="read:current_user update:current_user_metadata"
     >
       <BrowserRouter>
         <App />

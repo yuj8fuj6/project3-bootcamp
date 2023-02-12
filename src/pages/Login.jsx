@@ -6,6 +6,7 @@ const Login = () => {
   return (
     <div>
       <div className="bg-darkgrey text-yellow">Login</div>
+      <br />
       <LoginButton />
       <LogoutButton />
     </div>
