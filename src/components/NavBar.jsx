@@ -1,6 +1,6 @@
 import React from "react";
 import "./Navbar.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 // import { Link, useMatch, useResolvedPath } from "react-router-dom";
 import Logo from "./Logo";
 import {
@@ -12,8 +12,19 @@ import {
   MapSVG,
   LogoutSVG,
 } from "../assets/SVG";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function Navbar() {
+  const navigate = useNavigate();
+  const { logout } = useAuth0();
+  const handleLogout = () => {
+    logout({
+      logoutParams: {
+        returnTo: window.location.origin,
+      },
+    });
+  };
+
   return (
     <nav className="navbar">
       <Link to="/">
@@ -57,10 +68,10 @@ export default function Navbar() {
           </Link>
         </li>
         <li>
-          <Link to="/login" className="justify-center-link">
+          <button className="justify-center-link" onClick={handleLogout}>
             <LogoutSVG />
             Logout
-          </Link>
+          </button>
         </li>
       </ul>
     </nav>
