@@ -13,6 +13,7 @@ import {
   LogoutSVG,
 } from "../assets/SVG";
 import { useAuth0 } from "@auth0/auth0-react";
+import LoggedInUserDisplay from "../components/LoggedInUserDisplay";
 
 export default function Navbar() {
   const { logout } = useAuth0();
@@ -29,6 +30,7 @@ export default function Navbar() {
       <Link to="/main">
         <Logo />
       </Link>
+      <LoggedInUserDisplay />
       <ul className="menu menu-horizontal px-1">
         <li>
           <Link to="/main" className="justify-center-link">

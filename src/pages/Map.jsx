@@ -6,6 +6,7 @@ const Map = () => {
     <>
     <Navbar />
     <div>
+      <Navbar />
       <div className="bg-darkgrey text-yellow">Map</div>
     </div>
     </>

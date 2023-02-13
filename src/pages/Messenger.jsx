@@ -4,6 +4,7 @@ import { Backend_URL } from "../Backend_URL";
 import Message from "../components/messengerComponents/Message";
 import "./messenger.css";
 import { Button, Input } from "antd";
+import Navbar from "../components/NavBar";
 
 const socket = io.connect(Backend_URL);
 
@@ -19,37 +20,41 @@ export default function Messenger() {
   };
 
   return (
-    <div className="messenger">
-      <div className="chatMenu">
-        <div className="chatMenuWrapper">
-          <h3>Join chat</h3>
-          <Input
-            type="text"
-            placeholder="Name..."
-            onChange={(event) => {
-              setUsername(event.target.value);
-            }}
-          />
-          <Input
-            type="text"
-            placeholder="Room ID..."
-            onChange={(event) => {
-              setRoom(event.target.value);
-            }}
-          />
-          <Button type="default" onClick={joinRoom}>
-            Join a room
-          </Button>
+    <>
+      <Navbar />
+      <div className="messenger">
+        <div className="chatInbox">
+          <div className="chatInboxWrapper">
+            <Input
+              placeholder="search for friends"
+              className="chatInboxInput"
+            />
+            <h3>Join chat</h3>
+            <Input
+              type="text"
+              placeholder="Name..."
+              onChange={(event) => {
+                setUsername(event.target.value);
+              }}
+            />
+            <Input
+              type="text"
+              placeholder="Room ID..."
+              onChange={(event) => {
+                setRoom(event.target.value);
+              }}
+            />
+            <Button type="default" onClick={joinRoom}>
+              Join a room
+            </Button>
+          </div>
         </div>
-      </div>
-
-      <div className="chatBox">
-        <div className="chatBoxWrapper">
-          <div className="chatBoxTop">
+        <div className="chatConversation">
+          <div className="chatConversationWrapper">
             <Message socket={socket} username={username} room={room} />
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
