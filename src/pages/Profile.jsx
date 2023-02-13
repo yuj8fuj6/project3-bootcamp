@@ -14,6 +14,8 @@ const Profile = () => {
 
   console.log(user);
 
+  console.log(user)
+
   const handleSubmit = async (e) => {
     e.preventDefault();
   };

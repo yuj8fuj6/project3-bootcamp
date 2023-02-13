@@ -10,6 +10,7 @@ import Login from "./pages/Login";
 import Modal from "./components/Modal";
 import { Route, Routes } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
+import { UserContextProvider } from "./contexts/UserContext";
 
 const App = () => {
   const { user, isAuthenticated } = useAuth0();
