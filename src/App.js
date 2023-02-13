@@ -1,5 +1,5 @@
 import "./App.css";
-import Navbar from "./components/NavBar";
+// import Navbar from "./components/NavBar";
 import Landing from "./pages/Landing";
 import Profile from "./pages/Profile";
 import Forum from "./pages/Forum";
@@ -13,17 +13,17 @@ import { UserContextProvider } from "./contexts/UserContext";
 const App = () => {
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="App">
         <UserContextProvider>
           <Routes>
-            <Route path="/" element={<Landing />} />
+            <Route path="/" element={<Login />} />
+            <Route path="/main" element={<Landing />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/forum" element={<Forum />} />
             <Route path="/messenger" element={<Messenger />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/map" element={<Map />} />
-            <Route path="/login" element={<Login />} />
           </Routes>
         </UserContextProvider>
       </div>

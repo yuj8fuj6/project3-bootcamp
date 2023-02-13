@@ -15,7 +15,6 @@ import {
 import { useAuth0 } from "@auth0/auth0-react";
 
 export default function Navbar() {
-  const navigate = useNavigate();
   const { logout } = useAuth0();
   const handleLogout = () => {
     logout({
@@ -27,12 +26,12 @@ export default function Navbar() {
 
   return (
     <nav className="navbar">
-      <Link to="/">
+      <Link to="/main">
         <Logo />
       </Link>
       <ul className="menu menu-horizontal px-1">
         <li>
-          <Link to="/" className="justify-center-link">
+          <Link to="/main" className="justify-center-link">
             <HomeSVG />
             Home
           </Link>
