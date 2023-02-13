@@ -6,11 +6,6 @@
   align-items: center;
 }
 
-.messageTop {
-  display: flex;
-  width: 100%;
-}
-
 .messageBody {
   display: flex;
   flex-direction: column;
