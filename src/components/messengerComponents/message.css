@@ -1,16 +1,25 @@
 .message {
-  width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-between;
 }
 
-.messageBody {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.messageUser {
   width: 100%;
+  border-bottom: 1px solid #dcdcdc;
+  padding-left: 30px;
+  height: 100px;
+}
+
+.message .messageBody {
+  width: 100%;
+  height: calc(100% - 100px);
+  position: relative;
+  padding-left: 30px;
+  padding-right: 30px;
+  border-bottom: 1px solid #dcdcdc;
 }
 
 .messageContainer {
@@ -35,21 +44,28 @@
 .messageText {
   display: flex;
   padding: 10px;
-  border-radius: 20px;
+  border-radius: 10px;
   background-color: #1877f2;
   color: white;
   max-width: 300px;
+  min-width: 100px;
   min-height: 40px;
   overflow-wrap: break-word;
   word-break: break-word;
   justify-content: center;
+  border-bottom: 1px solid #dcdcdc;
 }
 
 .messageMeta {
   display: flex;
   font-size: 12px;
-  margin-top: 10px;
-  justify-content: flex-end;
+  margin-bottom: 5px;
+  justify-content: space-between;
+}
+
+.messageMeta #author {
+  font-weight: bold;
+  color: black;
 }
 
 .messageBottom {
@@ -77,9 +93,9 @@
 }
 
 #other .messageText {
-  align-items: flex-start;
+  align-items: flex-end;
 }
 
 #other .messageMeta {
-  align-items: flex-start;
+  align-items: flex-end;
 }

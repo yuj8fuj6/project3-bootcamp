@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./message.css";
 import ScrollToBottom from "react-scroll-to-bottom";
 import { Button, Input } from "antd";
+import LoggedInUserDisplay from "../LoggedInUserDisplay";
 
 export default function Message({ socket, username, room }) {
   const [currentMessage, setCurrentMessage] = useState("");
@@ -36,8 +37,10 @@ export default function Message({ socket, username, room }) {
 
   return (
     <div className="message">
+      <div className="messageUser">
+        <LoggedInUserDisplay />
+      </div>
       <div className="messageBody">
-        {/* scrolltobottom not working */}
         <ScrollToBottom className="messageContainer">
           {messageList.map((messageContent) => {
             return (
@@ -46,12 +49,12 @@ export default function Message({ socket, username, room }) {
                 id={username === messageContent.sender ? "you" : "other"}
               >
                 <div>
+                  <div className="messageMeta">
+                    <p id="author">{messageContent.sender}</p>
+                    <p id="time">{messageContent.time}</p>
+                  </div>
                   <div className="messageText">
                     <p>{messageContent.message}</p>
-                  </div>
-                  <div className="messageMeta">
-                    <p>{messageContent.time}</p>
-                    <p>{messageContent.sender}</p>
                   </div>
                 </div>
               </div>
@@ -62,6 +65,7 @@ export default function Message({ socket, username, room }) {
       <div className="messageBottom">
         <Input
           type="text"
+          // IMPORTANT TO ADD THIS VALUE
           value={currentMessage}
           placeholder="Type something..."
           onChange={(event) => {
