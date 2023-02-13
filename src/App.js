@@ -8,23 +8,17 @@ import Contact from "./pages/Contact";
 import Map from "./pages/Map";
 import Login from "./pages/Login";
 import Modal from "./components/Modal";
+import LoggedInUserDisplay from "./components/LoggedInUserDisplay";
 import { Route, Routes } from "react-router-dom";
-import { useAuth0 } from "@auth0/auth0-react";
 import { UserContextProvider } from "./contexts/UserContext";
 
 const App = () => {
-  const { user, isAuthenticated } = useAuth0();
   return (
     <>
-      <Navbar />
-      {/* To display logged in user */}
-      {isAuthenticated && (
-        <div>
-          <h2>{user.name}</h2>
-          <p>{user.email}</p>
-        </div>
-      )}
       <div className="App">
+        <Navbar />
+        {/* To display logged in user */}
+        <LoggedInUserDisplay />
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/profile" element={<Profile />} />

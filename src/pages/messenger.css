@@ -1,18 +1,17 @@
 .messenger {
-  height: 100vh;
   display: flex;
+  max-height: 50vh;
 }
 
 .chatMenu {
   flex: 2;
+  margin-right: 10px;
 }
 
 .chatMenuInput {
   width: 90%;
   padding: 10px 0;
   border: none;
-  border-bottom: 1px solid grey;
-  background-color: transparent;
 }
 
 .chatBox {
@@ -49,4 +48,5 @@
 .chatBoxWrapper {
   padding: 10px;
   height: 100%;
+  background-color: grey;
 }

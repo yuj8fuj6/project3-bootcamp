@@ -1,39 +1,82 @@
 import React, { useState, useEffect } from "react";
-import queryString from "query-string";
-import io from "socket.io-client";
 import "./message.css";
+import ScrollToBottom from "react-scroll-to-bottom";
+import { Button, Input } from "antd";
 
-export default function Message() {
-  useEffect(({ location }) => {
-    const data = queryString.parse(location.search);
+export default function Message({ socket, username, room }) {
+  const [currentMessage, setCurrentMessage] = useState("");
+  const [messageList, setMessageList] = useState([]);
 
-    console.log(location.search);
-    console.log(data);
+  const sendMessage = async () => {
+    if (currentMessage !== "") {
+      const messageData = {
+        room: room,
+        author: username,
+        message: currentMessage,
+        time:
+          new Date(Date.now()).getHours() +
+          ":" +
+          new Date(Date.now()).getMinutes(),
+      };
+
+      await socket.emit("send_message", messageData);
+      console.log(messageData);
+      setMessageList((prevList) => [...prevList, messageData]);
+      // clears input after every message sent
+      setCurrentMessage("");
+    }
+  };
+
+  useEffect(() => {
+    socket.on("receive_message", (data) => {
+      console.log(data);
+      setMessageList((prevList) => [...prevList, data]);
+    });
   });
 
-  return <h1>Chat</h1>;
+  return (
+    <div className="message">
+      <div className="messageTop">
+        <h1>LIVE CHAT</h1>
+      </div>
+      <div className="messageBody">
+        <ScrollToBottom className="messageContainer">
+          {messageList.map((messageContent) => {
+            return (
+              <div
+                className="messageInfo"
+                id={username === messageContent.author ? "you" : "other"}
+                // id="you"
+              >
+                <div>
+                  <div className="messageText">
+                    <p>{messageContent.message}</p>
+                  </div>
+                  <div className="messageMeta">
+                    <p>{messageContent.time}</p>
+                    <p>{messageContent.author}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </ScrollToBottom>
+      </div>
+      <div className="messageBottom">
+        <Input
+          type="text"
+          placeholder="Type something..."
+          onChange={(event) => {
+            setCurrentMessage(event.target.value);
+          }}
+          onKeyPress={(e) => {
+            e.key === "Enter" && sendMessage();
+          }}
+        />
+        <Button type="primary" onClick={sendMessage}>
+          Send
+        </Button>
+      </div>
+    </div>
+  );
 }
-
-// import React from "react";
-// import "./message.css";
-
-// export default function Message({ own }) {
-//   return (
-//     <div className={own ? "message own" : "message"}>
-//       <div className="messageTop">
-//         <img
-//           className="messageImage"
-//           src="https://images.unsplash.com/photo-1527082395-e939b847da0d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1635&q=80"
-//           atl=""
-//         />
-//         <p className="messageText">
-//           Lorem Ipsum is simply dummy text of the printing and typesetting
-//           industry. Lorem Ipsum has been the industry's standard dummy text ever
-//           since the 1500s, when an unknown printer took a galley of type and
-//           scrambled it to make a type specimen book.
-//         </p>
-//       </div>
-//       <div className="messageBottom">1 hour ago</div>
-//     </div>
-//   );
-// }
