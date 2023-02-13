@@ -11,7 +11,7 @@ export default function Message({ socket, username, room }) {
     if (currentMessage !== "") {
       const messageData = {
         room: room,
-        author: username,
+        sender: username,
         message: currentMessage,
         time:
           new Date(Date.now()).getHours() +
@@ -32,21 +32,18 @@ export default function Message({ socket, username, room }) {
       console.log(data);
       setMessageList((prevList) => [...prevList, data]);
     });
-  });
+  }, [socket]);
 
   return (
     <div className="message">
-      <div className="messageTop">
-        <h1>LIVE CHAT</h1>
-      </div>
       <div className="messageBody">
+        {/* scrolltobottom not working */}
         <ScrollToBottom className="messageContainer">
           {messageList.map((messageContent) => {
             return (
               <div
                 className="messageInfo"
-                id={username === messageContent.author ? "you" : "other"}
-                // id="you"
+                id={username === messageContent.sender ? "you" : "other"}
               >
                 <div>
                   <div className="messageText">
@@ -54,7 +51,7 @@ export default function Message({ socket, username, room }) {
                   </div>
                   <div className="messageMeta">
                     <p>{messageContent.time}</p>
-                    <p>{messageContent.author}</p>
+                    <p>{messageContent.sender}</p>
                   </div>
                 </div>
               </div>
@@ -65,6 +62,7 @@ export default function Message({ socket, username, room }) {
       <div className="messageBottom">
         <Input
           type="text"
+          value={currentMessage}
           placeholder="Type something..."
           onChange={(event) => {
             setCurrentMessage(event.target.value);

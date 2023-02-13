@@ -4,7 +4,6 @@ import { Backend_URL } from "../Backend_URL";
 import Message from "../components/messengerComponents/Message";
 import "./messenger.css";
 import { Button, Input } from "antd";
-import ScrollToBottom from "react-scroll-to-bottom";
 
 const socket = io.connect(Backend_URL);
 

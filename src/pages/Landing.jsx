@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect } from "react";
 import Modal from "../components/Modal";
 import Navbar from "../components/NavBar";
 import { useAuth0 } from "@auth0/auth0-react";
