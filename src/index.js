@@ -14,7 +14,7 @@ root.render(
       authorizationParams={{
         redirect_uri: window.location.origin,
         audience: process.env.REACT_APP_AUDIENCE,
-        scope: "read:current_user update:current_user_metadata",
+        // scope: "read:current_user update:current_user_metadata",
       }}
       // redirect_uri={window.location.origin}
       // audience={process.env.REACT_APP_AUDIENCE}
