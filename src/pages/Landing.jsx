@@ -1,12 +1,16 @@
 import React from "react";
 import Modal from "../components/Modal";
+import Navbar from "../components/NavBar";
 
 const Landing = () => {
   return (
-    <div>
-      <div className="bg-darkgrey text-yellow">Landing</div>
-      <Modal />
-    </div>
+    <>
+      <Navbar />
+      <div>
+        <div className="bg-darkgrey text-yellow">Landing</div>
+        <Modal />
+      </div>
+    </>
   );
 };
 
