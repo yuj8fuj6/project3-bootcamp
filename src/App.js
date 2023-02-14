@@ -1,5 +1,7 @@
+import "@progress/kendo-theme-default/dist/all.css";
 import "./App.css";
 import Landing from "./pages/Landing";
+
 
 const App = () => {
   return (
