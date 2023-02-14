@@ -1,9 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useContext } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import Navbar from "../components/NavBar";
 import ProfileForm from "../components/ProfileForm.jsx";
 import { UserContext } from "../contexts/UserContext";
-import { useContext } from "react";
 
 const Profile = () => {
   const { isAuthenticated, loginWithRedirect } = useAuth0();
@@ -25,8 +24,6 @@ const Profile = () => {
       loginWithRedirect();
     }
   });
-
-  console.log(updatedAt);
 
   return (
     <div className="max-h-screen max-w-screen">
