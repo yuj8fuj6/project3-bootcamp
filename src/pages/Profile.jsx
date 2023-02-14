@@ -17,7 +17,7 @@ const Profile = () => {
     professor,
     profile_pic_url,
     student,
-    updated_at,
+    updatedAt,
   } = user;
 
   useEffect(() => {
@@ -26,7 +26,7 @@ const Profile = () => {
     }
   });
 
-  console.log(student);
+  console.log(updatedAt);
 
   return (
     <div className="max-h-screen max-w-screen">
@@ -66,10 +66,9 @@ const Profile = () => {
         email={email_address}
         phone={phone_number}
         url={profile_pic_url}
-        updated_at={updated_at}
+        updatedAt={updatedAt}
         student={student}
         professor={professor}
-        admin={admin}
       />
     </div>
   );

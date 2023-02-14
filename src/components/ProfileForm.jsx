@@ -10,10 +10,9 @@ const ProfileForm = ({
   email,
   phone,
   url,
-  updated_at,
+  updatedAt,
   student,
   professor,
-  admin,
 }) => {
   const { getAccessTokenSilently } = useAuth0();
 
@@ -205,6 +204,9 @@ const ProfileForm = ({
       </div>
       <div className="flex justify-center mt-10">
         <Button>Confirm Changes</Button>
+      </div>
+      <div className="px-5 text-base text-yellow">
+        Updated at: {updatedAt}
       </div>
     </div>
   );
