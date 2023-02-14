@@ -1,9 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useContext } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import Navbar from "../components/NavBar";
 import ProfileForm from "../components/ProfileForm.jsx";
 import { UserContext } from "../contexts/UserContext";
-import { useContext } from "react";
 
 const Profile = () => {
   const { isAuthenticated, loginWithRedirect } = useAuth0();
@@ -17,7 +16,7 @@ const Profile = () => {
     professor,
     profile_pic_url,
     student,
-    updated_at,
+    updatedAt,
   } = user;
 
   useEffect(() => {
@@ -27,7 +26,7 @@ const Profile = () => {
   });
 
   return (
-    <div>
+    <div className="max-h-screen max-w-screen">
       <Navbar />
       {student && (
         <div className="px-20 pt-10 font-extrabold text-2xl text-yellow">
@@ -47,14 +46,26 @@ const Profile = () => {
       <div className="px-20 pt-10 font-extrabold text-2xl text-yellow">
         {last_name} {first_name}
       </div>
+      {student && (
+        <div className="px-20 text-base text-yellow">
+          Student ID: {student.id}
+        </div>
+      )}
+      {professor && (
+        <div className="px-20 text-base text-yellow">
+          Staff ID: {professor.id}
+        </div>
+      )}
+      {admin && (
+        <div className="px-20 text-base text-yellow">Admin ID: {admin.id}</div>
+      )}
       <ProfileForm
         email={email_address}
         phone={phone_number}
         url={profile_pic_url}
-        updated_at={updated_at}
+        updatedAt={updatedAt}
         student={student}
         professor={professor}
-        admin={admin}
       />
     </div>
   );
