@@ -39,6 +39,10 @@ export default function Message({ socket, username, room }) {
     <div className="message">
       <div className="messageUser">
         <LoggedInUserDisplay />
+        <div className="messageButtons">
+          <Button>Delete chat</Button>
+          <Button>View profile</Button>
+        </div>
       </div>
       <div className="messageBody">
         <ScrollToBottom className="messageContainer">
@@ -71,13 +75,13 @@ export default function Message({ socket, username, room }) {
           onChange={(event) => {
             setCurrentMessage(event.target.value);
           }}
+          // when you press the "enter" button
           onKeyPress={(e) => {
             e.key === "Enter" && sendMessage();
           }}
         />
-        <Button type="primary" onClick={sendMessage}>
-          Send
-        </Button>
+        <Button onClick={sendMessage}>Send</Button>
+        <Button>Confirm Index Swap</Button>
       </div>
     </div>
   );
