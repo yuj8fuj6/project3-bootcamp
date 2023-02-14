@@ -26,8 +26,10 @@ const Profile = () => {
     }
   });
 
+  console.log(student);
+
   return (
-    <div>
+    <div className="max-h-screen max-w-screen">
       <Navbar />
       {student && (
         <div className="px-20 pt-10 font-extrabold text-2xl text-yellow">
@@ -47,6 +49,19 @@ const Profile = () => {
       <div className="px-20 pt-10 font-extrabold text-2xl text-yellow">
         {last_name} {first_name}
       </div>
+      {student && (
+        <div className="px-20 text-base text-yellow">
+          Student ID: {student.id}
+        </div>
+      )}
+      {professor && (
+        <div className="px-20 text-base text-yellow">
+          Staff ID: {professor.id}
+        </div>
+      )}
+      {admin && (
+        <div className="px-20 text-base text-yellow">Admin ID: {admin.id}</div>
+      )}
       <ProfileForm
         email={email_address}
         phone={phone_number}

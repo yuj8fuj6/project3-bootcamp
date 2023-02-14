@@ -27,7 +27,7 @@ const ProfileForm = ({
   };
 
   return (
-    <div className="pt-10 px-20 grid grid-cols-1 justify-center w-full">
+    <div className="pt-10 px-20 grid grid-cols-1 justify-center w-full max-h-full">
       <div className="grid grid-cols-3 justify-center gap-3">
         <div>
           <label>
@@ -73,6 +73,20 @@ const ProfileForm = ({
               <textarea
                 className="mt-2 w-full border text-darkgrey font-bold border-neutral-300 rounded-lg text-left indent-1"
                 value={student.school}
+                readonly
+              />
+            </>
+          )}
+          {professor && (
+            <>
+              <label>
+                <p className="text-left text-yellow text-xl font-bold mt-2">
+                  School:
+                </p>
+              </label>
+              <textarea
+                className="mt-2 w-full border text-darkgrey font-bold border-neutral-300 rounded-lg text-left indent-1"
+                value={professor.school}
                 readonly
               />
             </>
