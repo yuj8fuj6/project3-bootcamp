@@ -1,14 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import io from "socket.io-client";
 import { Backend_URL } from "../Backend_URL";
 import Message from "../components/messengerComponents/Message";
 import "./messenger.css";
 import { Button, Input } from "antd";
 import Navbar from "../components/NavBar";
+import axios from "axios";
+import ChatInbox from "../components/messengerComponents/ChatInbox";
 
 const socket = io.connect(Backend_URL);
 
 export default function Messenger() {
+  const [chatInbox, setChatInbox] = useState([]);
+  const [chatInboxId, setChatInboxId] = useState();
+  const [currentChat, setCurrentChat] = useState(true);
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState("");
+
   const [username, setUsername] = useState("");
   const [room, setRoom] = useState("");
 
@@ -19,12 +27,41 @@ export default function Messenger() {
     }
   };
 
+  useEffect(() => {
+    // if there is chatInboxId, retrieve chatInbox
+    if (chatInboxId) {
+      axios.get(`${Backend_URL}/chatinbox/${chatInboxId}`).then((response) => {
+        setChatInbox(response.data);
+      });
+    }
+  }, [chatInboxId]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await axios.post(
+        "/chatconversation",
+        message,
+        setMessages([...message, res.data]),
+        setNewMessage("")
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <>
       <Navbar />
       <div className="messenger">
         <div className="chatInbox">
           <div className="chatInboxWrapper">
+            {chatInbox.map((conversation) => (
+              <div onClick={() => setCurrentChat(conversation)}>
+                <ChatInbox conversation={conversation} />
+              </div>
+            ))}
             <Input
               placeholder="search for friends"
               className="chatInboxInput"
@@ -51,7 +88,24 @@ export default function Messenger() {
         </div>
         <div className="chatConversation">
           <div className="chatConversationWrapper">
-            <Message socket={socket} username={username} room={room} />
+            {currentChat ? (
+              <Message socket={socket} username={username} room={room} />
+            ) : (
+              <p>Open a conversation to start a chat</p>
+            )}
+          </div>
+          <div className="chatConversationInput">
+            <textarea
+              className="chatMessageInput"
+              placeholder="write something..."
+              onChange={(event) => {
+                setNewMessage(event.target.value);
+              }}
+              value={newMessage}
+            ></textarea>
+            <Button className="chatSubmitButton" onClick={handleSubmit}>
+              Send
+            </Button>
           </div>
         </div>
       </div>

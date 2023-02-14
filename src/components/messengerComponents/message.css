@@ -11,6 +11,8 @@
   border-bottom: 1px solid #dcdcdc;
   padding-left: 30px;
   height: 100px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .message .messageBody {
@@ -45,8 +47,8 @@
   display: flex;
   padding: 10px;
   border-radius: 10px;
-  background-color: #1877f2;
-  color: white;
+  background-color: rgb(245, 241, 241);
+  color: black;
   max-width: 300px;
   min-width: 100px;
   min-height: 40px;
@@ -80,8 +82,8 @@
 
 #you .messageText {
   align-items: flex-end;
-  background-color: rgb(245, 241, 241);
-  color: black;
+  background-color: #1877f2;
+  color: white;
 }
 
 #you .messageMeta {
