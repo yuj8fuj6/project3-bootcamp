@@ -2,20 +2,16 @@ import React, { useEffect, useState } from 'react'
 import {
   Scheduler,
   WeekView,
-  SchedulerSlot,
-  SchedulerViewSlot,
-  SchedulerEditSlot,
+
 } from "@progress/kendo-react-scheduler";
 import { Day } from "@progress/kendo-date-math";
 import { sampleData, displayDate } from "./sampleData";
 
 
-
-
 const Timetable = () => {
   const [courseData, setCourseData] = useState({})
   useEffect(() => {
-    
+
   }, [courseData])
   return (
     //need to disable allday
