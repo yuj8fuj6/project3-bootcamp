@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useAuth0, User } from "@auth0/auth0-react";
+import { useAuth0 } from "@auth0/auth0-react";
 import { Link } from "react-router-dom";
 import Button from "./Button";
 import axios from "axios";
@@ -10,10 +10,9 @@ const ProfileForm = ({
   email,
   phone,
   url,
-  updated_at,
+  updatedAt,
   student,
   professor,
-  admin,
 }) => {
   const { getAccessTokenSilently } = useAuth0();
 
@@ -27,7 +26,7 @@ const ProfileForm = ({
   };
 
   return (
-    <div className="pt-10 px-20 grid grid-cols-1 justify-center w-full">
+    <div className="pt-10 px-20 grid grid-cols-1 justify-center w-full max-h-full">
       <div className="grid grid-cols-3 justify-center gap-3">
         <div>
           <label>
@@ -73,6 +72,20 @@ const ProfileForm = ({
               <textarea
                 className="mt-2 w-full border text-darkgrey font-bold border-neutral-300 rounded-lg text-left indent-1"
                 value={student.school}
+                readonly
+              />
+            </>
+          )}
+          {professor && (
+            <>
+              <label>
+                <p className="text-left text-yellow text-xl font-bold mt-2">
+                  School:
+                </p>
+              </label>
+              <textarea
+                className="mt-2 w-full border text-darkgrey font-bold border-neutral-300 rounded-lg text-left indent-1"
+                value={professor.school}
                 readonly
               />
             </>
@@ -191,6 +204,9 @@ const ProfileForm = ({
       </div>
       <div className="flex justify-center mt-10">
         <Button>Confirm Changes</Button>
+      </div>
+      <div className="px-5 text-base text-yellow">
+        Updated at: {updatedAt}
       </div>
     </div>
   );
