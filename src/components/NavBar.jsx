@@ -16,7 +16,6 @@ import { useAuth0 } from "@auth0/auth0-react";
 import LoggedInUserDisplay from "../components/LoggedInUserDisplay";
 
 export default function Navbar() {
-  const navigate = useNavigate();
   const { logout } = useAuth0();
   const handleLogout = () => {
     logout({
@@ -28,7 +27,7 @@ export default function Navbar() {
 
   return (
     <nav className="navbar">
-      <Link to="/">
+      <Link to="/main">
         <Logo />
       </Link>
       <LoggedInUserDisplay />
