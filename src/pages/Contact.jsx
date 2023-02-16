@@ -7,13 +7,21 @@ import ContactForm from "../components/ContactForm";
 const Contact = () => {
   const { isAuthenticated, loginWithRedirect } = useAuth0();
   const user = useContext(UserContext);
-  const { email_address, first_name, last_name, phone_number, student, admin, professor } = user;
+  const {
+    email_address,
+    first_name,
+    last_name,
+    phone_number,
+    student,
+    admin,
+    professor,
+  } = user.userData;
 
   useEffect(() => {
     if (!isAuthenticated) {
       loginWithRedirect();
     }
-  });
+  }, []);
 
   return (
     <div className="max-h-screen max-w-screen">

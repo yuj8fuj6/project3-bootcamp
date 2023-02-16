@@ -1,4 +1,4 @@
-import React, { useEffect,useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import Navbar from "../components/NavBar";
 import ProfileForm from "../components/ProfileForm.jsx";
@@ -17,13 +17,13 @@ const Profile = () => {
     profile_pic_url,
     student,
     updatedAt,
-  } = user;
+  } = user.userData;
 
   useEffect(() => {
     if (!isAuthenticated) {
       loginWithRedirect();
     }
-  });
+  }, []);
 
   return (
     <div className="max-h-screen max-w-screen">

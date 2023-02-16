@@ -16,15 +16,15 @@ const App = () => {
       {/* <Navbar /> */}
       <div className="App">
         <UserContextProvider>
-          <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/main" element={<Landing />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/forum" element={<Forum />} />
-            <Route path="/messenger" element={<Messenger />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/map" element={<Map />} />
-          </Routes>
+            <Routes>
+              <Route path="/" element={<Login />} />
+              <Route path="/main" element={<Landing />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/forum" element={<Forum />} />
+              <Route path="/messenger" element={<Messenger />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/map" element={<Map />} />
+            </Routes>
         </UserContextProvider>
       </div>
     </>

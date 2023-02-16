@@ -10,6 +10,7 @@ export const UserContextProvider = (props) => {
   const { user, isLoading, isAuthenticated } = useAuth0();
   const [userData, setUserData] = useState([]);
   const [email, setEmail] = useState("");
+  const [allUserData, setAllUserData] = useState([]);
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
@@ -20,14 +21,22 @@ export const UserContextProvider = (props) => {
 
   useEffect(() => {
     if (email) {
-      axios.get(`${BACKEND_URL}/${email}`).then((response) => {
+      axios.get(`${BACKEND_URL}/users/${email}`).then((response) => {
         setUserData(response.data);
       });
     }
   }, [email]);
 
+  useEffect(() => {
+    if (!isLoading && isAuthenticated) {
+      axios.get(`${BACKEND_URL}/users`).then((response) => {
+        setAllUserData(response.data);
+      });
+    }
+  }, [isAuthenticated]);
+
   return (
-    <UserContext.Provider value={userData}>
+    <UserContext.Provider value={{userData, allUserData}}>
       {props.children}
     </UserContext.Provider>
   );
