@@ -2,22 +2,30 @@ import React, { useEffect, useState } from "react";
 import Button from "../components/Button"
 import axios from "axios";
 
-const CourseReg = () => {
-  const [index, setIndex] = useState([1,2,3,4,5,6])
-  const [courses, setCourse] = useState([{course_code: "EE2108", vaccancy: 5}])
+const CourseReg = (props) => {
+  // const [courseIndex, setCourseIndex] = useState(props.courseIndex);
+  // const [courses, setCourse] = useState(props.course)
+  const [index, setIndex] = useState([1,2,3,4,5,6,7,8])//own course index
+  const [courseIndex, setCourseIndex] = useState({}); //update whenever user changes the index
+  const [courses, setCourse] = useState([
+    { course_code: "IE2108", vaccancy: 5 },
+    { course_code: "IE2110", vaccancy: 8 },
+  ]);
 
-  useEffect(() => {
-    //call api to get courses from courseReg table
-    
-  }, [courses])
+  //handleChange will select the course's index and update in Timetable.jsx via Landing.jsx
+  // const handleChange = (e) =>{
+    //send timetable index to Timetables.jsx
+    //must trigger re-render
+  //}
+   let options = index.map((index) => <option>{index}</option>);
   //mapping options and course for easy display (refactoring code)
-  
-  let courseReg = courses.map(async(course, i) => {
-    // call api for index data and then setIndex
+    let element = courses.map((course, i) => { 
+    //need an async function here and cannot use async in map
+    // call api for index of each course data and then setIndex
     // axios.get("url").then((res) => {
     //   setIndex(res)
     // })
-    let options = index.map((index) => <option>{index}</option>);
+    // let options = index.map((index) => <option>{index}</option>);
     return (
       <tr>
         <th>{i + 1}</th>
@@ -31,7 +39,7 @@ const CourseReg = () => {
   });
 
   const addCourse = () => {
-    let course = prompt("Please enter your name", "Harry Potter");
+    let course = prompt("Please enter course code", "");
     //Backend query
     //if exist add to courses state
     //insert data into courseReg table
@@ -42,7 +50,7 @@ const CourseReg = () => {
     //catch (error) {
       
     // }
-    setCourse([...courses, { course_code: "EE2107", vaccancy: 5 }]);
+    setCourse([...courses, { course_code: "IE2106", vaccancy: 10 }]);
   }
   return (
     <div>
@@ -56,15 +64,13 @@ const CourseReg = () => {
               <th>Vaccancy</th>
             </tr>
           </thead>
-          <tbody>
-            {courseReg}
-          </tbody>
+          <tbody>{element}</tbody>
         </table>
       </div>
       <Button onClick={addCourse}>Add Course</Button>
+      {/* <Button onClick={deleteCourse}>Delete Course</Button> */}
       <Button>Print timetable</Button>
     </div>
   );
 }
-
 export default CourseReg

@@ -8,9 +8,9 @@ const data = [
     Start: "2013-06-07T07:00:00.000Z",
     End: "2013-06-07T08:30:00.000Z",
     EndTimezone: null,
-    RecurrenceRule: "",
+    RecurrenceRule: "FREQ=WEEKLY;BYDAY=WE;COUNT=14",
     RecurrenceID: null,
-    RecurrenceException: null,
+    RecurrenceException: [new Date("2023-06-28T07:00:00.000Z")],
     isAllDay: false,
   },
 ];
