@@ -20,7 +20,7 @@ export const UserContextProvider = (props) => {
 
   useEffect(() => {
     if (email) {
-      axios.get(`${BACKEND_URL}/${email}`).then((response) => {
+      axios.get(`${BACKEND_URL}/users/${email}`).then((response) => {
         setUserData(response.data);
       });
     }
