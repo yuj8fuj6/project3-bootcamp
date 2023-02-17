@@ -3,16 +3,19 @@ import Logo from "../components/Logo";
 import Timetable from '../components/Timetable';
 import CourseReg from "../components/CourseReg";
 import "../App.css";
+import axios from 'axios';
 // worry next time, need to relate to user
 const Landing = () => {
   const [course, setCourse] = useState([]);
-  const [courseIndex, setCourseIndex] = useState([{IE2108: 321173}]); //courseIndex is an array of dictionary with the key being the courses and the value being the index
+  const [courseIndex, setCourseIndex] = useState([]); //courseIndex is an array of dictionary with the key being the courses and the value being the index
+
   //call once when initialise
-  // useEffect(() => {
-    // call api to GET all the user's registered courses from courseReg table (using user's id)
-    // then using course_id, GET all the course_code, setState as course
-    // then using a dictionary, form the dictionary where key is the course_code and the value is -e. Rmb to setState as courseIndex
-  // }, [])
+  useEffect(() => {
+    axios.get("http://localhost:3000/courses/IE1005").then((res) =>{
+      setCourseIndex(res.data.course_indices);
+      console.log(courseIndex);
+    })
+  }, [])
 
 
   return (

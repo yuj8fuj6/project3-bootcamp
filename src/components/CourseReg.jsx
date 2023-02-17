@@ -5,7 +5,7 @@ import axios from "axios";
 const CourseReg = (props) => {
   // const [courseIndex, setCourseIndex] = useState(props.courseIndex);
   // const [courses, setCourse] = useState(props.course)
-  const [index, setIndex] = useState([1,2,3,4,5,6,7,8])//own course index
+  const [index, setIndex] = useState(props.courseIndex);//own course index
   const [courseIndex, setCourseIndex] = useState({}); //update whenever user changes the index
   const [courses, setCourse] = useState([
     { course_code: "IE2108", vaccancy: 5 },
@@ -17,7 +17,7 @@ const CourseReg = (props) => {
     //send timetable index to Timetables.jsx
     //must trigger re-render
   //}
-   let options = index.map((index) => <option>{index}</option>);
+   let options = index.map((index) => <option>{index.index_code}</option>);
   //mapping options and course for easy display (refactoring code)
     let element = courses.map((course, i) => { 
     //need an async function here and cannot use async in map
