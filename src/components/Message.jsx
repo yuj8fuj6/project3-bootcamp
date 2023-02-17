@@ -1,18 +1,29 @@
 import React, { useState, useEffect } from "react";
+// import React, { useState, useEffect, useContext } from "react";
 import "./message.css";
 import ScrollToBottom from "react-scroll-to-bottom";
 import { Button, Input } from "antd";
-import LoggedInUserDisplay from "../LoggedInUserDisplay";
+import LoggedInUserDisplay from "./LoggedInUserDisplay";
+import { useAuth0 } from "@auth0/auth0-react";
+// import { UserContext } from "../contexts/UserContext";
 
-export default function Message({ socket, username, room }) {
+export default function Message({ socket, room, firstName, lastName }) {
   const [currentMessage, setCurrentMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
+  const { isAuthenticated, loginWithRedirect } = useAuth0();
+  const user = firstName + " " + lastName;
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      loginWithRedirect();
+    }
+  });
 
   const sendMessage = async () => {
     if (currentMessage !== "") {
       const messageData = {
         room: room,
-        sender: username,
+        sender: user,
         message: currentMessage,
         time:
           new Date(Date.now()).getHours() +
@@ -27,6 +38,29 @@ export default function Message({ socket, username, room }) {
       setCurrentMessage("");
     }
   };
+
+  // const sendMessage = async () => {
+  //   if (currentMessage !== "") {
+  //     const messageData = {
+  //       message: currentMessage,
+  //       sender: user.id,
+  //       time:
+  //         new Date(Date.now()).getHours() +
+  //         ":" +
+  //         new Date(Date.now()).getMinutes(),
+  //     };
+
+  //     const receiverId = current
+
+  //     await socket.emit("send_message", {
+  //       message
+  //     });
+  //     console.log(messageData);
+  //     setMessageList((prevList) => [...prevList, messageData]);
+  //     // clears input after every message sent
+  //     setCurrentMessage("");
+  //   }
+  // };
 
   useEffect(() => {
     socket.on("receive_message", (data) => {
@@ -50,7 +84,7 @@ export default function Message({ socket, username, room }) {
             return (
               <div
                 className="messageInfo"
-                id={username === messageContent.sender ? "you" : "other"}
+                id={user === messageContent.sender ? "you" : "other"}
               >
                 <div>
                   <div className="messageMeta">

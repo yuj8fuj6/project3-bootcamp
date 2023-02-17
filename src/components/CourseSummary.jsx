@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 const CourseSummary = () => {
-  return (
-    <div>CourseSummary</div>
-  )
-}
+  return <div>CourseSummary</div>;
+};
 
-export default CourseSummary
+export default CourseSummary;

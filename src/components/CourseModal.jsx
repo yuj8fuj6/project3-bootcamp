@@ -1,5 +1,4 @@
-import { Fragment, useRef, useState } from "react";
-import { Dialog, Transition } from "@headlessui/react";
+import { useState } from "react";
 import ModalBody from "./ModalBody";
 import { Modal, Button } from "antd";
 import "./courseModal.css";
