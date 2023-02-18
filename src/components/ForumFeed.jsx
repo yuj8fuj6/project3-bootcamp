@@ -14,7 +14,7 @@ const ForumFeed = () => {
 
   return (
     <div className="h-full rounded-lg">
-      <div className="overflow-auto p-1 h-[550px]">
+      <div className="overflow-auto p-1 h-[600px]">
         {allForumData &&
           allForumData.map((forum, index) => (
             <div
