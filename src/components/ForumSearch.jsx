@@ -25,7 +25,7 @@ const ForumSearch = ({ index, store }) => {
       }}
       defaultSelectedKeys={["1"]}
       mode="inline"
-      className="rounded-lg text-yellow font-semibold pt-5 bg-white h-[600px]"
+      className="rounded-lg text-yellow font-semibold pt-5 bg-white h-[625px]"
     >
       <p className="px-5 pb-5 text-xl text-darkgrey font-bold">COURSE FORUMS</p>
       <Button className="mx-5 mb-5 border-darkgrey border-2 p-4 text-darkgrey rounded-3xl font-bold hover:text-yellow hover:bg-darkgrey">

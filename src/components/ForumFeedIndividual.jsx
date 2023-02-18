@@ -3,24 +3,32 @@ import { ForumContext } from "../contexts/ForumContext";
 import { UserContext } from "../contexts/UserContext";
 import { useNavigate, useParams } from "react-router-dom";
 import { BsArrowDownSquare, BsArrowUpSquare } from "react-icons/bs";
+import { Form, Formik } from "formik";
 
 const ForumFeedIndividual = () => {
   const param = useParams();
 
   const allForumData = useContext(ForumContext);
   const { userData, allUserData } = useContext(UserContext);
+
   const allStudentData = allUserData.filter((user) => user.student);
   const forum = allForumData.filter((forum) => forum.id === param.id)[0];
 
+  const initialValues = { content: "" };
+
+  const handleSubmit = (values) => {
+    console.log(values.content);
+  };
+
   // console.log(allForumData);
-  // console.log(forum);
+  // console.log(userData);
   // console.log(allStudentData);
 
   return (
     <div className="h-full rounded-lg">
-      <div className="p-1 h-[550px]">
+      <div className="p-1">
         {allForumData && (
-          <div className="bg-white rounded-lg mt-2 pt-2 pl-5 grid grid-cols-1 h-full content-start">
+          <div className="bg-white rounded-lg mt-2 pt-2 pl-5 grid grid-cols-1 content-start">
             <div className="bg-darkgrey rounded-lg text-yellow text-sm font-bold w-[600px] h-fit py-1 indent-4 ">
               {forum.course.course_code} - {forum.course.course_name}
             </div>
@@ -36,7 +44,41 @@ const ForumFeedIndividual = () => {
                 <div className="text-darkgrey text-[10px] font-bold">
                   Created on {forum.updatedAt}
                 </div>
-                <div className="overflow-auto h-3/4 border-darkgrey border-1 mr-4 rounded-xl p-4 bg-slate-100">
+                <Formik
+                  initialValues={initialValues}
+                  onSubmit={(values, { resetForm }) => {
+                    handleSubmit(values);
+                    resetForm();
+                  }}
+                >
+                  {(props) => {
+                    console.log(props);
+                    return (
+                      <Form className="grid grid-cols-1 gap-2 mb-2">
+                        <label className="text-darkgrey font-extrabold">
+                          Post Content
+                        </label>
+                        <textarea
+                          type="text"
+                          id="content"
+                          name="content"
+                          className="border-darkgrey border-1 rounded mr-4 h-[125px] text-sm font-normal p-3"
+                          value={props.values.short || props.values.content}
+                          onChange={props.handleChange}
+                          onBlur={props.handleBlur}
+                          placeholder="Post your content here!"
+                        />
+                        <button
+                          className="text-darkgrey text-sm border-1 rounded-full border-darkgrey w-3/12 hover:bg-darkgrey hover:text-yellow"
+                          type="submit"
+                        >
+                          Submit Post
+                        </button>
+                      </Form>
+                    );
+                  }}
+                </Formik>
+                <div className="overflow-auto h-72 border-darkgrey border-1 mb-4 mr-4 rounded-xl p-4 bg-slate-100">
                   {allForumData &&
                     forum.posts.map((post) => (
                       <div className="grid grid-flow-col grid-cols-8 justify-start h-24">
