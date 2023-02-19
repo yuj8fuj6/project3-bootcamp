@@ -76,7 +76,6 @@ const ForumFeedIndividual = () => {
                           className="border-darkgrey border-1 rounded mr-4 h-[125px] text-sm font-normal p-3"
                           value={props.values.short || props.values.content}
                           onChange={props.handleChange}
-                          onBlur={props.handleBlur}
                           placeholder="Post your content here!"
                         />
                         <button

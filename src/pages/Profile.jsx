@@ -59,6 +59,9 @@ const Profile = () => {
       {admin && (
         <div className="px-20 text-base text-yellow">Admin ID: {admin.id}</div>
       )}
+      <div className="px-20 text-xs text-red-600">
+        Note: Only the contact phone no. field and profile picture are editable.
+      </div>
       <ProfileForm
         email={email_address}
         phone={phone_number}
