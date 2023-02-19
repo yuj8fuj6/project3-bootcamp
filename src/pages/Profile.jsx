@@ -63,6 +63,8 @@ const Profile = () => {
         Note: Only the contact phone no. field and profile picture are editable.
       </div>
       <ProfileForm
+        lastName = {last_name}
+        firstName = {first_name}
         email={email_address}
         phone={phone_number}
         url={profile_pic_url}

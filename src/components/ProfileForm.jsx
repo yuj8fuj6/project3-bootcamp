@@ -2,13 +2,28 @@ import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import Button from "./Button";
 import axios from "axios";
+import { storage } from "../firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
 
-const ProfileForm = ({ email, phone, url, updatedAt, student, professor }) => {
+const ProfileForm = ({
+  lastName,
+  firstName,
+  email,
+  phone,
+  url,
+  updatedAt,
+  student,
+  professor,
+}) => {
   const { getAccessTokenSilently } = useAuth0();
   const [phoneContact, setPhoneContact] = useState(phone);
   const [changedState, setChangedState] = useState(false);
+  const [updatedPhotoFile, setUpdatedPhotoFile] = useState("");
+  const [updatedPhotoFileURL, setUpdatedPhotoFileURL] = useState(url);
+  const [changedPhoto, setChangedPhoto] = useState(false);
+  const [profilePhotoURL, setProfilePhotoURL] = useState("");
 
   const handleChange = (e) => {
     setPhoneContact(e.target.value);
@@ -21,7 +36,12 @@ const ProfileForm = ({ email, phone, url, updatedAt, student, professor }) => {
     }
   }, [phoneContact]);
 
-  console.log(phoneContact.toString().length == 8);
+  const handleUpdatedPhoto = (e) => {
+    setUpdatedPhotoFile(e.target.files[0]);
+    const urlDisplay = URL.createObjectURL(e.target.files[0]);
+    setUpdatedPhotoFileURL(urlDisplay);
+    setChangedPhoto(true);
+  };
 
   const handleSubmit = async (e) => {
     await e.preventDefault();
@@ -31,6 +51,17 @@ const ProfileForm = ({ email, phone, url, updatedAt, student, professor }) => {
       scope: "read:current_user",
     });
   };
+
+  const handlePhotoSubmit = async (e) => {
+    e.preventDefault();
+    const profilePhotoRef = ref(storage, `${lastName} ${firstName}`);
+    await uploadBytes(profilePhotoRef, updatedPhotoFile).then(() =>
+      getDownloadURL(profilePhotoRef).then((url) => setProfilePhotoURL(url)),
+    );
+    alert("Profile photo has been successfully uploaded!");
+  };
+  // console.log(updatedPhotoFile.name);
+  // console.log(profilePhotoURL);
 
   return (
     <div className="pt-5 px-20 grid grid-cols-1 justify-center w-full max-h-full">
@@ -212,12 +243,22 @@ const ProfileForm = ({ email, phone, url, updatedAt, student, professor }) => {
         </div>
         <div className="grid grid-cols-1 ml-36 h-[350px]">
           <img
-            src={url}
+            src={updatedPhotoFileURL}
             alt="profile pic"
             className="h-72 w-72 rounded-full object-cover"
           />
-          <div className="flex justify-center p-7">
-            <Button>Upload Photo</Button>
+          <label className="flex justify-center mt-5">
+            <p className="text-yellow hover:text-blue-400">Upload Photo</p>
+            <input
+              type="file"
+              className="hidden"
+              onChange={handleUpdatedPhoto}
+            />
+          </label>
+          <div className="flex justify-center p-4">
+            {changedPhoto && (
+              <Button onClick={handlePhotoSubmit}>Confirm Photo</Button>
+            )}
           </div>
         </div>
       </div>
