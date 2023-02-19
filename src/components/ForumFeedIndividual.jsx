@@ -79,8 +79,9 @@ const ForumFeedIndividual = () => {
                           placeholder="Post your content here!"
                         />
                         <button
-                          className="text-darkgrey text-sm border-1 rounded-full border-darkgrey w-3/12 hover:bg-darkgrey hover:text-yellow"
+                          className="text-darkgrey text-sm border-1 rounded-full border-darkgrey w-3/12 hover:bg-darkgrey hover:text-yellow disabled:border-slate-400 disabled:text-slate-400"
                           type="submit"
+                          disabled={props.values.content == ""}
                         >
                           Submit Post
                         </button>
