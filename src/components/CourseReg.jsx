@@ -5,19 +5,19 @@ import axios from "axios";
 const CourseReg = (props) => {
   // const [courseIndex, setCourseIndex] = useState(props.courseIndex);
   // const [courses, setCourse] = useState(props.course)
+  const { course_indices } = props.course;
   const [index, setIndex] = useState(props.courseIndex);//own course index
   const [courseIndex, setCourseIndex] = useState({}); //update whenever user changes the index
   const [courses, setCourse] = useState([
     { course_code: "IE2108", vaccancy: 5 },
     { course_code: "IE2110", vaccancy: 8 },
   ]);
-
+  console.log(props.course.course_indices)
   //handleChange will select the course's index and update in Timetable.jsx via Landing.jsx
-  // const handleChange = (e) =>{
-    //send timetable index to Timetables.jsx
-    //must trigger re-render
-  //}
-   let options = index.map((index) => <option>{index.index_code}</option>);
+  const handleChange = (e) =>{
+    props.setChosenIndex(e.target.value)
+  }
+   let options = course_indices.map((index) => <option>{index.index_code}</option>);
   //mapping options and course for easy display (refactoring code)
     let element = courses.map((course, i) => { 
     //need an async function here and cannot use async in map
@@ -30,7 +30,7 @@ const CourseReg = (props) => {
       <tr>
         <th>{i + 1}</th>
         <td>{course.course_code}</td>
-        <select className="select select-ghost w-full max-w-xs">
+        <select className="select select-ghost w-full max-w-xs" value={} onChange={handleChange}>
           {options}
         </select>
         <td>{`${course.vaccancy}`}</td>
