@@ -1,9 +1,15 @@
-import React from 'react'
+import React from "react";
+import "./Logo.css";
 
-const Logo = () => {
+const Logo = (props) => {
   return (
-    <div className='text-yellow font-extra-black tracking-wider text-4xl'>STARS WAR</div>
-  )
-}
+    <img
+      src={require("../assets/Logo_04.png")}
+      className="Navbar-Logo"
+      alt="Website-Logo"
+      {...props}
+    />
+  );
+};
 
-export default Logo
+export default Logo;

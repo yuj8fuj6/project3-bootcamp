@@ -13,6 +13,7 @@
 
 # misc
 kendo-ui-license.txt
+.env
 .DS_Store
 .env.local
 .env.development.local

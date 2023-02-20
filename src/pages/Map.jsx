@@ -1,13 +1,15 @@
-import React from 'react'; 
-import Logo from '../components/Logo';
+import React from "react";
+import Navbar from "../components/NavBar";
 
 const Map = () => {
   return (
+    <>
+    <Navbar />
     <div>
-      <Logo />
       <div className="bg-darkgrey text-yellow">Map</div>
     </div>
+    </>
   );
-}
+};
 
-export default Map
+export default Map;

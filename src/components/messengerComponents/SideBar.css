@@ -1,0 +1,22 @@
+.side-bar-container {
+  background-color: white;
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+}
+
+.side-bar-wrapper {
+  width: 100%;
+  padding-left: 10%;
+  padding-right: 10%;
+  overflow: auto;
+}
+
+.side-bar-tabs {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
