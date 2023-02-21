@@ -8,16 +8,18 @@ const Profile = () => {
   const { isAuthenticated, loginWithRedirect } = useAuth0();
   const user = useContext(UserContext);
   const {
+    id, 
     admin,
     email_address,
     first_name,
     last_name,
     phone_number,
     professor,
-    profile_pic_url,
     student,
     updatedAt,
   } = user.userData;
+
+  const profile_pic_url = user.userPhotoURL; 
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -71,6 +73,7 @@ const Profile = () => {
         updatedAt={updatedAt}
         student={student}
         professor={professor}
+        id = {id}
       />
     </div>
   );

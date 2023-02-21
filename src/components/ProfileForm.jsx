@@ -4,6 +4,7 @@ import Button from "./Button";
 import axios from "axios";
 import { storage } from "../firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { BACKEND_URL } from "../constants.js";
 
 const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
 
@@ -16,6 +17,7 @@ const ProfileForm = ({
   updatedAt,
   student,
   professor,
+  id,
 }) => {
   const { getAccessTokenSilently } = useAuth0();
   const [phoneContact, setPhoneContact] = useState(phone);
@@ -52,16 +54,50 @@ const ProfileForm = ({
     });
   };
 
+  const uploadPhoto = async (updatedPhotoFile) => {
+    const profilePhotoRef = ref(storage, `${lastName} ${firstName}`);
+    if (updatedPhotoFile) {
+      const photoURL = uploadBytes(profilePhotoRef, updatedPhotoFile)
+        .then((snapshot) => {
+          return getDownloadURL(snapshot.ref);
+        })
+        .then((url) => {
+          setProfilePhotoURL(url);
+          return url;
+        });
+      return photoURL;
+    }
+  };
+
   const handlePhotoSubmit = async (e) => {
     e.preventDefault();
-    const profilePhotoRef = ref(storage, `${lastName} ${firstName}`);
-    await uploadBytes(profilePhotoRef, updatedPhotoFile).then(() =>
-      getDownloadURL(profilePhotoRef).then((url) => setProfilePhotoURL(url)),
-    );
+    let photoURL = await uploadPhoto(updatedPhotoFile);
+    // Do not know why this code below only works after 2 clicks.
+    // const profilePhotoRef = ref(storage, `${lastName} ${firstName}`);
+    // await uploadBytes(profilePhotoRef, updatedPhotoFile).then(() =>
+    //   getDownloadURL(profilePhotoRef).then((downloadURL) => {
+    //     // console.log(downloadURL);
+    //     setProfilePhotoURL(downloadURL);
+    //     // console.log(profilePhotoURL);
+    //   }),
+    // );
+    await axios
+      .post(`${BACKEND_URL}/users/photoURL`, {
+        photoURL: `${photoURL}`,
+        user_id: `${id}`,
+      })
+      .then((res) => {
+        console.log(res.data.profile_pic_url);
+        setUpdatedPhotoFileURL(res.data.profile_pic_url);
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("Profile photo upload is unsuccessful.");
+      });
+
     alert("Profile photo has been successfully uploaded!");
+    setProfilePhotoURL("");
   };
-  // console.log(updatedPhotoFile.name);
-  // console.log(profilePhotoURL);
 
   return (
     <div className="pt-5 px-20 grid grid-cols-1 justify-center w-full max-h-full">
