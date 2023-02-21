@@ -23,6 +23,7 @@ export const UserContextProvider = (props) => {
     if (email) {
       axios.get(`${BACKEND_URL}/users/${email}`).then((response) => {
         setUserData(response.data);
+        console.log(userData);
       });
     }
   }, [email]);
