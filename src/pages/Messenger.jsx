@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useMemo } from "react";
 import io from "socket.io-client";
 import Message from "../components/Message";
 import "./messenger.css";
@@ -8,12 +8,11 @@ import Conversation from "../components/Conversation";
 import { UserContext } from "../contexts/UserContext";
 import { useAuth0 } from "@auth0/auth0-react";
 
-const socket = io.connect(`http://localhost:3000`);
-
 const Messenger = () => {
+  const socket = useMemo(() => io("http://localhost:3000"), []);
   const { isAuthenticated, loginWithRedirect } = useAuth0();
   const user = useContext(UserContext);
-  const { email_address, first_name, last_name } = user;
+  const { email_address, first_name, last_name, profile_pic_url } = user;
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -21,23 +20,24 @@ const Messenger = () => {
     }
   });
 
+  // add users in the chatroom to an array
+  // useEffect not triggering
+  // useEffect(() => {
+  //   socket.emit("add_user", email_address);
+  //   console.log("added user", email_address);
+  //   socket.on("get_users", (email_address) => {
+  //     console.log([email_address]);
+  //   });
+  // }, [email_address]);
+
   //<<<<<<<JOIN ROOM>>>>>>
   const [room, setRoom] = useState("");
-  const joinRoom = () => {
+  const joinRoom = async () => {
     if (room !== "") {
       socket.emit("join_room", { room, email_address });
-      // socket.emit("join_room", {user.email, room, targetUser.email})
       console.log(`${first_name} ${last_name} has joined room ${room}`);
     }
   };
-
-  // add users in the chatroom to an array
-  useEffect(() => {
-    socket.emit("add_user", email_address);
-    socket.on("get_users", (email_address) => {
-      console.log(email_address);
-    });
-  }, [email_address]);
 
   return (
     <>
@@ -67,9 +67,10 @@ const Messenger = () => {
             <Message
               socket={socket}
               room={room}
-              email={email_address}
+              email_address={email_address}
               firstName={first_name}
               lastName={last_name}
+              profilePic={profile_pic_url}
             />
           </div>
         </div>

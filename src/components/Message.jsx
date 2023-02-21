@@ -3,15 +3,22 @@ import React, { useState, useEffect } from "react";
 import "./message.css";
 import ScrollToBottom from "react-scroll-to-bottom";
 import { Button, Input } from "antd";
-import LoggedInUserDisplay from "./LoggedInUserDisplay";
 import { useAuth0 } from "@auth0/auth0-react";
 // import { UserContext } from "../contexts/UserContext";
 
-export default function Message({ socket, room, firstName, lastName }) {
+export default function Message({
+  socket,
+  room,
+  email_address,
+  firstName,
+  lastName,
+  profilePic,
+}) {
   const [currentMessage, setCurrentMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
+  const [allMessages, setAllMessages] = useState([]);
   const { isAuthenticated, loginWithRedirect } = useAuth0();
-  const user = firstName + " " + lastName;
+  const author = firstName + " " + lastName;
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -22,57 +29,70 @@ export default function Message({ socket, room, firstName, lastName }) {
   const sendMessage = async () => {
     if (currentMessage !== "") {
       const messageData = {
-        room: room,
-        sender: user,
         message: currentMessage,
+        room: room,
+        sender: email_address,
         time:
           new Date(Date.now()).getHours() +
           ":" +
           new Date(Date.now()).getMinutes(),
       };
 
-      await socket.emit("send_message", messageData);
-      console.log(messageData);
+      await socket.emit("send_message", {
+        currentMessage,
+        room,
+        email_address,
+      });
+      console.log("send message", messageData);
       setMessageList((prevList) => [...prevList, messageData]);
       // clears input after every message sent
       setCurrentMessage("");
     }
   };
 
-  // const sendMessage = async () => {
-  //   if (currentMessage !== "") {
-  //     const messageData = {
-  //       message: currentMessage,
-  //       sender: user.id,
-  //       time:
-  //         new Date(Date.now()).getHours() +
-  //         ":" +
-  //         new Date(Date.now()).getMinutes(),
-  //     };
-
-  //     const receiverId = current
-
-  //     await socket.emit("send_message", {
-  //       message
-  //     });
-  //     console.log(messageData);
-  //     setMessageList((prevList) => [...prevList, messageData]);
-  //     // clears input after every message sent
-  //     setCurrentMessage("");
-  //   }
-  // };
-
+  // updated chat when someone sends message
+  // useEffect not triggering when emitting to specific room
   useEffect(() => {
+    console.log("HELLO");
+    console.log("ROOM", room);
     socket.on("receive_message", (data) => {
-      console.log(data);
+      console.log("emit receive message", data);
       setMessageList((prevList) => [...prevList, data]);
     });
-  }, [socket]);
+  }, [socket, room]);
+
+  // socket.on("receive_message", (data) => {
+  //   console.log("emit receive message", data);
+  //   setMessageList((prevList) => [...prevList, data]);
+  // });
+
+  // useEffect(() => {
+  //   // console.log(socket);
+  //   console.log("HELLO");
+
+  //   // console.log("WORLD");
+  //   // socket.on("send_chatData", (data) => {
+  //   //   console.log("emit send chatData", data);
+  //   //   setAllMessages(data);
+  //   // });
+  // }, [socket]);
 
   return (
     <div className="message">
       <div className="messageUser">
-        <LoggedInUserDisplay />
+        <div className="messengerInfoContainer">
+          <img
+            src={profilePic}
+            alt="profile pic"
+            className="messengerProfileImage"
+          />
+          <div>
+            <div>
+              {firstName} {lastName}
+            </div>
+            <div>{email_address}</div>
+          </div>
+        </div>
         <div className="messageButtons">
           <Button>Delete chat</Button>
           <Button>View profile</Button>
@@ -80,15 +100,16 @@ export default function Message({ socket, room, firstName, lastName }) {
       </div>
       <div className="messageBody">
         <ScrollToBottom className="messageContainer">
-          {messageList.map((messageContent) => {
+          {messageList.map((messageContent, index) => {
             return (
               <div
                 className="messageInfo"
-                id={user === messageContent.sender ? "you" : "other"}
+                id={email_address === messageContent.sender ? "you" : "other"}
+                key={index}
               >
                 <div>
                   <div className="messageMeta">
-                    <p id="author">{messageContent.sender}</p>
+                    <p id="author">{author}</p>
                     <p id="time">{messageContent.time}</p>
                   </div>
                   <div className="messageText">
