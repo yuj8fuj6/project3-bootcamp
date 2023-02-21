@@ -1,28 +1,48 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useContext } from "react";
 import { ForumContext } from "../contexts/ForumContext";
 import { UserContext } from "../contexts/UserContext";
-import { useNavigate, useParams } from "react-router-dom";
-import { BsArrowDownSquare, BsArrowUpSquare } from "react-icons/bs";
+import { useNavigate, useParams, Link } from "react-router-dom";
+import {
+  BsArrowDownSquare,
+  BsArrowUpSquare,
+  BsArrowLeftCircle,
+} from "react-icons/bs";
+import { Form, Formik } from "formik";
 
 const ForumFeedIndividual = () => {
   const param = useParams();
+  const navigate = useNavigate();
 
   const allForumData = useContext(ForumContext);
-  const { userData, allUserData } = useContext(UserContext);
+  const { userData, allUserData, userPhotoURL, userPhone } = useContext(UserContext);
+
   const allStudentData = allUserData.filter((user) => user.student);
   const forum = allForumData.filter((forum) => forum.id === param.id)[0];
 
-  // console.log(allForumData);
-  // console.log(forum);
-  // console.log(allStudentData);
+  const initialValues = { content: "" };
+
+  const handleSubmit = (values) => {
+    console.log(values.content);
+  };
 
   return (
     <div className="h-full rounded-lg">
-      <div className="p-1 h-[550px]">
+      <div className="p-1">
         {allForumData && (
-          <div className="bg-white rounded-lg mt-2 pt-2 pl-5 grid grid-cols-1 h-full content-start">
-            <div className="bg-darkgrey rounded-lg text-yellow text-sm font-bold w-[600px] h-fit py-1 indent-4 ">
-              {forum.course.course_code} - {forum.course.course_name}
+          <div className="bg-white rounded-lg mt-2 pt-2 pl-5 grid grid-cols-1 content-start">
+            <div className="flex flex-row">
+              <div className="bg-darkgrey rounded-lg text-yellow text-sm font-bold w-[500px] h-fit py-1 indent-4 ">
+                {forum.course.course_code} - {forum.course.course_name}
+              </div>
+              <button
+                className="hover:text-yellow hover-darkgrey font-extrabold text-xl flex flex-row ml-40 py-1"
+                onClick={() => {
+                  navigate("/forum");
+                }}
+              >
+                <BsArrowLeftCircle />
+                <span className="text-sm ml-2">Back to Summary</span>
+              </button>
             </div>
             <div className="grid grid-flow-col grid-cols-8 justify-start mt-2">
               <div className="text-darkgrey grid grid-cols-1 font-extrabold text-xl h-24">
@@ -36,7 +56,40 @@ const ForumFeedIndividual = () => {
                 <div className="text-darkgrey text-[10px] font-bold">
                   Created on {forum.updatedAt}
                 </div>
-                <div className="overflow-auto h-3/4 border-darkgrey border-1 mr-4 rounded-xl p-4 bg-slate-100">
+                <Formik
+                  initialValues={initialValues}
+                  onSubmit={(values, { resetForm }) => {
+                    handleSubmit(values);
+                    resetForm();
+                  }}
+                >
+                  {(props) => {
+                    return (
+                      <Form className="grid grid-cols-1 gap-2 mb-2">
+                        <label className="text-darkgrey font-extrabold">
+                          Post Content
+                        </label>
+                        <textarea
+                          type="text"
+                          id="content"
+                          name="content"
+                          className="border-darkgrey border-1 rounded mr-4 h-[125px] text-sm font-normal p-3"
+                          value={props.values.short || props.values.content}
+                          onChange={props.handleChange}
+                          placeholder="Post your content here!"
+                        />
+                        <button
+                          className="text-darkgrey text-sm border-1 rounded-full border-darkgrey w-3/12 hover:bg-darkgrey hover:text-yellow disabled:border-slate-400 disabled:text-slate-400"
+                          type="submit"
+                          disabled={props.values.content == ""}
+                        >
+                          Submit Post
+                        </button>
+                      </Form>
+                    );
+                  }}
+                </Formik>
+                <div className="overflow-auto h-72 border-darkgrey border-1 mb-4 mr-4 rounded-xl p-4 bg-slate-100">
                   {allForumData &&
                     forum.posts.map((post) => (
                       <div className="grid grid-flow-col grid-cols-8 justify-start h-24">
@@ -77,8 +130,14 @@ const ForumFeedIndividual = () => {
                             <BsArrowUpSquare className="hover:text-yellow hover:bg-darkgrey" />
                             <div>100</div>
                             <BsArrowDownSquare className="hover:text-yellow hover:bg-darkgrey" />
-                            <div className="ml-5">Direct Message</div>
-                            <div className="ml-5">Report</div>
+                            <div className="ml-5 hover:text-yellow">
+                              Direct Message
+                            </div>
+                            <Link to="/contact">
+                              <div className="ml-5 hover:text-yellow">
+                                Report
+                              </div>
+                            </Link>
                           </p>
                         </div>
                       </div>

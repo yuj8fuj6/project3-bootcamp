@@ -6,7 +6,7 @@ import { BsArrowDownSquare, BsArrowUpSquare } from "react-icons/bs";
 
 const ForumFeed = () => {
   const allForumData = useContext(ForumContext);
-  const { userData, allUserData } = useContext(UserContext);
+  const { userData, allUserData, userPhotoURL, userPhone} = useContext(UserContext);
   const allStudentData = allUserData.filter((user) => user.student);
 
   // console.log(allForumData);
@@ -14,7 +14,7 @@ const ForumFeed = () => {
 
   return (
     <div className="h-full rounded-lg">
-      <div className="overflow-auto p-1 h-[550px]">
+      <div className="overflow-auto p-1 h-[600px]">
         {allForumData &&
           allForumData.map((forum, index) => (
             <div
