@@ -12,10 +12,9 @@ const CourseReg = (props) => {
   const studentData = props.studentData
   //const [indexData, setIndexData] = useState([]);//specific course indexs
   const [courseIndex, setCourseIndex] = useState({}); //update whenever user changes the index
-  const [vacancy, setVacancy] = useState(null)
-  const [courses, setCourse] = useState("");
+  const [courses, setCourse] = useState(""); //used as a query param
   const { data: indexData } = useGetIndexData(courses);
-  console.log(indexData)
+  // add course function: add courses to query to backend and add it to courseIndex to be transferred to other components
   const addCourse = () => {
     let course_code = prompt("Please enter course code", "");
     if(courses.length === 0){
@@ -24,18 +23,25 @@ const CourseReg = (props) => {
     else{
       setCourse(courses + `+${course_code}`)
     }
-    console.log(courses)
+    let course_index = {
+      ...courseIndex
+    }
+    course_index[course_code] = undefined;
+    setCourseIndex(course_index)
   }
 
-  const handleChange = (e) =>{
-    setVacancy(e.target.value)
+  const handleChange = (e, course) =>{
+    let course_index = {...courseIndex}
+    course_index[course.course_code] = course.course_indices[e.target.value].index_code;
+    setCourseIndex(course_index)
+    console.log(course_index)
   }
   let element
   if(indexData !== undefined){
     element = indexData.map((course, i) => {
+      //console.log(course.course_indices.find(ele => ele.index_code === 320671).vacancy)
       let options
       if(course.course_indices !== undefined){
-        console.log(course);
         options = course.course_indices.map((index, i) => {
           let x = (
               <option value={i}>{index.index_code}</option>
@@ -50,16 +56,14 @@ const CourseReg = (props) => {
           <td>{course.course_code}</td>
           <select
             className="select select-bordered w-full max-w-xs"
-            onChange={handleChange}
+            onChange={(e) => handleChange(e, course)}
           >
             <option disabled selected>
               Choose Index
             </option>
             {options}
           </select>
-          <td>
-            {vacancy === null ? "--" : course.course_indices[vacancy].vacancy}
-          </td>
+          <td>{courseIndex[course.course_code] === undefined ? "--": course.course_indices.find(ele => ele.index_code === courseIndex[course.course_code]).vacancy }</td>
         </tr>
       );
     })
