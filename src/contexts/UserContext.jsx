@@ -53,11 +53,10 @@ export const UserContextProvider = (props) => {
     }
   }, [userData.phone_number]);
 
-  console.log(userPhone);
 
   return (
     <UserContext.Provider
-      value={{ userData, allUserData, userPhotoURL, userPhone }}
+      value={{ userData, allUserData, userPhotoURL, userPhone, setUserPhone }}
     >
       {props.children}
     </UserContext.Provider>

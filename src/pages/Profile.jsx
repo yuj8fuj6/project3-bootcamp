@@ -20,6 +20,7 @@ const Profile = () => {
 
   const profile_pic_url = user.userPhotoURL; 
   const phone_number = user.userPhone; 
+  const setUserPhone = user.setUserPhone; 
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -74,6 +75,7 @@ const Profile = () => {
         student={student}
         professor={professor}
         id = {id}
+        setUserPhone = {setUserPhone}
       />
     </div>
   );
