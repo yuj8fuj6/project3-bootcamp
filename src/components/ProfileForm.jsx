@@ -18,7 +18,8 @@ const ProfileForm = ({
   student,
   professor,
   id,
-  setUserPhone,
+  setUserData,
+  userData,
 }) => {
   const { getAccessTokenSilently } = useAuth0();
   const [phoneContact, setPhoneContact] = useState(phone);
@@ -63,7 +64,7 @@ const ProfileForm = ({
       .then((res) => {
         console.log(res.data.phone_number);
         setPhoneContact(res.data.phone_number);
-        setUserPhone(res.data.phone_number);
+        setUserData({ ...userData, phone_number: res.data.phone_number });
       })
       .catch((err) => {
         console.log(err);
@@ -111,6 +112,7 @@ const ProfileForm = ({
       .then((res) => {
         console.log(res.data.profile_pic_url);
         setUpdatedPhotoFileURL(res.data.profile_pic_url);
+        setUserData({ ...userData, profile_pic_url: res.data.profile_pic_url });
       })
       .catch((err) => {
         console.log(err);

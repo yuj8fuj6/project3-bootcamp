@@ -8,7 +8,7 @@ const Profile = () => {
   const { isAuthenticated, loginWithRedirect } = useAuth0();
   const user = useContext(UserContext);
   const {
-    id, 
+    id,
     admin,
     email_address,
     first_name,
@@ -16,11 +16,12 @@ const Profile = () => {
     professor,
     student,
     updatedAt,
+    profile_pic_url,
+    phone_number,
   } = user.userData;
 
-  const profile_pic_url = user.userPhotoURL; 
-  const phone_number = user.userPhone; 
-  const setUserPhone = user.setUserPhone; 
+  const setUserData = user.setUserData;
+  const userData = user.userData;
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -66,16 +67,17 @@ const Profile = () => {
         Note: Only the contact phone no. field and profile picture are editable.
       </div>
       <ProfileForm
-        lastName = {last_name}
-        firstName = {first_name}
+        lastName={last_name}
+        firstName={first_name}
         email={email_address}
         phone={phone_number}
         url={profile_pic_url}
         updatedAt={updatedAt}
         student={student}
         professor={professor}
-        id = {id}
-        setUserPhone = {setUserPhone}
+        id={id}
+        setUserData={setUserData}
+        userData={userData}
       />
     </div>
   );
