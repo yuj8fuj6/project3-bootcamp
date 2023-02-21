@@ -40,8 +40,6 @@ const ProfileForm = ({
     }
   }, [phoneContact]);
 
-  console.log(phoneContact);
-
   const handleUpdatedPhoto = (e) => {
     setUpdatedPhotoFile(e.target.files[0]);
     const urlDisplay = URL.createObjectURL(e.target.files[0]);

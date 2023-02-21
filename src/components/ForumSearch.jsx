@@ -4,23 +4,40 @@ import Button from "./Button";
 import { Formik, Form, Field } from "formik";
 import { Link } from "react-router-dom";
 import { ForumContext } from "../contexts/ForumContext";
+import { CourseContext } from "../contexts/CourseContext";
 import { Modal } from "antd";
+import axios from "axios";
+
+import { BACKEND_URL } from "../constants.js";
 
 const { Item } = Menu;
 
 const ForumSearch = () => {
   const allForumData = useContext(ForumContext);
+  const allCourseData = useContext(CourseContext);
   const [filteredForums, setFilteredForums] = useState([]);
   const [filterState, setFilterState] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const [filteredCourses, setFilteredCourses] = useState([]);
 
   const handleClick = () => setOpenModal(true);
 
   const initialValues = { code: "", name: "", content: "" };
 
+  useEffect(() => {
+    axios.get(`${BACKEND_URL}/forums/filteredCourses`).then((response) => {
+      setFilteredCourses(response.data);
+    });
+  }, [allCourseData]);
+
+  console.log(filteredCourses);
+
   const handleSubmit = (values) => {
     console.log(values);
   };
+
+  console.log(allCourseData);
+  console.log(allForumData);
 
   return (
     <div>
@@ -66,27 +83,45 @@ const ForumSearch = () => {
                       <label htmlFor="code" className="text-sm font-bold mt-4">
                         Course Code
                       </label>
-                      <input
+                      <select
                         type="text"
                         id="code"
                         name="code"
                         className="border-darkgrey border-1 rounded text-sm font-normal indent-3"
                         value={props.values.code}
                         onChange={props.handleChange}
-                        placeholder="MH1811"
-                      />
+                      >
+                        {allCourseData &&
+                          filteredCourses.map((course) => (
+                            <option
+                              value={course.course_code}
+                              label={course.course_code}
+                            >
+                              {course.course_code}
+                            </option>
+                          ))}
+                      </select>
                       <label className="text-sm font-bold mt-4">
                         Course Title
                       </label>
-                      <input
+                      <select
                         type="text"
                         id="name"
                         name="name"
                         className="border-darkgrey border-1 rounded text-sm font-normal indent-3"
                         value={props.values.name}
                         onChange={props.handleChange}
-                        placeholder="MATHEMATICS"
-                      />
+                      >
+                        {allCourseData &&
+                          filteredCourses.map((course) => (
+                            <option
+                              value={course.course_name}
+                              label={course.course_name}
+                            >
+                              {course.course_name}
+                            </option>
+                          ))}
+                      </select>
                       <label className="text-sm font-bold mt-4">
                         Course Description
                       </label>
@@ -103,6 +138,11 @@ const ForumSearch = () => {
                   );
                 }}
               </Formik>
+              <div className="flex flex-row justify-center">
+                <button className="bg-darkgrey rounded-full border-1 p-1 text-yellow font-bold px-3 mt-4 hover:bg-yellow hover:text-darkgrey">
+                  Confirm
+                </button>
+              </div>
             </div>
           </div>
         </Modal>
