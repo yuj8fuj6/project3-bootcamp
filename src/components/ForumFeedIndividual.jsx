@@ -14,7 +14,7 @@ const ForumFeedIndividual = () => {
   const navigate = useNavigate();
 
   const allForumData = useContext(ForumContext);
-  const { userData, allUserData, userPhotoURL } = useContext(UserContext);
+  const { userData, allUserData, userPhotoURL, userPhone } = useContext(UserContext);
 
   const allStudentData = allUserData.filter((user) => user.student);
   const forum = allForumData.filter((forum) => forum.id === param.id)[0];

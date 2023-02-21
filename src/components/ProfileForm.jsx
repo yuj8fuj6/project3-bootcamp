@@ -38,6 +38,8 @@ const ProfileForm = ({
     }
   }, [phoneContact]);
 
+  console.log(phoneContact)
+
   const handleUpdatedPhoto = (e) => {
     setUpdatedPhotoFile(e.target.files[0]);
     const urlDisplay = URL.createObjectURL(e.target.files[0]);
@@ -46,12 +48,28 @@ const ProfileForm = ({
   };
 
   const handleSubmit = async (e) => {
-    await e.preventDefault();
+    e.preventDefault();
 
     const accessToken = await getAccessTokenSilently({
       audience: `${audience}`,
       scope: "read:current_user",
     });
+    await axios
+      .post(`${BACKEND_URL}/users/profile`, {
+        phone_number: `${phoneContact}`,
+        user_id: `${id}`,
+      })
+      .then((res) => {
+        console.log(res.data.phone_number);
+        setPhoneContact(res.data.phone_number);
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("Changes to profile are unsuccessful.");
+      });
+
+    alert("Profile has been successfully updated!");
+    setChangedState(false);
   };
 
   const uploadPhoto = async (updatedPhotoFile) => {
@@ -97,6 +115,7 @@ const ProfileForm = ({
 
     alert("Profile photo has been successfully uploaded!");
     setProfilePhotoURL("");
+    setChangedPhoto(false);
   };
 
   return (
@@ -299,7 +318,7 @@ const ProfileForm = ({
         </div>
       </div>
       <div className="flex justify-center mt-5">
-        {changedState && <Button>Confirm Changes</Button>}
+        {changedState && <Button onClick={handleSubmit}>Confirm Changes</Button>}
       </div>
       <div className="px-5 text-base text-yellow">Updated at: {updatedAt}</div>
     </div>

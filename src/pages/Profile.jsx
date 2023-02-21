@@ -13,13 +13,13 @@ const Profile = () => {
     email_address,
     first_name,
     last_name,
-    phone_number,
     professor,
     student,
     updatedAt,
   } = user.userData;
 
   const profile_pic_url = user.userPhotoURL; 
+  const phone_number = user.userPhone; 
 
   useEffect(() => {
     if (!isAuthenticated) {

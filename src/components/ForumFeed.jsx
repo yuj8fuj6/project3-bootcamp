@@ -6,7 +6,7 @@ import { BsArrowDownSquare, BsArrowUpSquare } from "react-icons/bs";
 
 const ForumFeed = () => {
   const allForumData = useContext(ForumContext);
-  const { userData, allUserData, userPhotoURL} = useContext(UserContext);
+  const { userData, allUserData, userPhotoURL, userPhone} = useContext(UserContext);
   const allStudentData = allUserData.filter((user) => user.student);
 
   // console.log(allForumData);
