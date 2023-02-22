@@ -1,16 +1,44 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./message.css";
 import { Button, Input } from "antd";
 import { useAuth0 } from "@auth0/auth0-react";
 
-export default function Message() {
+export default function Message(socket, room, email_address) {
   const { isAuthenticated, loginWithRedirect } = useAuth0();
+  const [currentMessage, setCurrentMessage] = useState("");
+  const [messageList, setMessageList] = useState([]);
 
   useEffect(() => {
     if (!isAuthenticated) {
       loginWithRedirect();
     }
   });
+
+  const sendMessage = async () => {
+    if (currentMessage) {
+      const messageData = {
+        message: currentMessage,
+        room: room,
+        sender: email_address,
+        time: new Date(Date.now()),
+      };
+      await socket.emit("send_message", {
+        currentMessage,
+        room,
+        email_address,
+      });
+      console.log("SENT MESSAGE", messageData);
+      setMessageList((prevMessage) => [...prevMessage, messageData]);
+      setCurrentMessage("");
+    }
+  };
+
+  // useEffect(() => {
+  //   // socket.on("receive_message", (data) => {
+  //   //   console.log("RECEIVED MESSAGE", data);
+  //   //   setMessageList((prevMessage) => [...prevMessage, data]);
+  //   });
+  // }, [socket]);
 
   return (
     <div className="message">
@@ -43,8 +71,15 @@ export default function Message() {
         </div>
       </div>
       <div className="messageBottom">
-        <Input />
-        <Button>Send</Button>
+        <Input
+          type="text"
+          value={currentMessage}
+          placeholder="Type something..."
+          onChange={(e) => {
+            setCurrentMessage(e.target.value);
+          }}
+        />
+        <Button onClick={() => sendMessage()}>Send</Button>
         <Button>Confirm Index Swap</Button>
       </div>
     </div>

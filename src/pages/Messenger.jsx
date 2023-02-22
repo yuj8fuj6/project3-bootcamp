@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Message from "../components/Message";
 import "./messenger.css";
 import { Button, Input } from "antd";
@@ -6,12 +6,15 @@ import Navbar from "../components/NavBar";
 import Conversation from "../components/Conversation";
 import { useAuth0 } from "@auth0/auth0-react";
 import io from "socket.io-client";
+import { UserContext } from "../contexts/UserContext";
 
 const socket = io.connect("http://localhost:3000");
 
 const Messenger = () => {
   const { isAuthenticated, loginWithRedirect } = useAuth0();
   const [room, setRoom] = useState("");
+  const user = useContext(UserContext);
+  const { email_address } = user.userData;
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -22,9 +25,10 @@ const Messenger = () => {
   //<<<<<<<JOIN ROOM>>>>>>
   const joinRoom = async () => {
     if (room) {
-      socket.emit("join_room", { room });
-      console.log(`User has joined room ${room}`);
+      socket.emit("join_room", { room, email_address });
+      console.log(`${email_address} has joined room ${room}`);
     }
+    setRoom("");
   };
 
   return (
@@ -37,6 +41,7 @@ const Messenger = () => {
             <h3>Join chat</h3>
             <Input
               type="text"
+              value={room}
               placeholder="Room ID..."
               onChange={(event) => {
                 setRoom(event.target.value);
@@ -52,7 +57,11 @@ const Messenger = () => {
         </div>
         <div className="chatConversation">
           <div className="chatConversationWrapper">
-            <Message />
+            <Message
+              socket={socket}
+              room={room}
+              email_address={email_address}
+            />
           </div>
         </div>
       </div>
