@@ -15,6 +15,7 @@ export default function Message({
   const { isAuthenticated, loginWithRedirect } = useAuth0();
   const [currentMessage, setCurrentMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
+  const [allMessages, setAllMessages] = useState([]);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -48,6 +49,13 @@ export default function Message({
     });
   }, [socket]);
 
+  useEffect(() => {
+    socket.on("send_chatData", (data) => {
+      console.log("SEND CHAT DATA", data);
+      setAllMessages("");
+    });
+  }, []);
+
   return (
     <div className="message">
       <div className="messageUser">
@@ -71,6 +79,32 @@ export default function Message({
       </div>
       <div className="messageBody">
         <ScrollToBottom className="messageContainer">
+          {/* {allMessages.map((messageContent, index) => {
+            return (
+              <div
+                className="messageInfo"
+                id={email_address === messageContent.sender ? "you" : "other"}
+                key={index}
+              >
+                <div className="messageFlex">
+                  <img
+                    src={profilePic}
+                    alt="profile pic"
+                    className="messageProfileImage"
+                  />
+                  <div>
+                    <div className="messageMeta">
+                      <p id="author">{messageContent.sender}</p>
+                      <p id="time">{messageContent.time}</p>
+                    </div>
+                    <div className="messageText">
+                      <p>{messageContent.message}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })} */}
           {messageList.map((messageContent, index) => {
             return (
               <div
