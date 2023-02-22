@@ -14,7 +14,8 @@ const Messenger = () => {
   const { isAuthenticated, loginWithRedirect } = useAuth0();
   const [room, setRoom] = useState("");
   const user = useContext(UserContext);
-  const { email_address } = user.userData;
+  const { email_address, first_name, last_name, profile_pic_url } =
+    user.userData;
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -59,6 +60,9 @@ const Messenger = () => {
               socket={socket}
               room={room}
               email_address={email_address}
+              firstName={first_name}
+              lastName={last_name}
+              profilePic={profile_pic_url}
             />
           </div>
         </div>
