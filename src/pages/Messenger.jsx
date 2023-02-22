@@ -24,7 +24,7 @@ const Messenger = () => {
   });
 
   //<<<<<<<JOIN ROOM>>>>>>
-  const joinRoom = async () => {
+  const joinRoom = () => {
     if (room) {
       socket.emit("join_room", { room, email_address });
       console.log(`${email_address} has joined room ${room}`);

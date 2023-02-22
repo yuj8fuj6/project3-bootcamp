@@ -23,12 +23,24 @@ export default function Message({
     }
   }, []);
 
+  // add users in the chatroom to an array
+  // NOT WORKING
+  // useEffect(() => {
+  //   socket.emit("add_user", email_address);
+  //   console.log("added user", email_address);
+  //   socket.on("get_users", (email_address) => {
+  //     console.log([email_address]);
+  //   });
+  // }, []);
+
   const sendMessage = async () => {
     if (currentMessage) {
       const messageData = {
         message: currentMessage,
         room: room,
         sender: email_address,
+        name: `${firstName} ${lastName}`,
+        profileDP: profilePic,
         time:
           new Date(Date.now()).getHours() +
           ":" +
@@ -52,7 +64,7 @@ export default function Message({
   useEffect(() => {
     socket.on("send_chatData", (data) => {
       console.log("SEND CHAT DATA", data);
-      setAllMessages("");
+      setAllMessages(data);
     });
   }, []);
 
@@ -79,32 +91,39 @@ export default function Message({
       </div>
       <div className="messageBody">
         <ScrollToBottom className="messageContainer">
-          {/* {allMessages.map((messageContent, index) => {
-            return (
-              <div
-                className="messageInfo"
-                id={email_address === messageContent.sender ? "you" : "other"}
-                key={index}
-              >
-                <div className="messageFlex">
-                  <img
-                    src={profilePic}
-                    alt="profile pic"
-                    className="messageProfileImage"
-                  />
-                  <div>
-                    <div className="messageMeta">
-                      <p id="author">{messageContent.sender}</p>
-                      <p id="time">{messageContent.time}</p>
-                    </div>
-                    <div className="messageText">
-                      <p>{messageContent.message}</p>
+          {allMessages &&
+            allMessages.map((allMessagesContent, index) => {
+              return (
+                <div
+                  className="messageInfo"
+                  id={
+                    email_address === allMessagesContent.authorUser.first_name
+                      ? "you"
+                      : "other"
+                  }
+                  key={index}
+                >
+                  <div className="messageFlex">
+                    <img
+                      src={allMessagesContent.authorUser.profile_pic_url}
+                      alt="profile pic"
+                      className="messageProfileImage"
+                    />
+                    <div>
+                      <div className="messageMeta">
+                        <p id="author">
+                          {`${allMessagesContent.authorUser.first_name} ${allMessagesContent.authorUser.last_name}`}
+                        </p>
+                        <p id="time">{allMessagesContent.id}</p>
+                      </div>
+                      <div className="messageText">
+                        <p>{allMessagesContent.message}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            );
-          })} */}
+              );
+            })}
           {messageList.map((messageContent, index) => {
             return (
               <div
@@ -114,13 +133,13 @@ export default function Message({
               >
                 <div className="messageFlex">
                   <img
-                    src={profilePic}
+                    src={messageContent.profileDP}
                     alt="profile pic"
                     className="messageProfileImage"
                   />
                   <div>
                     <div className="messageMeta">
-                      <p id="author">{messageContent.sender}</p>
+                      <p id="author">{messageContent.name}</p>
                       <p id="time">{messageContent.time}</p>
                     </div>
                     <div className="messageText">
