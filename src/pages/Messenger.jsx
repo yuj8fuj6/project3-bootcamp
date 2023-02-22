@@ -1,19 +1,30 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Message from "../components/Message";
 import "./messenger.css";
 import { Button, Input } from "antd";
 import Navbar from "../components/NavBar";
 import Conversation from "../components/Conversation";
 import { useAuth0 } from "@auth0/auth0-react";
+import io from "socket.io-client";
+
+const socket = io.connect("http://localhost:3000");
 
 const Messenger = () => {
   const { isAuthenticated, loginWithRedirect } = useAuth0();
+  const [room, setRoom] = useState("");
 
   useEffect(() => {
     if (!isAuthenticated) {
       loginWithRedirect();
     }
   });
+
+  //<<<<<<<JOIN ROOM>>>>>>
+  const joinRoom = async () => {
+    if (room) {
+      socket.emit("join_room", { room });
+    }
+  };
 
   return (
     <>
@@ -27,10 +38,12 @@ const Messenger = () => {
               type="text"
               placeholder="Room ID..."
               onChange={(event) => {
-                // setRoom(event.target.value);
+                setRoom(event.target.value);
               }}
             />
-            <Button type="default">Join a room</Button>
+            <Button type="default" onClick={() => joinRoom()}>
+              Join a room
+            </Button>
             <Conversation />
             <Conversation />
             <Conversation />
