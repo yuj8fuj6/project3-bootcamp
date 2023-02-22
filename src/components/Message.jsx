@@ -3,7 +3,7 @@ import "./message.css";
 import { Button, Input } from "antd";
 import { useAuth0 } from "@auth0/auth0-react";
 
-export default function Message(socket, room, email_address) {
+export default function Message({ socket, room, email_address }) {
   const { isAuthenticated, loginWithRedirect } = useAuth0();
   const [currentMessage, setCurrentMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
@@ -20,25 +20,25 @@ export default function Message(socket, room, email_address) {
         message: currentMessage,
         room: room,
         sender: email_address,
-        time: new Date(Date.now()),
+        time:
+          new Date(Date.now()).getHours() +
+          ":" +
+          new Date(Date.now()).getMinutes(),
       };
-      await socket.emit("send_message", {
-        currentMessage,
-        room,
-        email_address,
-      });
+
+      await socket.emit("send_message", messageData);
       console.log("SENT MESSAGE", messageData);
       setMessageList((prevMessage) => [...prevMessage, messageData]);
       setCurrentMessage("");
     }
   };
 
-  // useEffect(() => {
-  //   // socket.on("receive_message", (data) => {
-  //   //   console.log("RECEIVED MESSAGE", data);
-  //   //   setMessageList((prevMessage) => [...prevMessage, data]);
-  //   });
-  // }, [socket]);
+  useEffect(() => {
+    socket.on("receive_message", (data) => {
+      console.log("RECEIVED MESSAGE", data);
+      setMessageList((prevMessage) => [...prevMessage, data]);
+    });
+  }, [socket]);
 
   return (
     <div className="message">
@@ -57,17 +57,25 @@ export default function Message(socket, room, email_address) {
       </div>
       <div className="messageBody">
         <div className="messageContainer">
-          <div className="messageInfo">
-            <div>
-              <div className="messageMeta">
-                <p id="author">SENDER</p>
-                <p id="time">TIME</p>
+          {messageList.map((messageContent, index) => {
+            return (
+              <div
+                className="messageInfo"
+                id={email_address === messageContent.sender ? "you" : "other"}
+                key={index}
+              >
+                <div>
+                  <div className="messageMeta">
+                    <p id="author">{messageContent.sender}</p>
+                    <p id="time">{messageContent.time}</p>
+                  </div>
+                  <div className="messageText">
+                    <p>{messageContent.message}</p>
+                  </div>
+                </div>
               </div>
-              <div className="messageText">
-                <p>MESSAGE</p>
-              </div>
-            </div>
-          </div>
+            );
+          })}
         </div>
       </div>
       <div className="messageBottom">

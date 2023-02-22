@@ -28,7 +28,6 @@ const Messenger = () => {
       socket.emit("join_room", { room, email_address });
       console.log(`${email_address} has joined room ${room}`);
     }
-    setRoom("");
   };
 
   return (
@@ -41,7 +40,6 @@ const Messenger = () => {
             <h3>Join chat</h3>
             <Input
               type="text"
-              value={room}
               placeholder="Room ID..."
               onChange={(event) => {
                 setRoom(event.target.value);
