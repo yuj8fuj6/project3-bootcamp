@@ -45,6 +45,7 @@ const Messenger = () => {
               onChange={(event) => {
                 setRoom(event.target.value);
               }}
+              onKeyPress={(e) => e.key === "Enter" && joinRoom()}
             />
             <Button type="default" onClick={() => joinRoom()}>
               Join a room
