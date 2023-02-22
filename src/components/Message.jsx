@@ -114,7 +114,7 @@ export default function Message({
                         <p id="author">
                           {`${allMessagesContent.authorUser.first_name} ${allMessagesContent.authorUser.last_name}`}
                         </p>
-                        <p id="time">{allMessagesContent.id}</p>
+                        <p id="time">{allMessagesContent.time}</p>
                       </div>
                       <div className="messageText">
                         <p>{allMessagesContent.message}</p>
@@ -140,7 +140,7 @@ export default function Message({
                   <div>
                     <div className="messageMeta">
                       <p id="author">{messageContent.name}</p>
-                      <p id="time">{messageContent.time}</p>
+                      <p id="time">{messageContent.createdAt}</p>
                     </div>
                     <div className="messageText">
                       <p>{messageContent.message}</p>
