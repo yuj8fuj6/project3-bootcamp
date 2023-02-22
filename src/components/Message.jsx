@@ -97,7 +97,8 @@ export default function Message({
                 <div
                   className="messageInfo"
                   id={
-                    email_address === allMessagesContent.authorUser.first_name
+                    email_address ===
+                    allMessagesContent.authorUser.email_address
                       ? "you"
                       : "other"
                   }
