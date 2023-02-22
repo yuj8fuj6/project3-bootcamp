@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
 import { ForumContext } from "../contexts/ForumContext";
 import { UserContext } from "../contexts/UserContext";
 import { useNavigate, useParams, Link } from "react-router-dom";
@@ -8,22 +9,49 @@ import {
   BsArrowLeftCircle,
 } from "react-icons/bs";
 import { Form, Formik } from "formik";
+import axios from "axios";
+
+import { BACKEND_URL } from "../constants.js";
+
+const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
 
 const ForumFeedIndividual = () => {
   const param = useParams();
   const navigate = useNavigate();
 
-  const {allForumData, setAllForumData} = useContext(ForumContext);
+  const { getAccessTokenSilently } = useAuth0();
+  const { allForumData, setAllForumData } = useContext(ForumContext);
   const { userData, allUserData, setUserData } = useContext(UserContext);
 
   const allStudentData = allUserData.filter((user) => user.student);
   const forum = allForumData.filter((forum) => forum.id === param.id)[0];
+  const currentUserStudentID = userData.student.id;
 
   const initialValues = { content: "" };
 
   const handleSubmit = async (values) => {
-    console.log(values.content);
+    const accessToken = await getAccessTokenSilently({
+      audience: `${audience}`,
+      scope: "read:current_user",
+    });
+    const newPost = {
+      student_id: currentUserStudentID,
+      content: `${values.content}`,
+      forum_id: forum.id,
+    };
+    await axios
+      .post(`${BACKEND_URL}/forums/newPost`, newPost)
+      .then((res) => {
+        setAllForumData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("No post was created!");
+      });
+    alert("New post has been successfully created!");
   };
+
+  const handleDelete = async () => {};
 
   return (
     <div className="h-full rounded-lg">
@@ -64,6 +92,7 @@ const ForumFeedIndividual = () => {
                   }}
                 >
                   {(props) => {
+                    console.log(props.values.content);
                     return (
                       <Form className="grid grid-cols-1 gap-2 mb-2">
                         <label className="text-darkgrey font-extrabold">

@@ -31,12 +31,9 @@ const ForumSearch = () => {
     axios.get(`${BACKEND_URL}/forums/filteredCourses`).then((response) => {
       setFilteredCourses(response.data);
     });
-  }, [allCourseData]);
-
-  console.log(allCourseData);
+  }, [allCourseData, allForumData]);
 
   const handleSubmit = async (values) => {
-    console.log(values);
     const accessToken = await getAccessTokenSilently({
       audience: `${audience}`,
       scope: "read:current_user",
