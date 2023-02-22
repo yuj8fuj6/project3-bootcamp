@@ -19,7 +19,7 @@ export const CourseContextProvider = (props) => {
   }, [isAuthenticated]);
 
   return (
-    <CourseContext.Provider value={allCourseData}>
+    <CourseContext.Provider value={{allCourseData, setAllCourseData}}>
       {props.children}
     </CourseContext.Provider>
   );

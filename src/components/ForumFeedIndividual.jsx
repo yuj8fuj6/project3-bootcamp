@@ -13,7 +13,7 @@ const ForumFeedIndividual = () => {
   const param = useParams();
   const navigate = useNavigate();
 
-  const allForumData = useContext(ForumContext);
+  const {allForumData, setAllForumData} = useContext(ForumContext);
   const { userData, allUserData, setUserData } = useContext(UserContext);
 
   const allStudentData = allUserData.filter((user) => user.student);

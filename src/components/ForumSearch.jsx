@@ -13,8 +13,8 @@ import { BACKEND_URL } from "../constants.js";
 const { Item } = Menu;
 
 const ForumSearch = () => {
-  const allForumData = useContext(ForumContext);
-  const allCourseData = useContext(CourseContext);
+  const { allForumData, setAllForumData } = useContext(ForumContext);
+  const { allCourseData, setAllCourseData } = useContext(CourseContext);
   const [filteredForums, setFilteredForums] = useState([]);
   const [filterState, setFilterState] = useState(false);
   const [openModal, setOpenModal] = useState(false);
@@ -30,14 +30,9 @@ const ForumSearch = () => {
     });
   }, [allCourseData]);
 
-  console.log(filteredCourses);
-
-  const handleSubmit = (values) => {
+  const handleSubmit = async (values) => {
     console.log(values);
   };
-
-  console.log(allCourseData);
-  console.log(allForumData);
 
   return (
     <div>

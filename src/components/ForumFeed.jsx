@@ -5,18 +5,18 @@ import { Link } from "react-router-dom";
 import { BsArrowDownSquare, BsArrowUpSquare } from "react-icons/bs";
 
 const ForumFeed = () => {
-  const allForumData = useContext(ForumContext);
+  const { allForumData, setAllForumData } = useContext(ForumContext);
   const { userData, allUserData, setUserData } = useContext(UserContext);
   const allStudentData = allUserData.filter((user) => user.student);
 
-  // console.log(allForumData);
+  console.log(allForumData);
   // console.log(allStudentData);
 
   return (
     <div className="h-full rounded-lg">
       <div className="overflow-auto p-1 h-[600px]">
         {allForumData &&
-          allForumData.map((forum, index) => (
+          allForumData.map((forum) => (
             <div
               className="bg-white rounded-lg mt-4 h-48 pt-4 pl-5 grid grid-cols-1 gap-5"
               key={forum.id}
