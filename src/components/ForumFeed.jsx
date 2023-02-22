@@ -22,7 +22,7 @@ const ForumFeed = () => {
               key={forum.id}
             >
               <Link to={`/forum/${forum.id}`}>
-                <div className="bg-darkgrey rounded-lg text-yellow text-sm font-bold w-[1000px] py-1 indent-4">
+                <div className="bg-darkgrey rounded-lg text-yellow text-sm font-bold w-[800px] py-1 indent-4">
                   {forum.course.course_code} - {forum.course.course_name}
                 </div>
                 <div className="grid grid-flow-col grid-cols-8 justify-start mt-2">

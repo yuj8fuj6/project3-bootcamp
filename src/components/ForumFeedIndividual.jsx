@@ -7,6 +7,7 @@ import {
   BsArrowDownSquare,
   BsArrowUpSquare,
   BsArrowLeftCircle,
+  BsFillTrashFill,
 } from "react-icons/bs";
 import { Form, Formik } from "formik";
 import axios from "axios";
@@ -51,7 +52,22 @@ const ForumFeedIndividual = () => {
     alert("New post has been successfully created!");
   };
 
-  const handleDelete = async () => {};
+  const handleDelete = async (postID) => {
+    const accessToken = await getAccessTokenSilently({
+      audience: `${audience}`,
+      scope: "read:current_user",
+    });
+    await axios
+      .post(`${BACKEND_URL}/forums/deletePost`, { postID: postID })
+      .then((res) => {
+        setAllForumData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("No post was deleted!");
+      });
+    alert("Post has been successfully deleted!");
+  };
 
   return (
     <div className="h-full rounded-lg">
@@ -92,7 +108,6 @@ const ForumFeedIndividual = () => {
                   }}
                 >
                   {(props) => {
-                    console.log(props.values.content);
                     return (
                       <Form className="grid grid-cols-1 gap-2 mb-2">
                         <label className="text-darkgrey font-extrabold">
@@ -167,6 +182,16 @@ const ForumFeedIndividual = () => {
                                 Report
                               </div>
                             </Link>
+                            {post.studentId === currentUserStudentID && (
+                              <button
+                                className="ml-5 hover:text-yellow text-lg text-red-400"
+                                onClick={() => {
+                                  handleDelete(post.id);
+                                }}
+                              >
+                                <BsFillTrashFill />
+                              </button>
+                            )}
                           </p>
                         </div>
                       </div>
