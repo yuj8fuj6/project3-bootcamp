@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
 import { Menu } from "antd";
 import Button from "./Button";
 import { Formik, Form, Field } from "formik";
@@ -10,9 +11,11 @@ import axios from "axios";
 
 import { BACKEND_URL } from "../constants.js";
 
+const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
 const { Item } = Menu;
 
 const ForumSearch = () => {
+  const { getAccessTokenSilently } = useAuth0();
   const { allForumData, setAllForumData } = useContext(ForumContext);
   const { allCourseData, setAllCourseData } = useContext(CourseContext);
   const [filteredForums, setFilteredForums] = useState([]);
@@ -30,8 +33,33 @@ const ForumSearch = () => {
     });
   }, [allCourseData]);
 
+  console.log(allCourseData);
+
   const handleSubmit = async (values) => {
     console.log(values);
+    const accessToken = await getAccessTokenSilently({
+      audience: `${audience}`,
+      scope: "read:current_user",
+    });
+    const newForumCourse = allCourseData.filter(
+      (course) => course.course_code == values.code,
+    )[0].id;
+    const newForum = {
+      title: `${values.code} - ${values.name}`,
+      description: `${values.content}`,
+      course_id: newForumCourse,
+    };
+    await axios
+      .post(`${BACKEND_URL}/forums/newForum`, newForum)
+      .then((res) => {
+        setAllForumData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("No forum was created!");
+      });
+    alert("New forum has been successfully created!");
+    setOpenModal(false);
   };
 
   return (
@@ -83,7 +111,7 @@ const ForumSearch = () => {
                         id="code"
                         name="code"
                         className="border-darkgrey border-1 rounded text-sm font-normal indent-3"
-                        value={props.values.code}
+                        value={props.values.short || props.values.code}
                         onChange={props.handleChange}
                       >
                         {allCourseData &&
@@ -104,7 +132,7 @@ const ForumSearch = () => {
                         id="name"
                         name="name"
                         className="border-darkgrey border-1 rounded text-sm font-normal indent-3"
-                        value={props.values.name}
+                        value={props.values.short || props.values.name}
                         onChange={props.handleChange}
                       >
                         {allCourseData &&
@@ -125,19 +153,22 @@ const ForumSearch = () => {
                         id="content"
                         name="content"
                         className="border-darkgrey border-1 rounded h-[125px] text-sm font-normal p-3"
-                        value={props.values.content}
+                        value={props.values.short || props.values.content}
                         onChange={props.handleChange}
                         placeholder="Post your content here!"
                       />
+                      <div className="flex flex-row justify-center">
+                        <button
+                          className="bg-darkgrey rounded-full border-1 p-1 text-yellow font-bold px-3 mt-4 hover:bg-yellow hover:text-darkgrey"
+                          type="submit"
+                        >
+                          Confirm
+                        </button>
+                      </div>
                     </Form>
                   );
                 }}
               </Formik>
-              <div className="flex flex-row justify-center">
-                <button className="bg-darkgrey rounded-full border-1 p-1 text-yellow font-bold px-3 mt-4 hover:bg-yellow hover:text-darkgrey">
-                  Confirm
-                </button>
-              </div>
             </div>
           </div>
         </Modal>

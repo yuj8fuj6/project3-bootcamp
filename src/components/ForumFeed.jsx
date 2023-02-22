@@ -9,7 +9,7 @@ const ForumFeed = () => {
   const { userData, allUserData, setUserData } = useContext(UserContext);
   const allStudentData = allUserData.filter((user) => user.student);
 
-  console.log(allForumData);
+  // console.log(allForumData);
   // console.log(allStudentData);
 
   return (
@@ -18,11 +18,11 @@ const ForumFeed = () => {
         {allForumData &&
           allForumData.map((forum) => (
             <div
-              className="bg-white rounded-lg mt-4 h-48 pt-4 pl-5 grid grid-cols-1 gap-5"
+              className="bg-white rounded-lg mt-4 h-[300px] pt-4 pl-5 grid grid-cols-1 gap-5"
               key={forum.id}
             >
               <Link to={`/forum/${forum.id}`}>
-                <div className="bg-darkgrey rounded-lg text-yellow text-sm font-bold w-[600px] py-1 indent-4">
+                <div className="bg-darkgrey rounded-lg text-yellow text-sm font-bold w-[1000px] py-1 indent-4">
                   {forum.course.course_code} - {forum.course.course_name}
                 </div>
                 <div className="grid grid-flow-col grid-cols-8 justify-start mt-2">
@@ -36,11 +36,12 @@ const ForumFeed = () => {
                   <div className="text-darkgrey text-lg col-span-7 font-extrabold">
                     <p>Latest Post:</p>
                     <p className="text-sm">
-                      "{forum.posts[forum.posts.length - 1].content}"
+                      {forum.posts.length != 0 &&
+                        `${forum.posts[forum.posts.length - 1].content}`}
                     </p>
                     <p className="text-sm font-normal">by </p>
                     <p className="text-sm font-normal">
-                      {allUserData &&
+                      {allUserData && forum.posts.length != 0 &&
                         `${
                           allStudentData.filter(
                             (user) =>
@@ -65,6 +66,12 @@ const ForumFeed = () => {
                 </div>
                 <div className="text-darkgrey text-[10px] font-bold">
                   Created on {forum.updatedAt}
+                </div>
+                <div className="border-darkgrey border-1 rounded-xl w-[600px] mt-2 p-2 text-xs">
+                  <h1 className="text-darkgrey font-bold">
+                    Course Brief Description
+                  </h1>
+                  <p className="text-darkgrey">{forum.description}</p>
                 </div>
               </Link>
             </div>

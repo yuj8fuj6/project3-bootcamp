@@ -21,7 +21,7 @@ const ForumFeedIndividual = () => {
 
   const initialValues = { content: "" };
 
-  const handleSubmit = (values) => {
+  const handleSubmit = async (values) => {
     console.log(values.content);
   };
 
