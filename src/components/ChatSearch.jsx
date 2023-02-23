@@ -3,9 +3,10 @@ import { Input, Button } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import "./chatSearch.css";
 
-const ChatSearch = ({ user }) => {
+const ChatSearch = ({ user, socket }) => {
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [filterState, setFilterState] = useState("");
+  const [room, setRoom] = useState("");
 
   const handleFilter = (e) => {
     const searchUser = e.target.value;
@@ -23,6 +24,22 @@ const ChatSearch = ({ user }) => {
   const clearInput = () => {
     setFilteredUsers([]);
   };
+
+  const handleCreateChat = (email_address) => {
+    socket.emit("join_room", { room, email_address });
+    console.log("HANDLE CREATE CHAT", room, email_address);
+  };
+
+  function uuidv4() {
+    return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
+      (
+        c ^
+        (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
+      ).toString(16)
+    );
+  }
+
+  console.log(uuidv4());
 
   return (
     <>
@@ -43,10 +60,14 @@ const ChatSearch = ({ user }) => {
       </div>
       {filteredUsers.length !== 0 && (
         <div className="searchResult">
-          {filteredUsers.slice(0, 5).map((value, index) => {
+          {filteredUsers.slice(0, 5).map((value) => {
             return (
-              <div className="searchItem">
-                <p key={index}>{value.email_address}</p>
+              <div
+                className="searchItem"
+                key={value.id}
+                onClick={() => handleCreateChat(value.email_address)}
+              >
+                <p>{value.email_address}</p>
               </div>
             );
           })}

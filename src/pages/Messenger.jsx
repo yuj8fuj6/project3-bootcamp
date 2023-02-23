@@ -25,12 +25,12 @@ const Messenger = () => {
   });
 
   //<<<<<<<JOIN ROOM>>>>>>
-  const joinRoom = () => {
-    if (room) {
-      socket.emit("join_room", { room, email_address });
-      console.log(`${email_address} has joined room ${room}`);
-    }
-  };
+  // const joinRoom = () => {
+  //   if (room) {
+  //     socket.emit("join_room", { room, email_address });
+  //     console.log(`${email_address} has joined room ${room}`);
+  //   }
+  // };
 
   return (
     <>
@@ -38,7 +38,7 @@ const Messenger = () => {
       <div className="messenger">
         <div className="chatInbox">
           <div className="chatInboxWrapper">
-            <ChatSearch user={user} />
+            <ChatSearch user={user} socket={socket} />
             <h3>Join chat</h3>
             <Input
               type="text"
@@ -46,11 +46,12 @@ const Messenger = () => {
               onChange={(event) => {
                 setRoom(event.target.value);
               }}
-              onKeyPress={(e) => e.key === "Enter" && joinRoom()}
+              // onKeyPress={(e) => e.key === "Enter" && joinRoom()}
             />
-            <Button type="default" onClick={() => joinRoom()}>
-              Join a room
-            </Button>
+            {/* <Button type="default" onClick={() => joinRoom()}>
+              Join room
+            </Button> */}
+            {/* <Button type="default">Join a room</Button> */}
             <Conversation />
             <Conversation />
             <Conversation />
