@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import { Input, Button } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import "./chatSearch.css";
+import uuid from "react-uuid";
 
-const ChatSearch = ({ user, socket }) => {
+const ChatSearch = ({ user, socket, email }) => {
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [filterState, setFilterState] = useState("");
-  const [room, setRoom] = useState("");
+  // const [room, setRoom] = useState("");
+  const room = uuid();
 
   const handleFilter = (e) => {
     const searchUser = e.target.value;
@@ -26,20 +28,9 @@ const ChatSearch = ({ user, socket }) => {
   };
 
   const handleCreateChat = (email_address) => {
-    socket.emit("join_room", { room, email_address });
-    console.log("HANDLE CREATE CHAT", room, email_address);
+    socket.emit("join_room", { room, email, email_address });
+    console.log("HANDLE CREATE CHAT", room, email, email_address);
   };
-
-  function uuidv4() {
-    return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
-      (
-        c ^
-        (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
-      ).toString(16)
-    );
-  }
-
-  console.log(uuidv4());
 
   return (
     <>

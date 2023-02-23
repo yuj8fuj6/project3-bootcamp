@@ -18,6 +18,14 @@ const Messenger = () => {
   const { email_address, first_name, last_name, profile_pic_url } =
     user.userData;
 
+  socket.on("connect", () => {
+    const userId = email_address;
+    socket.emit("add_user", userId);
+    console.log(userId);
+  });
+  // useEffect(() => {
+  // });
+
   useEffect(() => {
     if (!isAuthenticated) {
       loginWithRedirect();
@@ -38,7 +46,7 @@ const Messenger = () => {
       <div className="messenger">
         <div className="chatInbox">
           <div className="chatInboxWrapper">
-            <ChatSearch user={user} socket={socket} />
+            <ChatSearch user={user} socket={socket} email={email_address} />
             <h3>Join chat</h3>
             <Input
               type="text"
