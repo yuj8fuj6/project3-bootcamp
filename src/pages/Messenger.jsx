@@ -7,6 +7,7 @@ import Conversation from "../components/Conversation";
 import { useAuth0 } from "@auth0/auth0-react";
 import io from "socket.io-client";
 import { UserContext } from "../contexts/UserContext";
+import ChatSearch from "../components/ChatSearch";
 
 const socket = io.connect("http://localhost:3000");
 
@@ -37,7 +38,7 @@ const Messenger = () => {
       <div className="messenger">
         <div className="chatInbox">
           <div className="chatInboxWrapper">
-            <Button>Search for user</Button>
+            <ChatSearch user={user} />
             <h3>Join chat</h3>
             <Input
               type="text"
