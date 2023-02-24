@@ -8,6 +8,8 @@ const ChatSearch = ({ user, socket, email, onCreateChat }) => {
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [filterState, setFilterState] = useState("");
   const room = uuid();
+  const [chatroom, setChatroom] = useState([]);
+  const [chatrooms, setChatrooms] = useState([]);
 
   const handleFilter = (e) => {
     const searchUser = e.target.value;
@@ -24,12 +26,28 @@ const ChatSearch = ({ user, socket, email, onCreateChat }) => {
 
   const clearInput = () => {
     setFilteredUsers([]);
+    setFilterState([]);
   };
 
   const handleCreateChat = (email_address) => {
-    socket.emit("join_room", { room, email, email_address });
-    console.log("HANDLE CREATE CHAT", room, email, email_address);
-    onCreateChat(room);
+    const chatroom = room;
+    const existingChatroom = chatrooms.find(
+      (c) => c.members.includes(email) && c.members.includes(email_address)
+    );
+    if (!existingChatroom) {
+      socket.emit("join_room", { room, email, email_address });
+      console.log("HANDLE CREATE CHAT", room, email, email_address, chatrooms);
+      setChatrooms([
+        ...chatrooms,
+        { id: room, members: [email, email_address] },
+      ]);
+      onCreateChat(room);
+      setFilteredUsers([]);
+      setFilterState([]);
+    } else {
+      console.log("CHATROOM ALREADY EXISTS", existingChatroom);
+      setChatroom(existingChatroom.id);
+    }
   };
 
   return (

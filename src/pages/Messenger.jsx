@@ -51,7 +51,7 @@ const Messenger = () => {
 
   const handleChatroom = (newChatroom) => {
     setChatroom(newChatroom);
-    console.log(newChatroom);
+    console.log("NEW CHATROOM", newChatroom);
   };
 
   return (
