@@ -210,7 +210,7 @@ const ForumFeedIndividual = () => {
                           </p>
                           <p className="mt-2 flex flex-row justify-start gap-2 text-xs">
                             <button
-                              disabled={!voted}
+                              disabled={voted}
                               onClick={() => {
                                 const data = {
                                   postID: post.id,
@@ -223,7 +223,7 @@ const ForumFeedIndividual = () => {
                             </button>
                             <div>{post.upvote}</div>
                             <button
-                              disabled={voted}
+                              disabled={!voted}
                               onClick={() => {
                                 const data = {
                                   postID: post.id,
