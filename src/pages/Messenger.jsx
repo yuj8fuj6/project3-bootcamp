@@ -13,13 +13,11 @@ const socket = io.connect("http://localhost:3000");
 
 const Messenger = () => {
   const { isAuthenticated, loginWithRedirect } = useAuth0();
-  const [room, setRoom] = useState("");
   const [chatroom, setChatroom] = useState("");
   const user = useContext(UserContext);
   const { email_address, first_name, last_name, profile_pic_url } =
     user.userData;
-  // const [conversations, setConversations] = useState([]);
-  // const [webData, setWebData] = useState([]);
+  const [allConversations, setAllConversations] = useState([]);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -28,26 +26,17 @@ const Messenger = () => {
   });
 
   useEffect(() => {
-    socket.on("add_user", (data) => {
-      console.log("USERS ADDED", data);
+    socket.emit("join", email_address);
+    console.log("INITIAL SHOW CONVERSATIONS", allConversations);
+    socket.emit("get_conversation");
+    socket.on("show_conversation", (data) => {
+      setAllConversations(data);
+      console.log("SHOW CONVERSATIONS", data);
     });
-  }, [socket]);
-
-  // useEffect(() => {
-  //   console.log("INITIAL SHOW CONVERSATIONS");
-  //   socket?.on("show_conversation", (data) => {
-  //     setWebData(data);
-  //     console.log("SHOW CONVERSATIONS", data);
-  //   });
-  // });
-
-  // useEffect(() => {
-  //   if (webData) {
-  //     setConversations([...conversations, webData]);
-  //     setWebData([]);
-  //   }
-  //   console.log("WEBDATA", webData);
-  // }, []);
+    return () => {
+      socket.off("show_conversation");
+    };
+  }, []);
 
   const handleChatroom = (newChatroom) => {
     setChatroom(newChatroom);
@@ -66,12 +55,11 @@ const Messenger = () => {
               email={email_address}
               onCreateChat={handleChatroom}
             />
-            {/* {conversations &&
-              conversations.map((conversation, index) => (
-                <div key={index}>
-                  <Conversation />
-                </div>
-              ))} */}
+            {allConversations.map((conversation) => (
+              <div key={conversation.id}>
+                <Conversation />
+              </div>
+            ))}
           </div>
         </div>
         <div className="chatConversation">
