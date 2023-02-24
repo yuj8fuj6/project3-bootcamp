@@ -18,6 +18,8 @@ const ProfileForm = ({
   student,
   professor,
   id,
+  setUserData,
+  userData,
 }) => {
   const { getAccessTokenSilently } = useAuth0();
   const [phoneContact, setPhoneContact] = useState(phone);
@@ -37,8 +39,6 @@ const ProfileForm = ({
       setChangedState(false);
     }
   }, [phoneContact]);
-
-  console.log(phoneContact)
 
   const handleUpdatedPhoto = (e) => {
     setUpdatedPhotoFile(e.target.files[0]);
@@ -62,6 +62,7 @@ const ProfileForm = ({
       .then((res) => {
         console.log(res.data.phone_number);
         setPhoneContact(res.data.phone_number);
+        setUserData({ ...userData, phone_number: res.data.phone_number });
       })
       .catch((err) => {
         console.log(err);
@@ -72,33 +73,35 @@ const ProfileForm = ({
     setChangedState(false);
   };
 
-  const uploadPhoto = async (updatedPhotoFile) => {
-    const profilePhotoRef = ref(storage, `${lastName} ${firstName}`);
-    if (updatedPhotoFile) {
-      const photoURL = uploadBytes(profilePhotoRef, updatedPhotoFile)
-        .then((snapshot) => {
-          return getDownloadURL(snapshot.ref);
-        })
-        .then((url) => {
-          setProfilePhotoURL(url);
-          return url;
-        });
-      return photoURL;
-    }
-  };
+  // const uploadPhoto = async (updatedPhotoFile) => {
+  //   const profilePhotoRef = ref(storage, `${lastName} ${firstName}`);
+  //   if (updatedPhotoFile) {
+  //     const photoURL = uploadBytes(profilePhotoRef, updatedPhotoFile)
+  //       .then((snapshot) => {
+  //         return getDownloadURL(profilePhotoRef);
+  //       })
+  //       .then((url) => {
+  //         setProfilePhotoURL(url);
+  //         return url;
+  //       });
+  //     return photoURL;
+  //   }
+  // };
 
   const handlePhotoSubmit = async (e) => {
     e.preventDefault();
-    let photoURL = await uploadPhoto(updatedPhotoFile);
+    // const photoURL = await uploadPhoto(updatedPhotoFile);
     // Do not know why this code below only works after 2 clicks.
-    // const profilePhotoRef = ref(storage, `${lastName} ${firstName}`);
-    // await uploadBytes(profilePhotoRef, updatedPhotoFile).then(() =>
-    //   getDownloadURL(profilePhotoRef).then((downloadURL) => {
-    //     // console.log(downloadURL);
-    //     setProfilePhotoURL(downloadURL);
-    //     // console.log(profilePhotoURL);
-    //   }),
-    // );
+    const profilePhotoRef = ref(storage, `${lastName} ${firstName}`);
+    const photoURL = await uploadBytes(profilePhotoRef, updatedPhotoFile).then(
+      () =>
+        getDownloadURL(profilePhotoRef).then((downloadURL) => {
+          // console.log(downloadURL);
+          setProfilePhotoURL(downloadURL);
+          // console.log(profilePhotoURL);
+          return downloadURL;
+        }),
+    );
     await axios
       .post(`${BACKEND_URL}/users/photoURL`, {
         photoURL: `${photoURL}`,
@@ -107,6 +110,7 @@ const ProfileForm = ({
       .then((res) => {
         console.log(res.data.profile_pic_url);
         setUpdatedPhotoFileURL(res.data.profile_pic_url);
+        setUserData({ ...userData, profile_pic_url: res.data.profile_pic_url });
       })
       .catch((err) => {
         console.log(err);
@@ -296,7 +300,7 @@ const ProfileForm = ({
             </>
           )}
         </div>
-        <div className="grid grid-cols-1 ml-36 h-[350px]">
+        <div className="grid grid-cols-1 ml-48 h-[350px]">
           <img
             src={updatedPhotoFileURL}
             alt="profile pic"
@@ -318,7 +322,9 @@ const ProfileForm = ({
         </div>
       </div>
       <div className="flex justify-center mt-5">
-        {changedState && <Button onClick={handleSubmit}>Confirm Changes</Button>}
+        {changedState && (
+          <Button onClick={handleSubmit}>Confirm Changes</Button>
+        )}
       </div>
       <div className="px-5 text-base text-yellow">Updated at: {updatedAt}</div>
     </div>

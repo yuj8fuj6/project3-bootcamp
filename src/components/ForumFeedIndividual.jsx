@@ -1,4 +1,5 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
 import { ForumContext } from "../contexts/ForumContext";
 import { UserContext } from "../contexts/UserContext";
 import { useNavigate, useParams, Link } from "react-router-dom";
@@ -6,24 +7,104 @@ import {
   BsArrowDownSquare,
   BsArrowUpSquare,
   BsArrowLeftCircle,
+  BsFillTrashFill,
+  BsFillAwardFill,
 } from "react-icons/bs";
 import { Form, Formik } from "formik";
+import axios from "axios";
+
+import { BACKEND_URL } from "../constants.js";
+
+const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
 
 const ForumFeedIndividual = () => {
   const param = useParams();
   const navigate = useNavigate();
+  const [totalPostVote, setTotalPostVote] = useState(0);
+  const [voted, setVoted] = useState(false);
 
-  const allForumData = useContext(ForumContext);
-  const { userData, allUserData, userPhotoURL, userPhone } = useContext(UserContext);
+  const { getAccessTokenSilently } = useAuth0();
+  const { allForumData, setAllForumData } = useContext(ForumContext);
+  const { userData, allUserData, setUserData } = useContext(UserContext);
 
   const allStudentData = allUserData.filter((user) => user.student);
   const forum = allForumData.filter((forum) => forum.id === param.id)[0];
+  const currentUserStudentID = userData.student.id;
 
   const initialValues = { content: "" };
 
-  const handleSubmit = (values) => {
-    console.log(values.content);
+  const handleSubmit = async (values) => {
+    const accessToken = await getAccessTokenSilently({
+      audience: `${audience}`,
+      scope: "read:current_user",
+    });
+    const newPost = {
+      student_id: currentUserStudentID,
+      content: `${values.content}`,
+      forum_id: forum.id,
+    };
+    await axios
+      .post(`${BACKEND_URL}/forums/newPost`, newPost)
+      .then((res) => {
+        setAllForumData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("No post was created!");
+      });
   };
+
+  const handleDelete = async (postID) => {
+    const accessToken = await getAccessTokenSilently({
+      audience: `${audience}`,
+      scope: "read:current_user",
+    });
+    await axios
+      .post(`${BACKEND_URL}/forums/deletePost`, { postID: postID })
+      .then((res) => {
+        setAllForumData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("No post was deleted!");
+      });
+  };
+
+  const handleClickUpVote = async (data) => {
+    const accessToken = await getAccessTokenSilently({
+      audience: `${audience}`,
+      scope: "read:current_user",
+    });
+    await axios
+      .post(`${BACKEND_URL}/forums/newPostVote`, {
+        upvote: true,
+        post_id: data.postID,
+        student_id: currentUserStudentID,
+        forum_id: data.postForumID,
+      })
+      .then((res) => {
+        setAllForumData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("Upvote failed!");
+      });
+    if (!voted) {
+      setVoted(true);
+    } else {
+      setVoted(false);
+    }
+  };
+
+  console.log(param.id);
+
+  useEffect(() => {
+    if (allForumData) {
+      axios.get(`${BACKEND_URL}/forums/${param.id}`).then((res) => {
+        setTotalPostVote(res.data);
+      });
+    }
+  }, [allForumData]);
 
   return (
     <div className="h-full rounded-lg">
@@ -46,11 +127,12 @@ const ForumFeedIndividual = () => {
             </div>
             <div className="grid grid-flow-col grid-cols-8 justify-start mt-2">
               <div className="text-darkgrey grid grid-cols-1 font-extrabold text-xl h-24">
-                <BsArrowUpSquare className="hover:text-yellow hover:bg-darkgrey" />
-                <span className="text-sm">
-                  100 <br /> Upvotes
+                <span className="text-xs">
+                  <div className="text-lg mb-2">
+                    {totalPostVote} <BsFillAwardFill />
+                  </div>
+                  Total <br /> Upvotes
                 </span>
-                <BsArrowDownSquare className="hover:text-yellow hover:bg-darkgrey" />
               </div>
               <div className="text-darkgrey text-lg col-span-7 font-extrabold">
                 <div className="text-darkgrey text-[10px] font-bold">
@@ -127,9 +209,31 @@ const ForumFeedIndividual = () => {
                             {post.content}
                           </p>
                           <p className="mt-2 flex flex-row justify-start gap-2 text-xs">
-                            <BsArrowUpSquare className="hover:text-yellow hover:bg-darkgrey" />
-                            <div>100</div>
-                            <BsArrowDownSquare className="hover:text-yellow hover:bg-darkgrey" />
+                            <button
+                              disabled={!voted}
+                              onClick={() => {
+                                const data = {
+                                  postID: post.id,
+                                  postForumID: post.forum_id,
+                                };
+                                handleClickUpVote(data);
+                              }}
+                            >
+                              <BsArrowUpSquare className="hover:text-yellow hover:bg-darkgrey" />
+                            </button>
+                            <div>{post.upvote}</div>
+                            <button
+                              disabled={voted}
+                              onClick={() => {
+                                const data = {
+                                  postID: post.id,
+                                  postForumID: post.forum_id,
+                                };
+                                handleClickUpVote(data);
+                              }}
+                            >
+                              <BsArrowDownSquare className="hover:text-yellow hover:bg-darkgrey" />
+                            </button>
                             <div className="ml-5 hover:text-yellow">
                               Direct Message
                             </div>
@@ -138,6 +242,16 @@ const ForumFeedIndividual = () => {
                                 Report
                               </div>
                             </Link>
+                            {post.studentId === currentUserStudentID && (
+                              <button
+                                className="ml-5 hover:text-yellow text-lg text-red-400"
+                                onClick={() => {
+                                  handleDelete(post.id);
+                                }}
+                              >
+                                <BsFillTrashFill />
+                              </button>
+                            )}
                           </p>
                         </div>
                       </div>
