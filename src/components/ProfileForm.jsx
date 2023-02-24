@@ -300,7 +300,7 @@ const ProfileForm = ({
             </>
           )}
         </div>
-        <div className="grid grid-cols-1 ml-36 h-[350px]">
+        <div className="grid grid-cols-1 ml-48 h-[350px]">
           <img
             src={updatedPhotoFileURL}
             alt="profile pic"

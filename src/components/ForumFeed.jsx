@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { ForumContext } from "../contexts/ForumContext";
 import { UserContext } from "../contexts/UserContext";
 import { Link } from "react-router-dom";
-import { BsArrowDownSquare, BsArrowUpSquare } from "react-icons/bs";
+import { BsFillFileTextFill } from "react-icons/bs";
 
 const ForumFeed = () => {
   const { allForumData, setAllForumData } = useContext(ForumContext);
@@ -27,11 +27,11 @@ const ForumFeed = () => {
                 </div>
                 <div className="grid grid-flow-col grid-cols-8 justify-start mt-2">
                   <div className="text-darkgrey grid grid-cols-1 font-extrabold text-xl">
-                    <BsArrowUpSquare className="hover:text-yellow hover:bg-darkgrey" />
+                    {forum.posts.length}
                     <span className="text-sm">
-                      100 <br /> Upvotes
+                      Posts
                     </span>
-                    <BsArrowDownSquare className="hover:text-yellow hover:bg-darkgrey" />
+                    <BsFillFileTextFill />
                   </div>
                   <div className="text-darkgrey text-lg col-span-7 font-extrabold">
                     <p>Latest Post:</p>
@@ -41,7 +41,8 @@ const ForumFeed = () => {
                     </p>
                     <p className="text-sm font-normal">by </p>
                     <p className="text-sm font-normal">
-                      {allUserData && forum.posts.length != 0 &&
+                      {allUserData &&
+                        forum.posts.length != 0 &&
                         `${
                           allStudentData.filter(
                             (user) =>
