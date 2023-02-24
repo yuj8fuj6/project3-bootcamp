@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-import { Input, Button } from "antd";
+import { Input } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import "./chatSearch.css";
 import uuid from "react-uuid";
 
-const ChatSearch = ({ user, socket, email }) => {
+const ChatSearch = ({ user, socket, email, onCreateChat }) => {
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [filterState, setFilterState] = useState("");
-  // const [room, setRoom] = useState("");
   const room = uuid();
 
   const handleFilter = (e) => {
@@ -30,6 +29,7 @@ const ChatSearch = ({ user, socket, email }) => {
   const handleCreateChat = (email_address) => {
     socket.emit("join_room", { room, email, email_address });
     console.log("HANDLE CREATE CHAT", room, email, email_address);
+    onCreateChat(room);
   };
 
   return (
@@ -64,7 +64,6 @@ const ChatSearch = ({ user, socket, email }) => {
           })}
         </div>
       )}
-      <Button>Chat</Button>
     </>
   );
 };

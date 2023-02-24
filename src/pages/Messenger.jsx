@@ -14,17 +14,12 @@ const socket = io.connect("http://localhost:3000");
 const Messenger = () => {
   const { isAuthenticated, loginWithRedirect } = useAuth0();
   const [room, setRoom] = useState("");
+  const [chatroom, setChatroom] = useState("");
   const user = useContext(UserContext);
   const { email_address, first_name, last_name, profile_pic_url } =
     user.userData;
-
-  socket.on("connect", () => {
-    const userId = email_address;
-    socket.emit("add_user", userId);
-    console.log(userId);
-  });
-  // useEffect(() => {
-  // });
+  // const [conversations, setConversations] = useState([]);
+  // const [webData, setWebData] = useState([]);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -32,13 +27,32 @@ const Messenger = () => {
     }
   });
 
-  //<<<<<<<JOIN ROOM>>>>>>
-  // const joinRoom = () => {
-  //   if (room) {
-  //     socket.emit("join_room", { room, email_address });
-  //     console.log(`${email_address} has joined room ${room}`);
+  useEffect(() => {
+    socket.on("add_user", (data) => {
+      console.log("USERS ADDED", data);
+    });
+  }, [socket]);
+
+  // useEffect(() => {
+  //   console.log("INITIAL SHOW CONVERSATIONS");
+  //   socket?.on("show_conversation", (data) => {
+  //     setWebData(data);
+  //     console.log("SHOW CONVERSATIONS", data);
+  //   });
+  // });
+
+  // useEffect(() => {
+  //   if (webData) {
+  //     setConversations([...conversations, webData]);
+  //     setWebData([]);
   //   }
-  // };
+  //   console.log("WEBDATA", webData);
+  // }, []);
+
+  const handleChatroom = (newChatroom) => {
+    setChatroom(newChatroom);
+    console.log(newChatroom);
+  };
 
   return (
     <>
@@ -46,30 +60,25 @@ const Messenger = () => {
       <div className="messenger">
         <div className="chatInbox">
           <div className="chatInboxWrapper">
-            <ChatSearch user={user} socket={socket} email={email_address} />
-            <h3>Join chat</h3>
-            <Input
-              type="text"
-              placeholder="Room ID..."
-              onChange={(event) => {
-                setRoom(event.target.value);
-              }}
-              // onKeyPress={(e) => e.key === "Enter" && joinRoom()}
+            <ChatSearch
+              user={user}
+              socket={socket}
+              email={email_address}
+              onCreateChat={handleChatroom}
             />
-            {/* <Button type="default" onClick={() => joinRoom()}>
-              Join room
-            </Button> */}
-            {/* <Button type="default">Join a room</Button> */}
-            <Conversation />
-            <Conversation />
-            <Conversation />
+            {/* {conversations &&
+              conversations.map((conversation, index) => (
+                <div key={index}>
+                  <Conversation />
+                </div>
+              ))} */}
           </div>
         </div>
         <div className="chatConversation">
           <div className="chatConversationWrapper">
             <Message
               socket={socket}
-              room={room}
+              chatroom={chatroom}
               email_address={email_address}
               firstName={first_name}
               lastName={last_name}

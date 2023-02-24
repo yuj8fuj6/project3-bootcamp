@@ -6,7 +6,7 @@ import ScrollToBottom from "react-scroll-to-bottom";
 
 export default function Message({
   socket,
-  room,
+  chatroom,
   email_address,
   firstName,
   lastName,
@@ -37,7 +37,7 @@ export default function Message({
     if (currentMessage) {
       const messageData = {
         message: currentMessage,
-        room: room,
+        room: chatroom,
         sender: email_address,
         name: `${firstName} ${lastName}`,
         profileDP: profilePic,
