@@ -14,7 +14,6 @@ export default function Message({
   lastName,
   profilePic,
   chatroomId,
-  setCurrentChat,
 }) {
   const { isAuthenticated, loginWithRedirect } = useAuth0();
   const [currentMessage, setCurrentMessage] = useState("");
@@ -49,28 +48,20 @@ export default function Message({
   };
 
   useEffect(() => {
-    socket.emit("receive_message", (data) => {
+    console.log("USER RECEIVE");
+    socket.on("receive_message", (data) => {
       console.log("RECEIVED MESSAGE", data);
       setMessageList((prevMessage) => [...prevMessage, data]);
     });
     console.log("RECEIVED");
   }, [socket]);
 
-  useEffect(() => {
-    socket.on("message_history", (data) => {
-      console.log("SEND CHAT DATA", data);
-      setAllMessages(data);
-      // setCurrentChat(true);
-    });
-  }, []);
-
-  const getMessages = async () => {
+  const getMessages = () => {
     try {
       axios
         .get(`${BACKEND_URL}/conversations/messages/${chatroomId}`)
         .then((response) => {
           console.log("RESPONSE", response, response.data);
-          setCurrentChat(response.data);
           setAllMessages(response.data);
         });
     } catch (err) {

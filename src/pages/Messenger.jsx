@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import Message from "../components/Message";
 import "./messenger.css";
-import { Button, Input } from "antd";
+import { Button } from "antd";
 import Navbar from "../components/NavBar";
 import Conversation from "../components/Conversation";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -21,8 +21,9 @@ const Messenger = () => {
     user.userData;
   const [allConversations, setAllConversations] = useState([]);
   const [currentChat, setCurrentChat] = useState("");
-  const [messages, setMessages] = useState("");
   const [chatroomIndex, setChatroomIndex] = useState("");
+
+  console.log(socket);
 
   socket.on("connect", () => {
     console.log("CLIENT CONNECTED");
@@ -56,6 +57,9 @@ const Messenger = () => {
   console.log("CONVERSATION", allConversations);
 
   const startChat = (chatroom) => {
+    console.log("JOIN CHATROOM", chatroom);
+    socket.emit("join_chatroom", chatroom);
+    console.log("JOINED");
     setChatroom(chatroom);
     setCurrentChat(chatroom);
     const chatroomId = allConversations.filter(
@@ -70,8 +74,6 @@ const Messenger = () => {
     console.log("CLOSE CHAT");
     setCurrentChat(null);
   };
-
-  // console.log("CONVERSATION", allConversations[0].chatroom.room);
 
   return (
     <>
@@ -115,7 +117,6 @@ const Messenger = () => {
                   firstName={first_name}
                   lastName={last_name}
                   profilePic={profile_pic_url}
-                  setCurrentChat={setCurrentChat}
                 />
               </>
             ) : (
