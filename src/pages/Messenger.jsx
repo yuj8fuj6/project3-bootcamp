@@ -46,13 +46,11 @@ const Messenger = () => {
   };
   console.log("CONVERSATION", allConversations);
 
-  const startChat = () => {
+  const startChat = (chatroom) => {
     console.log("START CHAT");
-    socket.on("chatroom_name", (chatroomName) => {
-      setChatroom(chatroomName);
-    });
+    setChatroom(chatroom);
     setCurrentChat(true);
-    console.log(chatroom);
+    console.log("CHATROOM", chatroom);
   };
 
   const closeChat = () => {
@@ -63,7 +61,6 @@ const Messenger = () => {
   return (
     <>
       <Navbar />
-      <h1>{chatroom}</h1>
       <div className="messenger">
         <div className="chatInbox">
           <div className="chatInboxWrapper">
@@ -75,12 +72,16 @@ const Messenger = () => {
               setAllConversations={setAllConversations}
               setCurrentChat={setCurrentChat}
             />
-            {allConversations.map((conversation) => (
-              <div key={conversation.id} onClick={() => startChat()}>
+            {allConversations.map((conversation, index) => (
+              <div
+                key={index}
+                onClick={() => startChat(conversation.chatroom.room)}
+              >
                 <Conversation
                   firstName={conversation.user.first_name}
                   lastName={conversation.user.last_name}
                   profilePic={conversation.user.profile_pic_url}
+                  chatroomName={conversation.chatroom.room}
                 />
               </div>
             ))}

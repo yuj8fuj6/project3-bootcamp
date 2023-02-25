@@ -1,7 +1,12 @@
 import React from "react";
 import "./conversation.css";
 
-export default function Conversation({ firstName, lastName, profilePic }) {
+export default function Conversation({
+  firstName,
+  lastName,
+  profilePic,
+  chatroomName,
+}) {
   return (
     <div className="conversation">
       <img
@@ -12,6 +17,7 @@ export default function Conversation({ firstName, lastName, profilePic }) {
       <span className="conversationName">
         {firstName} {lastName}
       </span>
+      <span>{chatroomName}</span>
     </div>
   );
 }
