@@ -1,3 +1,4 @@
+import "@progress/kendo-theme-default/dist/all.css";
 import "./App.css";
 // import Navbar from "./components/NavBar";
 import Landing from "./pages/Landing";
@@ -13,6 +14,7 @@ import { CourseContextProvider } from "./contexts/CourseContext";
 import { ForumContextProvider } from "./contexts/ForumContext"
 import ForumFeed from "./components/ForumFeed";
 import ForumFeedIndividual from "./components/ForumFeedIndividual";
+
 
 const App = () => {
   return (
