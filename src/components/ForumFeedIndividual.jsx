@@ -14,7 +14,8 @@ const ForumFeedIndividual = () => {
   const navigate = useNavigate();
 
   const allForumData = useContext(ForumContext);
-  const { userData, allUserData, userPhotoURL, userPhone } = useContext(UserContext);
+  const { userData, allUserData, userPhotoURL, userPhone } =
+    useContext(UserContext);
 
   const allStudentData = allUserData.filter((user) => user.student);
   const forum = allForumData.filter((forum) => forum.id === param.id)[0];
@@ -96,7 +97,7 @@ const ForumFeedIndividual = () => {
                         <img
                           src={
                             allStudentData.filter(
-                              (user) => user.student.id === post.studentId,
+                              (user) => user.student.id === post.studentId
                             )[0].profile_pic_url
                           }
                           alt="Forum Profile Pic"
@@ -106,19 +107,19 @@ const ForumFeedIndividual = () => {
                           <p>
                             {
                               allStudentData.filter(
-                                (user) => user.student.id === post.studentId,
+                                (user) => user.student.id === post.studentId
                               )[0].last_name
                             }{" "}
                             {
                               allStudentData.filter(
-                                (user) => user.student.id === post.studentId,
+                                (user) => user.student.id === post.studentId
                               )[0].first_name
                             }{" "}
                             <span className="text-xs pl-6">
                               - Updated at{" "}
                               {
                                 allStudentData.filter(
-                                  (user) => user.student.id === post.studentId,
+                                  (user) => user.student.id === post.studentId
                                 )[0].updatedAt
                               }
                             </span>

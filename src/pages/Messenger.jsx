@@ -11,7 +11,7 @@ import ChatSearch from "../components/ChatSearch";
 import axios from "axios";
 import { BACKEND_URL } from "../constants.js";
 
-const socket = io.connect("http://localhost:3000");
+const socket = io.connect(BACKEND_URL);
 
 const Messenger = () => {
   const { isAuthenticated, loginWithRedirect } = useAuth0();
@@ -20,7 +20,16 @@ const Messenger = () => {
   const { email_address, first_name, last_name, profile_pic_url } =
     user.userData;
   const [allConversations, setAllConversations] = useState([]);
-  const [currentChat, setCurrentChat] = useState(null);
+  const [currentChat, setCurrentChat] = useState("");
+  const [messages, setMessages] = useState("");
+  const [chatroomIndex, setChatroomIndex] = useState("");
+
+  socket.on("connect", () => {
+    console.log("CLIENT CONNECTED");
+    const userId = email_address;
+    socket.emit("add_user", userId);
+    console.log("ADDED USER", userId);
+  });
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -47,16 +56,22 @@ const Messenger = () => {
   console.log("CONVERSATION", allConversations);
 
   const startChat = (chatroom) => {
-    console.log("START CHAT");
     setChatroom(chatroom);
-    setCurrentChat(true);
+    setCurrentChat(chatroom);
+    const chatroomId = allConversations.filter(
+      (room) => chatroom === room.chatroom.room
+    )[0].chatroomId;
+    console.log("CHATROOM ID", chatroomId);
     console.log("CHATROOM", chatroom);
+    setChatroomIndex(chatroomId);
   };
 
   const closeChat = () => {
     console.log("CLOSE CHAT");
     setCurrentChat(null);
   };
+
+  // console.log("CONVERSATION", allConversations[0].chatroom.room);
 
   return (
     <>
@@ -95,6 +110,7 @@ const Messenger = () => {
                 <Message
                   socket={socket}
                   chatroom={chatroom}
+                  chatroomId={chatroomIndex}
                   email_address={email_address}
                   firstName={first_name}
                   lastName={last_name}

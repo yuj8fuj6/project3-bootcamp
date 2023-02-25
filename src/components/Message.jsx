@@ -3,6 +3,8 @@ import "./message.css";
 import { Button, Input } from "antd";
 import { useAuth0 } from "@auth0/auth0-react";
 import ScrollToBottom from "react-scroll-to-bottom";
+import axios from "axios";
+import { BACKEND_URL } from "../constants";
 
 export default function Message({
   socket,
@@ -11,6 +13,7 @@ export default function Message({
   firstName,
   lastName,
   profilePic,
+  chatroomId,
   setCurrentChat,
 }) {
   const { isAuthenticated, loginWithRedirect } = useAuth0();
@@ -46,18 +49,37 @@ export default function Message({
   };
 
   useEffect(() => {
-    socket.on("receive_message", (data) => {
+    socket.emit("receive_message", (data) => {
       console.log("RECEIVED MESSAGE", data);
       setMessageList((prevMessage) => [...prevMessage, data]);
     });
+    console.log("RECEIVED");
   }, [socket]);
 
   useEffect(() => {
-    socket.on("send_chatData", (data) => {
+    socket.on("message_history", (data) => {
       console.log("SEND CHAT DATA", data);
       setAllMessages(data);
-      setCurrentChat(true);
+      // setCurrentChat(true);
     });
+  }, []);
+
+  const getMessages = async () => {
+    try {
+      axios
+        .get(`${BACKEND_URL}/conversations/messages/${chatroomId}`)
+        .then((response) => {
+          console.log("RESPONSE", response, response.data);
+          setCurrentChat(response.data);
+          setAllMessages(response.data);
+        });
+    } catch (err) {
+      console.log("ERROR", err);
+    }
+  };
+
+  useEffect(() => {
+    getMessages();
   }, []);
 
   return (
@@ -133,7 +155,7 @@ export default function Message({
                   <div>
                     <div className="messageMeta">
                       <p id="author">{messageContent.name}</p>
-                      <p id="time">{messageContent.createdAt}</p>
+                      <p id="time">{messageContent.time}</p>
                     </div>
                     <div className="messageText">
                       <p>{messageContent.message}</p>
