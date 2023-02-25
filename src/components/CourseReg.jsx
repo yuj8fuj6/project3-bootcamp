@@ -7,11 +7,7 @@ const fetcher = (url) => axios.get(url).then((res) => res.data);
 let courses = "";
 
 const CourseReg = (props) => {
-  // const [courseIndex, setCourseIndex] = useState(props.courseIndex);
-  // const [courses, setCourse] = useState(props.course)
   const studentData = props.studentData
-  //const [indexData, setIndexData] = useState([]);//specific course indexs
-  const [courseIndex, setCourseIndex] = useState({}); //update whenever user changes the index
   const [courses, setCourse] = useState(""); //used as a query param
   const { data: indexData } = useGetIndexData(courses);
   // add course function: add courses to query to backend and add it to courseIndex to be transferred to other components
@@ -24,16 +20,17 @@ const CourseReg = (props) => {
       setCourse(courses + `+${course_code}`)
     }
     let course_index = {
-      ...courseIndex
+      ...props.courseIndex
     }
     course_index[course_code] = undefined;
-    setCourseIndex(course_index)
+    props.setCourseIndex(course_index)
   }
 
   const handleChange = (e, course) =>{
-    let course_index = {...courseIndex}
+    e.preventDefault()
+    let course_index = {...props.courseIndex}
     course_index[course.course_code] = course.course_indices[e.target.value].index_code;
-    setCourseIndex(course_index)
+    props.setCourseIndex(course_index)
     console.log(course_index)
   }
   let element
@@ -41,15 +38,14 @@ const CourseReg = (props) => {
     element = indexData.map((course, i) => {
       //console.log(course.course_indices.find(ele => ele.index_code === 320671).vacancy)
       let options
-      if(course.course_indices !== undefined){
+      if (course.course_indices !== undefined) {
         options = course.course_indices.map((index, i) => {
-          let x = (
-              <option value={i}>{index.index_code}</option>
-          );
-          return x
+          let x = <option value={i}>{index.index_code}</option>;
+          return x;
         });
       }
-
+      console.log(options)
+      options.unshift(<option selected disabled> Choose</option>)
       return (
         <tr>
           <th>{i + 1}</th>
@@ -58,15 +54,19 @@ const CourseReg = (props) => {
             className="select select-bordered w-full max-w-xs"
             onChange={(e) => handleChange(e, course)}
           >
-            <option disabled selected>
-              Choose Index
-            </option>
             {options}
           </select>
-          <td>{courseIndex[course.course_code] === undefined ? "--": course.course_indices.find(ele => ele.index_code === courseIndex[course.course_code]).vacancy }</td>
+          <td>
+            {props.courseIndex[course.course_code] === undefined
+              ? "--"
+              : course.course_indices.find(
+                  (ele) =>
+                    ele.index_code === props.courseIndex[course.course_code]
+                ).vacancy}
+          </td>
         </tr>
       );
-    })
+    });
   }
   return (
     <div className="overflow-x-auto">
@@ -82,6 +82,7 @@ const CourseReg = (props) => {
         </thead>
       </table>
       <Button onClick={addCourse}>Add Courses</Button>
+      {/* <Button onClick={registerCourse}>Register</Button> */}
     </div>
   );
 }

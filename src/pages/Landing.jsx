@@ -33,7 +33,11 @@ const Landing = () => {
       <div className="columns">
         <Timetable courseIndex={courseIndex} />
         <div className="rows">
-          <CourseReg studentData={data} setCourseIndex={setCourseIndex} />
+          <CourseReg
+            studentData={data}
+            courseIndex={courseIndex}
+            setCourseIndex={setCourseIndex}
+          />
           <CourseReg studentData={data} courseIndex={setCourseIndex} />
         </div>
       </div>

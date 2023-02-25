@@ -1,23 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import {
   Scheduler,
-  WeekView,
-
+  WeekView
 } from "@progress/kendo-react-scheduler";
+import useSWR from 'swr';
+import axios from 'axios';
 import { Day } from "@progress/kendo-date-math";
 import { sampleData, displayDate } from "./sampleData";
-
+import { BACKEND_URL } from '../constants';
+const fetcher = (url) => axios.get(url).then((res) => res.data);
 
 const Timetable = (props) => {
-  const [timetableData, setTimetableData] = useState([])
+  const indexes = Object.values(props.courseIndex).filter(x => x).join("+")
+  const courses = Object.keys(props.courseIndex).filter((x) => x).join("+");
   const [course, setCourse] = useState(props.course);
   const [courseIndex, setCourseIndex] = useState(props.courseIndex);
-  //The states below is meant to be set for each axios call to update the data
-  const [courseCode, setCourseCode] = useState("");
-  const [id, setID] = useState(null);
-  const [startTime, setStartTime] = useState(""); //Start time must be referenced to the start of week 1, including day, month, year
-  const [endtTime, setEndTime] = useState("");
-  const [recessTime, setRecessTime] = useState(""); // This is initialize to be the same as start time but will be used to modify the recurrence exception condition without changing starttime
+  const { data } = useSWR(indexes && courses ? `${BACKEND_URL}/courses/${courses}/${indexes}` : null, fetcher);
+  console.log(data)
   //Generate timetabledata
   // useEffect(async()=>{
   //   //axios call to set courseCode, id, StartTime, EndTime from Index_table. Then set Timetable data
@@ -39,6 +38,21 @@ const Timetable = (props) => {
   //     timetableData.push(data)
   //   }
   // },[course, courseIndex])
+
+  // id: dataItem.TaskID,
+  // start: parseAdjust(dataItem.Start),
+  // startTimezone: dataItem.startTimezone,
+  // end: parseAdjust(dataItem.End),
+  // endTimezone: dataItem.endTimezone,
+  // isAllDay: dataItem.isAllDay,
+  // title: dataItem.Title,
+  // description: dataItem.Description,
+  // recurrenceRule: dataItem.RecurrenceRule,
+  // recurrenceId: dataItem.RecurrenceID,
+  // recurrenceExceptions: dataItem.RecurrenceException,
+  // roomId: dataItem.RoomID,
+  // ownerID: dataItem.OwnerID,
+  // personId: dataItem.OwnerID
 
   return (
     //need to disable allday
