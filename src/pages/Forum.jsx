@@ -1,11 +1,8 @@
 import React, { useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import Navbar from "../components/NavBar";
-import axios from "axios";
 import ForumSearch from "../components/ForumSearch";
 import { Outlet } from "react-router-dom";
-
-import { BACKEND_URL } from "../constants.js";
 
 const Forum = () => {
   const { isAuthenticated, loginWithRedirect } = useAuth0();

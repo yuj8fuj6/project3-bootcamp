@@ -19,7 +19,7 @@ export const ForumContextProvider = (props) => {
   }, [isAuthenticated]);
 
   return (
-    <ForumContext.Provider value={allForumData}>
+    <ForumContext.Provider value={{allForumData, setAllForumData}}>
       {props.children}
     </ForumContext.Provider>
   );
