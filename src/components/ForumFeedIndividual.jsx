@@ -43,7 +43,11 @@ const ForumFeedIndividual = () => {
       forum_id: forum.id,
     };
     await axios
-      .post(`${BACKEND_URL}/forums/newPost`, newPost)
+      .post(`${BACKEND_URL}/forums/newPost`, newPost, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
       .then((res) => {
         setAllForumData(res.data);
       })
@@ -59,7 +63,15 @@ const ForumFeedIndividual = () => {
       scope: "read:current_user",
     });
     await axios
-      .post(`${BACKEND_URL}/forums/deletePost`, { postID: postID })
+      .post(
+        `${BACKEND_URL}/forums/deletePost`,
+        { postID: postID },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      )
       .then((res) => {
         setAllForumData(res.data);
       })
@@ -75,12 +87,20 @@ const ForumFeedIndividual = () => {
       scope: "read:current_user",
     });
     await axios
-      .post(`${BACKEND_URL}/forums/newPostVote`, {
-        upvote: true,
-        post_id: data.postID,
-        student_id: currentUserStudentID,
-        forum_id: data.postForumID,
-      })
+      .post(
+        `${BACKEND_URL}/forums/newPostVote`,
+        {
+          upvote: true,
+          post_id: data.postID,
+          student_id: currentUserStudentID,
+          forum_id: data.postForumID,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      )
       .then((res) => {
         setAllForumData(res.data);
       })
@@ -166,7 +186,6 @@ const ForumFeedIndividual = () => {
                 <div className="overflow-auto h-72 border-darkgrey border-1 mb-4 mr-4 rounded-xl p-4 bg-slate-100">
                   {allForumData &&
                     forum.posts.map((post) => {
-                      console.log(post);
                       return (
                         <div className="grid grid-flow-col grid-cols-8 justify-start h-24">
                           <img
@@ -227,9 +246,11 @@ const ForumFeedIndividual = () => {
                               >
                                 <BsArrowDownSquare className="hover:text-yellow hover:bg-darkgrey " />
                               </button>
-                              <div className="ml-5 hover:text-yellow">
-                                Direct Message
-                              </div>
+                              <Link to="/messenger">
+                                <div className="ml-5 hover:text-yellow">
+                                  Direct Message
+                                </div>
+                              </Link>
                               <Link to="/contact">
                                 <div className="ml-5 hover:text-yellow">
                                   Report

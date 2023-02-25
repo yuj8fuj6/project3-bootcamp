@@ -47,7 +47,11 @@ const ForumSearch = () => {
       course_id: newForumCourse,
     };
     await axios
-      .post(`${BACKEND_URL}/forums/newForum`, newForum)
+      .post(`${BACKEND_URL}/forums/newForum`, newForum, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
       .then((res) => {
         setAllForumData(res.data);
       })
