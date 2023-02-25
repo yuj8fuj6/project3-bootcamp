@@ -8,6 +8,8 @@ import { useAuth0 } from "@auth0/auth0-react";
 import io from "socket.io-client";
 import { UserContext } from "../contexts/UserContext";
 import ChatSearch from "../components/ChatSearch";
+import axios from "axios";
+import { BACKEND_URL } from "../constants.js";
 
 const socket = io.connect("http://localhost:3000");
 
@@ -18,6 +20,7 @@ const Messenger = () => {
   const { email_address, first_name, last_name, profile_pic_url } =
     user.userData;
   const [allConversations, setAllConversations] = useState([]);
+  const [currentChat, setCurrentChat] = useState(null);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -25,27 +28,42 @@ const Messenger = () => {
     }
   });
 
+  const getConversations = async () => {
+    const { data: conversations } = await axios.get(
+      `${BACKEND_URL}/conversations/${email_address}`
+    );
+    console.log("RESULT", conversations);
+    setAllConversations(conversations);
+  };
+
   useEffect(() => {
-    socket.emit("join", email_address);
-    console.log("INITIAL SHOW CONVERSATIONS", allConversations);
-    socket.emit("get_conversation");
-    socket.on("show_conversation", (data) => {
-      setAllConversations(data);
-      console.log("SHOW CONVERSATIONS", data);
-    });
-    return () => {
-      socket.off("show_conversation");
-    };
+    getConversations();
   }, []);
 
   const handleChatroom = (newChatroom) => {
     setChatroom(newChatroom);
     console.log("NEW CHATROOM", newChatroom);
   };
+  console.log("CONVERSATION", allConversations);
+
+  const startChat = () => {
+    console.log("START CHAT");
+    socket.on("chatroom_name", (chatroomName) => {
+      setChatroom(chatroomName);
+    });
+    setCurrentChat(true);
+    console.log(chatroom);
+  };
+
+  const closeChat = () => {
+    console.log("CLOSE CHAT");
+    setCurrentChat(null);
+  };
 
   return (
     <>
       <Navbar />
+      <h1>{chatroom}</h1>
       <div className="messenger">
         <div className="chatInbox">
           <div className="chatInboxWrapper">
@@ -54,24 +72,40 @@ const Messenger = () => {
               socket={socket}
               email={email_address}
               onCreateChat={handleChatroom}
+              setAllConversations={setAllConversations}
+              setCurrentChat={setCurrentChat}
             />
             {allConversations.map((conversation) => (
-              <div key={conversation.id}>
-                <Conversation />
+              <div key={conversation.id} onClick={() => startChat()}>
+                <Conversation
+                  firstName={conversation.user.first_name}
+                  lastName={conversation.user.last_name}
+                  profilePic={conversation.user.profile_pic_url}
+                />
               </div>
             ))}
+            <Button onClick={() => closeChat()}>clear</Button>
           </div>
         </div>
         <div className="chatConversation">
           <div className="chatConversationWrapper">
-            <Message
-              socket={socket}
-              chatroom={chatroom}
-              email_address={email_address}
-              firstName={first_name}
-              lastName={last_name}
-              profilePic={profile_pic_url}
-            />
+            {currentChat ? (
+              <>
+                <Message
+                  socket={socket}
+                  chatroom={chatroom}
+                  email_address={email_address}
+                  firstName={first_name}
+                  lastName={last_name}
+                  profilePic={profile_pic_url}
+                  setCurrentChat={setCurrentChat}
+                />
+              </>
+            ) : (
+              <span className="noConversationText">
+                Open a conversation to start a chat
+              </span>
+            )}
           </div>
         </div>
       </div>

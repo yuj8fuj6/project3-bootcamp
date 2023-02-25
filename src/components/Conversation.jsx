@@ -1,11 +1,17 @@
 import React from "react";
 import "./conversation.css";
 
-export default function Conversation() {
+export default function Conversation({ firstName, lastName, profilePic }) {
   return (
     <div className="conversation">
-      <div className="conversationImage"></div>
-      <span className="conversationName">John Doe</span>
+      <img
+        src={profilePic}
+        alt="conversation pic"
+        className="conversationImage"
+      />
+      <span className="conversationName">
+        {firstName} {lastName}
+      </span>
     </div>
   );
 }

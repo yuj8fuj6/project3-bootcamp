@@ -11,6 +11,7 @@ export default function Message({
   firstName,
   lastName,
   profilePic,
+  setCurrentChat,
 }) {
   const { isAuthenticated, loginWithRedirect } = useAuth0();
   const [currentMessage, setCurrentMessage] = useState("");
@@ -22,16 +23,6 @@ export default function Message({
       loginWithRedirect();
     }
   }, []);
-
-  // add users in the chatroom to an array
-  // NOT WORKING
-  // useEffect(() => {
-  //   socket.emit("add_user", email_address);
-  //   console.log("added user", email_address);
-  //   socket.on("get_users", (email_address) => {
-  //     console.log([email_address]);
-  //   });
-  // }, []);
 
   const sendMessage = async () => {
     if (currentMessage) {
@@ -65,6 +56,7 @@ export default function Message({
     socket.on("send_chatData", (data) => {
       console.log("SEND CHAT DATA", data);
       setAllMessages(data);
+      setCurrentChat(true);
     });
   }, []);
 

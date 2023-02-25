@@ -3,8 +3,17 @@ import { Input } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import "./chatSearch.css";
 import uuid from "react-uuid";
+import axios from "axios";
+import { BACKEND_URL } from "../constants";
 
-const ChatSearch = ({ user, socket, email, onCreateChat }) => {
+const ChatSearch = ({
+  user,
+  socket,
+  email,
+  onCreateChat,
+  setAllConversations,
+  setCurrentChat,
+}) => {
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [filterState, setFilterState] = useState("");
   const room = uuid();
@@ -35,7 +44,7 @@ const ChatSearch = ({ user, socket, email, onCreateChat }) => {
       (c) => c.members.includes(email) && c.members.includes(email_address)
     );
     if (!existingChatroom) {
-      socket.emit("join_room", { room, email, email_address });
+      socket.emit("create_room", { room, email, email_address });
       console.log("HANDLE CREATE CHAT", room, email, email_address, chatrooms);
       setChatrooms([
         ...chatrooms,
@@ -48,6 +57,18 @@ const ChatSearch = ({ user, socket, email, onCreateChat }) => {
       console.log("CHATROOM ALREADY EXISTS", existingChatroom);
       setChatroom(existingChatroom.id);
     }
+    setCurrentChat(true);
+    socket.on("chatroom_name", (data) => {
+      console.log("CHATROOM NAME", data);
+    });
+
+    setTimeout(async () => {
+      const { data: conversations } = await axios.get(
+        `${BACKEND_URL}/conversations/${email}`
+      );
+      console.log("RESULT", conversations);
+      setAllConversations(conversations);
+    }, 700);
   };
 
   return (
@@ -74,7 +95,9 @@ const ChatSearch = ({ user, socket, email, onCreateChat }) => {
               <div
                 className="searchItem"
                 key={value.id}
-                onClick={() => handleCreateChat(value.email_address)}
+                onClick={async () =>
+                  await handleCreateChat(value.email_address)
+                }
               >
                 <p>{value.email_address}</p>
               </div>
