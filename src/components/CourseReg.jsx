@@ -40,12 +40,12 @@ const CourseReg = (props) => {
       let options
       if (course.course_indices !== undefined) {
         options = course.course_indices.map((index, i) => {
-          let x = <option value={i}>{index.index_code}</option>;
+          let x = <option value={index.index_code}>{index.index_code}</option>;
           return x;
         });
       }
       console.log(options)
-      options.unshift(<option selected disabled> Choose</option>)
+      //options.unshift(<option selected disabled> Choose</option>)
       return (
         <tr>
           <th>{i + 1}</th>

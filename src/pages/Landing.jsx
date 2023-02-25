@@ -27,6 +27,7 @@ const Landing = () => {
       loginWithRedirect();
     }
   },[]);
+  console.log(courseIndex)
   return (
     <div>
       <Navbar />
