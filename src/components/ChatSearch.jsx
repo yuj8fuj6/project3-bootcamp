@@ -6,14 +6,7 @@ import uuid from "react-uuid";
 import axios from "axios";
 import { BACKEND_URL } from "../constants";
 
-const ChatSearch = ({
-  user,
-  socket,
-  email,
-  // onNewChatRoom,
-  setAllConversations,
-  // setCurrentChat,
-}) => {
+const ChatSearch = ({ user, socket, email, setAllConversations }) => {
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [filterState, setFilterState] = useState("");
   const [chatroom, setChatroom] = useState([]);
@@ -38,7 +31,7 @@ const ChatSearch = ({
   };
 
   const handleCreateChat = (recipientEmail) => {
-    const room = uuid(); // chat room name
+    const room = uuid(); // to render uuid for chatroom name
     const existingChatroom = chatrooms.find(
       (c) => c.members.includes(email) && c.members.includes(recipientEmail)
     );
@@ -53,17 +46,12 @@ const ChatSearch = ({
         ...chatrooms,
         { id: room, members: [email, recipientEmail] },
       ]);
-      // onNewChatRoom(room);
       setFilteredUsers([]);
       setFilterState([]);
     } else {
       console.log("CHATROOM ALREADY EXISTS", existingChatroom);
       setChatroom(existingChatroom.id);
     }
-    // setCurrentChat(true);
-    // socket.on("chatroom_name", (data) => {
-    //   console.log("CHATROOM NAME", data);
-    // });
 
     setTimeout(async () => {
       const { data: conversations } = await axios.get(

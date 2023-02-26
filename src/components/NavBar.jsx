@@ -1,7 +1,6 @@
 import React from "react";
 import "./Navbar.css";
-import { Link, useNavigate } from "react-router-dom";
-// import { Link, useMatch, useResolvedPath } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Logo from "./Logo";
 import {
   HomeSVG,
@@ -13,7 +12,6 @@ import {
   LogoutSVG,
 } from "../assets/SVG";
 import { useAuth0 } from "@auth0/auth0-react";
-import LoggedInUserDisplay from "../components/LoggedInUserDisplay";
 
 export default function Navbar() {
   const { logout } = useAuth0();
@@ -30,7 +28,6 @@ export default function Navbar() {
       <Link to="/main">
         <Logo />
       </Link>
-      <LoggedInUserDisplay />
       <ul className="menu menu-horizontal px-1">
         <li>
           <Link to="/main" className="justify-center-link">
@@ -78,48 +75,3 @@ export default function Navbar() {
     </nav>
   );
 }
-
-//  <CustomLink className="justify-center-link" to="/">
-//           <HomeSVG />
-//           Home
-//         </CustomLink>
-//         <CustomLink to="profile" className="justify-center-link">
-//           <ProfileSVG />
-//           Pofile
-//         </CustomLink>
-//         <CustomLink to="/forum" className="justify-center-link">
-//           <ForumSVG />
-//           Forum
-//         </CustomLink>
-//         <CustomLink to="/messenger" className="justify-center-link">
-//           <MessengerSVG />
-//           Messenger
-//         </CustomLink>
-//         <CustomLink to="/contact" className="justify-center-link">
-//           <ContactSVG />
-//           Contact
-//         </CustomLink>
-//         <CustomLink to="/map" className="justify-center-link">
-//           <MapSVG />
-//           Map
-//         </CustomLink>
-//         <CustomLink to="/logout" className="justify-center-link">
-//           <LogoutSVG />
-//           Logout
-//         </CustomLink>
-
-// // to have an active display when CustomLink is selected
-// function CustomLink({ to, children, ...props }) {
-//   const resolvedPath = useResolvedPath(to);
-
-//   // to determine if resolvedPath is active, without "end:true", partially matched URL
-//   const isActive = useMatch({ path: resolvedPath.pathname, end: true });
-
-//   return (
-//     <li className={isActive ? "active" : ""}>
-//       <Link to={to} {...props}>
-//         {children}
-//       </Link>
-//     </li>
-//   );
-// }

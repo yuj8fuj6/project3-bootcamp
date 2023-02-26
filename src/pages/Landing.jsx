@@ -5,7 +5,6 @@ import Timetable from "../components/Timetable";
 import CourseReg from "../components/CourseReg";
 import "../App.css";
 import axios from "axios";
-import Modal from "../components/Modal";
 import Navbar from "../components/NavBar";
 import { useAuth0 } from "@auth0/auth0-react";
 import { UserContext } from "../contexts/UserContext";

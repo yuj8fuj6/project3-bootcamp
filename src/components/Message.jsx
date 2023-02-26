@@ -17,7 +17,6 @@ export default function Message({
 }) {
   const { isAuthenticated, loginWithRedirect } = useAuth0();
   const [currentMessage, setCurrentMessage] = useState("");
-  // const [messageList, setMessageList] = useState([]);
   const [allMessages, setAllMessages] = useState([]);
 
   useEffect(() => {
@@ -46,7 +45,7 @@ export default function Message({
 
   useEffect(() => {
     socket.on("receive_message", async (data) => {
-      console.log("KLSDNKLASD");
+      console.log("RECEIVED");
       await getMessages();
     });
   }, [socket]);
@@ -56,7 +55,6 @@ export default function Message({
   }, [chatroom]);
 
   useEffect(() => {
-    // on mounted
     getMessages();
   }, []);
 
@@ -85,7 +83,6 @@ export default function Message({
             <h1>
               {firstName} {lastName}
             </h1>
-            <h1>{email_address}</h1>
           </div>
         </div>
         <div className="messageButtons">
@@ -127,32 +124,6 @@ export default function Message({
               </div>
             );
           })}
-          {/* {messageList.map((messageContent, index) => {
-            return (
-              <div
-                className="messageInfo"
-                id={email_address === messageContent.sender ? "you" : "other"}
-                key={index}
-              >
-                <div className="messageFlex">
-                  <img
-                    src={messageContent.profileDP}
-                    alt="profile pic"
-                    className="messageProfileImage"
-                  />
-                  <div>
-                    <div className="messageMeta">
-                      <p id="author">{messageContent.name}</p>
-                      <p id="time">{messageContent.time}</p>
-                    </div>
-                    <div className="messageText">
-                      <p>{messageContent.message}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })} */}
         </ScrollToBottom>
       </div>
       <div className="messageBottom">
