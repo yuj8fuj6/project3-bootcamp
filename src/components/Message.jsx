@@ -40,6 +40,7 @@ export default function Message({
       };
       await socket.emit("send_message", messageData);
       setCurrentMessage("");
+      console.log("SENT", messageData);
     }
   };
 
@@ -69,6 +70,7 @@ export default function Message({
       console.log("ERROR", err);
     }
   };
+  console.log("ALL MESSAGES", allMessages);
 
   return (
     <div className="message">
@@ -80,14 +82,15 @@ export default function Message({
             className="messengerProfileImage"
           />
           <div className="userInfoContainer">
-            <h1>
+            <h1 className="userInfoName">
               {firstName} {lastName}
             </h1>
+            <h1>{email_address}</h1>
           </div>
         </div>
-        <div className="messageButtons">
-          <Button>Delete chat</Button>
-          <Button>View profile</Button>
+        <div className="messageButtonsWrapper">
+          <Button className="messageButtons">Delete chat</Button>
+          <Button className="messageButtons">Confirm Index Swap</Button>
         </div>
       </div>
       <div className="messageBody">
@@ -109,15 +112,13 @@ export default function Message({
                     alt="profile pic"
                     className="messageProfileImage"
                   />
-                  <div>
-                    <div className="messageMeta">
-                      <p id="author">
-                        {`${allMessagesContent.authorUser.first_name} ${allMessagesContent.authorUser.last_name}`}
-                      </p>
-                      <p id="time">{allMessagesContent.time}</p>
-                    </div>
+                  <div className="messageWrapper">
                     <div className="messageText">
                       <p>{allMessagesContent.message}</p>
+                      <p>{allMessagesContent.authorUser.first_name}</p>
+                    </div>
+                    <div className="messageMeta">
+                      <p id="time">{allMessagesContent.time}</p>
                     </div>
                   </div>
                 </div>
@@ -128,16 +129,15 @@ export default function Message({
       </div>
       <div className="messageBottom">
         <Input
+          size="large"
           type="text"
           value={currentMessage}
-          placeholder="Type something..."
+          placeholder="Write a message..."
           onChange={(e) => {
             setCurrentMessage(e.target.value);
           }}
           onKeyPress={(e) => e.key === "Enter" && sendMessage()}
         />
-        <Button onClick={() => sendMessage()}>Send</Button>
-        <Button>Confirm Index Swap</Button>
       </div>
     </div>
   );

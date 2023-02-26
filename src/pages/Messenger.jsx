@@ -17,8 +17,7 @@ const Messenger = () => {
   const { isAuthenticated, loginWithRedirect } = useAuth0();
   const [chatroom, setChatroom] = useState(""); // chatroom name. used by socket
   const user = useContext(UserContext);
-  const { email_address, first_name, last_name, profile_pic_url } =
-    user.userData; // logged in user
+  const { email_address } = user.userData; // logged in user
   const [allConversations, setAllConversations] = useState([]); // list of conversations
   const [currentConversation, setCurrentConversation] = useState({}); // active conversation
   const [currentChat, setCurrentChat] = useState(false); // boolean whether to display chat or not
@@ -54,7 +53,6 @@ const Messenger = () => {
     setCurrentConversation(conversation);
     const chatRoomName = conversation.chatroom.room;
     socket.emit("join_chatroom", chatRoomName);
-    // setChatroom(chatRoomName);
     setCurrentChat(true);
     const chatroomId = allConversations.filter(
       (room) => chatRoomName === room.chatroom.room
@@ -62,9 +60,7 @@ const Messenger = () => {
     setChatroomIndex(chatroomId);
   };
 
-  const closeChat = () => {
-    setCurrentChat(null);
-  };
+  console.log("CURRENT CONVERSATION", currentConversation);
 
   return (
     <>
@@ -90,7 +86,6 @@ const Messenger = () => {
                 />
               </div>
             ))}
-            <Button onClick={() => closeChat()}>clear</Button>
           </div>
         </div>
         <div className="chatConversation">

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Input } from "antd";
-import { CloseOutlined } from "@ant-design/icons";
 import "./chatSearch.css";
 import uuid from "react-uuid";
 import axios from "axios";
@@ -71,12 +70,9 @@ const ChatSearch = ({ user, socket, email, setAllConversations }) => {
             placeholder="Search for friends"
             value={filterState}
             onChange={handleFilter}
+            size="large"
+            allowClear
           />
-          <div className="searchIcon">
-            {filteredUsers.length === 0 ? null : (
-              <CloseOutlined id="clearBtn" onClick={clearInput} />
-            )}
-          </div>
         </div>
       </div>
       {filteredUsers.length !== 0 && (
