@@ -17,7 +17,7 @@ const Timetable = (props) => {
   const { userData } = useContext(UserContext);
   const [course, setCourse] = useState(props.course);
   const { data } = useSWR(indexes && courses ? `${BACKEND_URL}/courses/${courses}/${indexes}` : null, fetcher);
-
+  console.log(data)
   let timetableData
   if(data !== undefined){
     timetableData = data.map((course) => {

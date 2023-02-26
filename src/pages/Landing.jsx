@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react'
 import Logo from "../components/Logo";
 import Timetable from '../components/Timetable';
 import CourseReg from "../components/CourseReg";
+import RegistedCourses from '../components/RegisteredCourse';
 import "../App.css";
 import axios from 'axios';
 import Modal from "../components/Modal";
@@ -39,7 +40,7 @@ const Landing = () => {
             courseIndex={courseIndex}
             setCourseIndex={setCourseIndex}
           />
-          <CourseReg studentData={data} courseIndex={setCourseIndex} />
+          <RegistedCourses></RegistedCourses>
         </div>
       </div>
     </div>
