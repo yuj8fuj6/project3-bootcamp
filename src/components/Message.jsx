@@ -17,7 +17,7 @@ export default function Message({
 }) {
   const { isAuthenticated, loginWithRedirect } = useAuth0();
   const [currentMessage, setCurrentMessage] = useState("");
-  const [messageList, setMessageList] = useState([]);
+  // const [messageList, setMessageList] = useState([]);
   const [allMessages, setAllMessages] = useState([]);
 
   useEffect(() => {
@@ -39,39 +39,38 @@ export default function Message({
           ":" +
           new Date(Date.now()).getMinutes(),
       };
-
       await socket.emit("send_message", messageData);
-      console.log("SENT MESSAGE", messageData);
-      setMessageList((prevMessage) => [...prevMessage, messageData]);
       setCurrentMessage("");
     }
   };
 
   useEffect(() => {
-    console.log("USER RECEIVE");
-    socket.on("receive_message", (data) => {
-      console.log("RECEIVED MESSAGE", data);
-      setMessageList((prevMessage) => [...prevMessage, data]);
+    socket.on("receive_message", async (data) => {
+      console.log("KLSDNKLASD");
+      await getMessages();
     });
-    console.log("RECEIVED");
   }, [socket]);
 
-  const getMessages = () => {
+  useEffect(() => {
+    getMessages();
+  }, [chatroom]);
+
+  useEffect(() => {
+    // on mounted
+    getMessages();
+  }, []);
+
+  const getMessages = async () => {
+    console.log("inside getMessages");
     try {
-      axios
-        .get(`${BACKEND_URL}/conversations/messages/${chatroomId}`)
-        .then((response) => {
-          console.log("RESPONSE", response, response.data);
-          setAllMessages(response.data);
-        });
+      const response = await axios.get(
+        `${BACKEND_URL}/conversations/messages/${chatroomId}`
+      );
+      setAllMessages(response.data);
     } catch (err) {
       console.log("ERROR", err);
     }
   };
-
-  useEffect(() => {
-    getMessages();
-  }, []);
 
   return (
     <div className="message">
@@ -96,41 +95,39 @@ export default function Message({
       </div>
       <div className="messageBody">
         <ScrollToBottom className="messageContainer">
-          {allMessages &&
-            allMessages.map((allMessagesContent, index) => {
-              return (
-                <div
-                  className="messageInfo"
-                  id={
-                    email_address ===
-                    allMessagesContent.authorUser.email_address
-                      ? "you"
-                      : "other"
-                  }
-                  key={index}
-                >
-                  <div className="messageFlex">
-                    <img
-                      src={allMessagesContent.authorUser.profile_pic_url}
-                      alt="profile pic"
-                      className="messageProfileImage"
-                    />
-                    <div>
-                      <div className="messageMeta">
-                        <p id="author">
-                          {`${allMessagesContent.authorUser.first_name} ${allMessagesContent.authorUser.last_name}`}
-                        </p>
-                        <p id="time">{allMessagesContent.time}</p>
-                      </div>
-                      <div className="messageText">
-                        <p>{allMessagesContent.message}</p>
-                      </div>
+          {allMessages.map((allMessagesContent, index) => {
+            return (
+              <div
+                className="messageInfo"
+                id={
+                  email_address === allMessagesContent.authorUser.email_address
+                    ? "you"
+                    : "other"
+                }
+                key={index}
+              >
+                <div className="messageFlex">
+                  <img
+                    src={allMessagesContent.authorUser.profile_pic_url}
+                    alt="profile pic"
+                    className="messageProfileImage"
+                  />
+                  <div>
+                    <div className="messageMeta">
+                      <p id="author">
+                        {`${allMessagesContent.authorUser.first_name} ${allMessagesContent.authorUser.last_name}`}
+                      </p>
+                      <p id="time">{allMessagesContent.time}</p>
+                    </div>
+                    <div className="messageText">
+                      <p>{allMessagesContent.message}</p>
                     </div>
                   </div>
                 </div>
-              );
-            })}
-          {messageList.map((messageContent, index) => {
+              </div>
+            );
+          })}
+          {/* {messageList.map((messageContent, index) => {
             return (
               <div
                 className="messageInfo"
@@ -155,7 +152,7 @@ export default function Message({
                 </div>
               </div>
             );
-          })}
+          })} */}
         </ScrollToBottom>
       </div>
       <div className="messageBottom">

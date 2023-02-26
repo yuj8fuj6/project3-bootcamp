@@ -10,13 +10,12 @@ const ChatSearch = ({
   user,
   socket,
   email,
-  onCreateChat,
+  // onNewChatRoom,
   setAllConversations,
-  setCurrentChat,
+  // setCurrentChat,
 }) => {
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [filterState, setFilterState] = useState("");
-  const room = uuid();
   const [chatroom, setChatroom] = useState([]);
   const [chatrooms, setChatrooms] = useState([]);
 
@@ -38,29 +37,33 @@ const ChatSearch = ({
     setFilterState([]);
   };
 
-  const handleCreateChat = (email_address) => {
-    const chatroom = room;
+  const handleCreateChat = (recipientEmail) => {
+    const room = uuid(); // chat room name
     const existingChatroom = chatrooms.find(
-      (c) => c.members.includes(email) && c.members.includes(email_address)
+      (c) => c.members.includes(email) && c.members.includes(recipientEmail)
     );
     if (!existingChatroom) {
-      socket.emit("create_room", { room, email, email_address });
-      console.log("HANDLE CREATE CHAT", room, email, email_address, chatrooms);
+      socket.emit("create_room", {
+        room,
+        email,
+        email_address: recipientEmail,
+      });
+      console.log("HANDLE CREATE CHAT", room, email, recipientEmail, chatrooms);
       setChatrooms([
         ...chatrooms,
-        { id: room, members: [email, email_address] },
+        { id: room, members: [email, recipientEmail] },
       ]);
-      onCreateChat(room);
+      // onNewChatRoom(room);
       setFilteredUsers([]);
       setFilterState([]);
     } else {
       console.log("CHATROOM ALREADY EXISTS", existingChatroom);
       setChatroom(existingChatroom.id);
     }
-    setCurrentChat(true);
-    socket.on("chatroom_name", (data) => {
-      console.log("CHATROOM NAME", data);
-    });
+    // setCurrentChat(true);
+    // socket.on("chatroom_name", (data) => {
+    //   console.log("CHATROOM NAME", data);
+    // });
 
     setTimeout(async () => {
       const { data: conversations } = await axios.get(

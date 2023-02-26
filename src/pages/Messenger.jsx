@@ -15,21 +15,18 @@ const socket = io.connect(BACKEND_URL);
 
 const Messenger = () => {
   const { isAuthenticated, loginWithRedirect } = useAuth0();
-  const [chatroom, setChatroom] = useState("");
+  const [chatroom, setChatroom] = useState(""); // chatroom name. used by socket
   const user = useContext(UserContext);
   const { email_address, first_name, last_name, profile_pic_url } =
-    user.userData;
-  const [allConversations, setAllConversations] = useState([]);
-  const [currentChat, setCurrentChat] = useState("");
-  const [chatroomIndex, setChatroomIndex] = useState("");
-
-  console.log(socket);
+    user.userData; // logged in user
+  const [allConversations, setAllConversations] = useState([]); // list of conversations
+  const [currentConversation, setCurrentConversation] = useState({}); // active conversation
+  const [currentChat, setCurrentChat] = useState(false); // boolean whether to display chat or not
+  const [chatroomIndex, setChatroomIndex] = useState(""); // active chat room id
 
   socket.on("connect", () => {
-    console.log("CLIENT CONNECTED");
     const userId = email_address;
     socket.emit("add_user", userId);
-    console.log("ADDED USER", userId);
   });
 
   useEffect(() => {
@@ -42,7 +39,6 @@ const Messenger = () => {
     const { data: conversations } = await axios.get(
       `${BACKEND_URL}/conversations/${email_address}`
     );
-    console.log("RESULT", conversations);
     setAllConversations(conversations);
   };
 
@@ -52,26 +48,21 @@ const Messenger = () => {
 
   const handleChatroom = (newChatroom) => {
     setChatroom(newChatroom);
-    console.log("NEW CHATROOM", newChatroom);
   };
-  console.log("CONVERSATION", allConversations);
 
-  const startChat = (chatroom) => {
-    console.log("JOIN CHATROOM", chatroom);
-    socket.emit("join_chatroom", chatroom);
-    console.log("JOINED");
-    setChatroom(chatroom);
-    setCurrentChat(chatroom);
+  const startChat = (conversation) => {
+    setCurrentConversation(conversation);
+    const chatRoomName = conversation.chatroom.room;
+    socket.emit("join_chatroom", chatRoomName);
+    // setChatroom(chatRoomName);
+    setCurrentChat(true);
     const chatroomId = allConversations.filter(
-      (room) => chatroom === room.chatroom.room
+      (room) => chatRoomName === room.chatroom.room
     )[0].chatroomId;
-    console.log("CHATROOM ID", chatroomId);
-    console.log("CHATROOM", chatroom);
     setChatroomIndex(chatroomId);
   };
 
   const closeChat = () => {
-    console.log("CLOSE CHAT");
     setCurrentChat(null);
   };
 
@@ -90,10 +81,7 @@ const Messenger = () => {
               setCurrentChat={setCurrentChat}
             />
             {allConversations.map((conversation, index) => (
-              <div
-                key={index}
-                onClick={() => startChat(conversation.chatroom.room)}
-              >
+              <div key={index} onClick={() => startChat(conversation)}>
                 <Conversation
                   firstName={conversation.user.first_name}
                   lastName={conversation.user.last_name}
@@ -111,12 +99,12 @@ const Messenger = () => {
               <>
                 <Message
                   socket={socket}
-                  chatroom={chatroom}
+                  chatroom={currentConversation.chatroom.room}
                   chatroomId={chatroomIndex}
-                  email_address={email_address}
-                  firstName={first_name}
-                  lastName={last_name}
-                  profilePic={profile_pic_url}
+                  email_address={currentConversation.user.email_address}
+                  firstName={currentConversation.user.first_name}
+                  lastName={currentConversation.user.last_name}
+                  profilePic={currentConversation.user.profile_pic_url}
                 />
               </>
             ) : (
