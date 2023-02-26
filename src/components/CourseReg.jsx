@@ -38,10 +38,18 @@ const CourseReg = (props) => {
     console.log(course_index)
   }
 
-  // const registerCourse = (e, course) => {
-  //   e.preventdefault()
-  //   const{ data: updated } = 
-  // }
+  const registerCourse = async(e, course) => {
+    e.preventDefault()
+    const data = await axios
+      .post(
+        `${BACKEND_URL}/courses/register/22252fc1-ca47-4e93-b26c-d52ba74e26c6/98`,
+        {
+          studentID: "22252fc1-ca47-4e93-b26c-d52ba74e26c6",
+          indexes: [14, 98, 83, 73],
+        }
+      )
+      .catch((err) => console.log(err));
+  }
   let element
   if(indexData !== undefined){
     element = indexData.map((course, i) => {
@@ -91,7 +99,7 @@ const CourseReg = (props) => {
         </thead>
       </table>
       <Button onClick={addCourse}>Add Courses</Button>
-      {/* <Button onClick={registerCourse}>Register</Button> */}
+      <Button onClick={registerCourse}>Register</Button>
     </div>
   );
 }
