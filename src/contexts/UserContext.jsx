@@ -11,8 +11,6 @@ export const UserContextProvider = (props) => {
   const [userData, setUserData] = useState([]);
   const [email, setEmail] = useState("");
   const [allUserData, setAllUserData] = useState([]);
-  const [userPhotoURL, setUserPhotoURL] = useState("");
-  const [userPhone, setUserPhone] = useState(0);
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
@@ -25,6 +23,7 @@ export const UserContextProvider = (props) => {
     if (email) {
       axios.get(`${BACKEND_URL}/users/${email}`).then((response) => {
         setUserData(response.data);
+        console.log(userData);
       });
     }
   }, [email]);
@@ -43,27 +42,9 @@ export const UserContextProvider = (props) => {
     }
   }, [isAuthenticated]);
 
-  useEffect(() => {
-    if (email) {
-      axios.get(`${BACKEND_URL}/users/${email}`).then((response) => {
-        setUserPhotoURL(response.data.profile_pic_url);
-      });
-    }
-  }, [userData.profile_pic_url]);
-
-  useEffect(() => {
-    if (email) {
-      axios.get(`${BACKEND_URL}/users/${email}`).then((response) => {
-        setUserPhone(response.data.phone_number);
-      });
-    }
-  }, [userData.phone_number]);
-
-  console.log(userPhone);
-
   return (
     <UserContext.Provider
-      value={{ userData, allUserData, userPhotoURL, userPhone }}
+      value={{ userData, allUserData, setUserData }}
     >
       {props.children}
     </UserContext.Provider>
