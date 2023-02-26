@@ -3,7 +3,7 @@ import axios from "axios";
 
 import { BACKEND_URL } from "../constants.js";
 
-const MapFeed = () => {
+const MapFeedIndividual = () => {
   // const [locationData, setLocationData] = useState([]);
   // const [mapURL, setMapURL] = useState("");
 
@@ -28,4 +28,4 @@ const MapFeed = () => {
   );
 };
 
-export default MapFeed;
+export default MapFeedIndividual;
