@@ -96,8 +96,6 @@ const CourseReg = (props) => {
           return x;
         });
       }
-      console.log(props.courseIndex)
-      //options.unshift(<option selected disabled> Choose</option>)
       return (
         <tr>
           <th>{i + 1}</th>
