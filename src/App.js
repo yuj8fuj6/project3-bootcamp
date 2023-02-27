@@ -14,7 +14,8 @@ import { CourseContextProvider } from "./contexts/CourseContext";
 import { ForumContextProvider } from "./contexts/ForumContext";
 import ForumFeed from "./components/ForumFeed";
 import ForumFeedIndividual from "./components/ForumFeedIndividual";
-
+import MapFeed from "./components/MapFeed";
+import MapFeedIndividual from "./components/MapFeedIndividual";
 
 const App = () => {
   return (
@@ -34,7 +35,10 @@ const App = () => {
                 </Route>
                 <Route path="messenger" element={<Messenger />} />
                 <Route path="contact" element={<Contact />} />
-                <Route path="map" element={<Map />} />
+                <Route path="map" element={<Map />}>
+                  <Route index={true} element={<MapFeed />} />
+                  <Route path=":id" element={<MapFeedIndividual />} />
+                </Route>
               </Routes>
             </ForumContextProvider>
           </CourseContextProvider>
