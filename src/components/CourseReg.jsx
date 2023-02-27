@@ -9,7 +9,6 @@ let courses = "";
 
 const CourseReg = (props) => {
   const studentData = props.studentData
-  const { trigger } = useSWRMutation(`${BACKEND_URL}/courses/register`, registerCourses)
   const [courses, setCourse] = useState(""); //used as a query param
   const { data: indexData } = useGetIndexData(courses);
   // add course function: add courses to query to backend and add it to courseIndex to be transferred to other components
@@ -38,17 +37,30 @@ const CourseReg = (props) => {
     console.log(course_index)
   }
 
-  const registerCourse = async(e, course) => {
+  const registerCourse = async(e) => {
     e.preventDefault()
-    const data = await axios
-      .post(
-        `${BACKEND_URL}/courses/register/22252fc1-ca47-4e93-b26c-d52ba74e26c6/98`,
-        {
-          studentID: "22252fc1-ca47-4e93-b26c-d52ba74e26c6",
-          indexes: [14, 98, 83, 73],
-        }
-      )
-      .catch((err) => console.log(err));
+    let indexes = Object.values(props.courseIndex);
+    let courses = Object.keys(props.courseIndex);
+
+    indexes = indexes.map((index,i) => {
+      let course = indexData.find(course => course.course_code === courses[i]);
+      let indice = course.course_indices.find(slot => slot.index_code === index)
+      return indice.id
+    })
+    if(indexes.length === 0){
+      console.log("it is empty")
+    }
+    else{
+      const data = await axios
+        .post(
+          `${BACKEND_URL}/courses/register/${studentData.id}/${studentData.student.id}`,
+          {
+            studentID: studentData.student.id,
+            indexes: indexes,
+          }
+        )
+        .catch((err) => console.log(err));
+    }
   }
   let element
   if(indexData !== undefined){
@@ -108,8 +120,4 @@ export default CourseReg
 
 function useGetIndexData(courses) {
   return useSWR(() => (courses ? `${BACKEND_URL}/courses/${courses}` : null), fetcher);
-}
-
-async function registerCourses(url, { arg }) {
-  await axios.post(url, arg).then((res) => res.data);
 }

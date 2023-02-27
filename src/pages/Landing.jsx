@@ -36,7 +36,7 @@ const Landing = () => {
         <Timetable courseIndex={courseIndex} />
         <div className="rows">
           <CourseReg
-            studentData={data}
+            studentData={userData}
             courseIndex={courseIndex}
             setCourseIndex={setCourseIndex}
           />
