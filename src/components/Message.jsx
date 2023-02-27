@@ -5,6 +5,8 @@ import { useAuth0 } from "@auth0/auth0-react";
 import ScrollToBottom from "react-scroll-to-bottom";
 import axios from "axios";
 import { BACKEND_URL } from "../constants";
+import IndexSwapModal from "../components/IndexSwapModal";
+import ViewProfileModal from "../components/ViewProfileModal";
 
 export default function Message({
   socket,
@@ -112,7 +114,8 @@ export default function Message({
           </div>
         </div>
         <div className="messageButtonsWrapper">
-          <Button className="messageButtons">Confirm Index Swap</Button>
+          <ViewProfileModal recipientEmail={recipientEmail} />
+          <IndexSwapModal />
         </div>
       </div>
       <div className="messageBody">

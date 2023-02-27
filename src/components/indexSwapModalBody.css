@@ -1,0 +1,23 @@
+.modalBody {
+  display: flex;
+  flex-direction: column;
+}
+
+.modalTitle {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.modalInfoBox {
+  width: 100%;
+  background-color: white;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid black;
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+.modalInfoDetails {
+  color: grey;
+}
