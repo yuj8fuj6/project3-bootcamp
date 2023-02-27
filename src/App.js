@@ -11,7 +11,7 @@ import Login from "./pages/Login";
 import { Route, Routes } from "react-router-dom";
 import { UserContextProvider } from "./contexts/UserContext";
 import { CourseContextProvider } from "./contexts/CourseContext";
-import { ForumContextProvider } from "./contexts/ForumContext"
+import { ForumContextProvider } from "./contexts/ForumContext";
 import ForumFeed from "./components/ForumFeed";
 import ForumFeedIndividual from "./components/ForumFeedIndividual";
 
@@ -24,18 +24,18 @@ const App = () => {
         <UserContextProvider>
           <CourseContextProvider>
             <ForumContextProvider>
-            <Routes>
-              <Route path="/" element={<Login />} />
-              <Route path="main" element={<Landing />} />
-              <Route path="profile" element={<Profile />} />
-              <Route path="forum" element={<Forum />}>
-                <Route index={true} element={<ForumFeed />} />
-                <Route path=":id" element={<ForumFeedIndividual />} />
-              </Route>
-              <Route path="messenger" element={<Messenger />} />
-              <Route path="contact" element={<Contact />} />
-              <Route path="map" element={<Map />} />
-            </Routes>
+              <Routes>
+                <Route path="/" element={<Login />} />
+                <Route path="main" element={<Landing />} />
+                <Route path="profile" element={<Profile />} />
+                <Route path="forum" element={<Forum />}>
+                  <Route index={true} element={<ForumFeed />} />
+                  <Route path=":id" element={<ForumFeedIndividual />} />
+                </Route>
+                <Route path="messenger" element={<Messenger />} />
+                <Route path="contact" element={<Contact />} />
+                <Route path="map" element={<Map />} />
+              </Routes>
             </ForumContextProvider>
           </CourseContextProvider>
         </UserContextProvider>
