@@ -16,17 +16,18 @@ const ChatSearch = ({ user, socket, email, setAllConversations }) => {
     setFilterState(searchUser);
     const newFilter = user.allUserData.filter((value) => {
       return value.email_address.includes(searchUser);
+      /*
+      HOW TO FILTER FOR ONLY STUDENTS
+      EXCLUDE '@ntu.edu.sg', OWN EMAIL AND ALREADY ACTIVE CONVERSATIONS
+      &&
+      !value.email_address.endsWith(`@ntu.edu.sg`)
+      */
     });
     if (searchUser === "") {
       setFilteredUsers([]);
     } else {
       setFilteredUsers(newFilter);
     }
-  };
-
-  const clearInput = () => {
-    setFilteredUsers([]);
-    setFilterState([]);
   };
 
   const handleCreateChat = (recipientEmail) => {

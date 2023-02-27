@@ -39,7 +39,6 @@ const Messenger = () => {
       `${BACKEND_URL}/conversations/${email_address}`
     );
     setAllConversations(conversations);
-    console.log("CONVERSATIONS", conversations);
   };
 
   useEffect(() => {
@@ -62,6 +61,7 @@ const Messenger = () => {
   };
 
   console.log("CURRENT CONVERSATION", currentConversation);
+  console.log("ALL CONVERSATION", allConversations);
 
   return (
     <>

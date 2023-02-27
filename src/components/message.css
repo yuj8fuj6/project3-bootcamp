@@ -158,6 +158,10 @@
   padding: 20px;
 }
 
-.messageButtons {
+.messageButtonsWrapper {
+  display: flex;
+}
+
+.messageTopBtn {
   margin-left: 10px;
 }

@@ -15,6 +15,10 @@ export default function IndexSwapModal() {
     setIsModalOpen(false);
   };
 
+  const handleSwap = async () => {
+    await setIsModalOpen(false);
+  };
+
   return (
     <>
       <Button type="default" onClick={showModal}>
@@ -31,7 +35,7 @@ export default function IndexSwapModal() {
       >
         <IndexSwapModalBody />
         <div className="modalFooter">
-          <Button onClick={handleOk} className="modalBtn">
+          <Button onClick={handleSwap} className="modalBtn">
             Confirm swap
           </Button>
           <Button onClick={handleOk} className="modalBtn">

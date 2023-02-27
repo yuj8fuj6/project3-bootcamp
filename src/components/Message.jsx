@@ -114,8 +114,12 @@ export default function Message({
           </div>
         </div>
         <div className="messageButtonsWrapper">
-          <ViewProfileModal recipientEmail={recipientEmail} />
-          <IndexSwapModal />
+          <div className="messageTopBtn">
+            <ViewProfileModal recipientEmail={recipientEmail} />
+          </div>
+          <div className="messageTopBtn">
+            <IndexSwapModal className="messageTopBtn" />
+          </div>
         </div>
       </div>
       <div className="messageBody">

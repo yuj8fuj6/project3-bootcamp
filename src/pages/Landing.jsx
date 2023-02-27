@@ -1,6 +1,4 @@
 import React, { useEffect, useState, useContext } from "react";
-import CourseModal from "../components/CourseModal";
-import Logo from "../components/Logo";
 import Timetable from "../components/Timetable";
 import CourseReg from "../components/CourseReg";
 import "../App.css";
@@ -31,7 +29,6 @@ const Landing = () => {
   return (
     <div>
       <Navbar />
-      <CourseModal />
       <div className="columns">
         <Timetable courseIndex={courseIndex} />
         <div className="rows">
