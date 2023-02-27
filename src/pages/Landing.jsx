@@ -1,16 +1,14 @@
-import React, { useEffect, useState, useContext } from 'react'
-import Logo from "../components/Logo";
-import Timetable from '../components/Timetable';
+import React, { useEffect, useState, useContext } from "react";
+import Timetable from "../components/Timetable";
 import CourseReg from "../components/CourseReg";
-import RegistedCourses from '../components/RegisteredCourse';
+import RegistedCourses from "../components/RegisteredCourse";
 import "../App.css";
-import axios from 'axios';
-import Modal from "../components/Modal";
+import axios from "axios";
 import Navbar from "../components/NavBar";
 import { useAuth0 } from "@auth0/auth0-react";
 import { UserContext } from "../contexts/UserContext";
-import useSWR from"swr"
-import { BACKEND_URL } from '../constants';
+import useSWR from "swr";
+import { BACKEND_URL } from "../constants";
 // worry next time, need to relate to user
 const Landing = () => {
   const [course, setCourse] = useState([]);
@@ -27,7 +25,7 @@ const Landing = () => {
     if (!isAuthenticated) {
       loginWithRedirect();
     }
-  },[]);
+  }, []);
   return (
     <div>
       <Navbar />
@@ -43,6 +41,6 @@ const Landing = () => {
       </div>
     </div>
   );
-}
+};
 
 export default Landing;

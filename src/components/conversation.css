@@ -1,0 +1,35 @@
+.conversation {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  cursor: pointer;
+  border-bottom: 1px solid #dcdcdc;
+}
+
+.conversation:hover {
+  background-color: #98a0a3;
+  color: black;
+}
+
+.conversationImage {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 20px;
+}
+
+.conversationWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.conversationName {
+  font-weight: bold;
+  color: black;
+}
+
+.conversationEmail {
+  font-size: 13px;
+  padding-left: 10px;
+}
