@@ -27,6 +27,29 @@ const CourseReg = (props) => {
     props.setCourseIndex(course_index)
   }
 
+  const deleteCourse = () =>{
+    let course_index = {
+      ...props.courseIndex,
+    };
+    let courses = Object.keys(props.courseIndex);
+    let course_code = prompt("Please enter course code", "");
+    if (!courses.length) {
+      alert("There is no courses to delete");
+    }
+    else if(courses.indexOf(course_code) !== -1 || course_code === ''){
+      delete course_index[course_code];
+      console.log(course_code)
+    }
+    else{
+      alert(`${course_code} is present in your current courses`);
+    }
+    props.setCourseIndex(course_index);
+    let a = courses.indexOf(course_code);
+    courses.splice(a,1)
+    setCourse(courses.join("+"))
+    console.log(courses)
+  }
+
   const handleChange = (e, course) =>{
     e.preventDefault()
     let course_index = {...props.courseIndex}
@@ -112,6 +135,7 @@ const CourseReg = (props) => {
       </table>
       <Button onClick={addCourse}>Add Courses</Button>
       <Button onClick={registerCourse}>Register</Button>
+      <Button onClick={deleteCourse}>Delete Course</Button>
     </div>
   );
 }
