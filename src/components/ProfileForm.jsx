@@ -54,11 +54,20 @@ const ProfileForm = ({
       audience: `${audience}`,
       scope: "read:current_user",
     });
+
     await axios
-      .post(`${BACKEND_URL}/users/profile`, {
-        phone_number: `${phoneContact}`,
-        user_id: `${id}`,
-      })
+      .put(
+        `${BACKEND_URL}/users/profile`,
+        {
+          phone_number: `${phoneContact}`,
+          user_id: `${id}`,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      )
       .then((res) => {
         console.log(res.data.phone_number);
         setPhoneContact(res.data.phone_number);
@@ -90,6 +99,11 @@ const ProfileForm = ({
 
   const handlePhotoSubmit = async (e) => {
     e.preventDefault();
+    const accessToken = await getAccessTokenSilently({
+      audience: `${audience}`,
+      scope: "read:current_user",
+    });
+
     // const photoURL = await uploadPhoto(updatedPhotoFile);
     // Do not know why this code below only works after 2 clicks.
     const profilePhotoRef = ref(storage, `${lastName} ${firstName}`);
@@ -103,10 +117,18 @@ const ProfileForm = ({
         }),
     );
     await axios
-      .post(`${BACKEND_URL}/users/photoURL`, {
-        photoURL: `${photoURL}`,
-        user_id: `${id}`,
-      })
+      .put(
+        `${BACKEND_URL}/users/photoURL`,
+        {
+          photoURL: `${photoURL}`,
+          user_id: `${id}`,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      )
       .then((res) => {
         console.log(res.data.profile_pic_url);
         setUpdatedPhotoFileURL(res.data.profile_pic_url);
