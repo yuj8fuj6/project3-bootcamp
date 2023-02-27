@@ -9,7 +9,7 @@ const fetcher = (url) => axios.get(url).then((res) => res.data);
 const RegistedCourses = (props) => {
   const userData = props.userData;
   let str = `${BACKEND_URL}/courses/temporary/registered/${userData?.student?.id}/courses`;
-  const { data: registered, mutate:refetch } = useSWR(`${BACKEND_URL}/courses/temporary/registered/${userData?.student?.id}/courses`,fetcher);
+  const { data: registered, mutate:refetch } = useSWR(`${BACKEND_URL}/courses/registered/user/${userData?.student?.id}/courses`,fetcher);
   console.log(registered)
   
   return (
@@ -24,21 +24,18 @@ const RegistedCourses = (props) => {
           </tr>
         </thead>
         <tbody>
-          {/* row 1 */}
           <tr>
             <th>1</th>
             <td>Cy Ganderton</td>
             <td>Quality Control Specialist</td>
             <td>Blue</td>
           </tr>
-          {/* row 2 */}
           <tr>
             <th>2</th>
             <td>Hart Hagerty</td>
             <td>Desktop Support Technician</td>
             <td>Purple</td>
           </tr>
-          {/* row 3 */}
           <tr>
             <th>3</th>
             <td>Brice Swyre</td>
@@ -48,7 +45,6 @@ const RegistedCourses = (props) => {
         </tbody>
       </table>
       <Button>Print Timetable</Button>
-      {/* <Button onClick={registerCourse}>Register</Button> */}
     </div>
   );
 }
