@@ -1,12 +1,17 @@
-import React, { useEffect, useState} from "react";
+import React, { useEffect, useState, useContext} from "react";
 import Button from "../components/Button";
 import axios from "axios";
 import useSWR from "swr";
-import { BACKEND_URL } from "../constants";
 import { UserContext } from "../contexts/UserContext";
+import { BACKEND_URL } from "../constants";
 const fetcher = (url) => axios.get(url).then((res) => res.data);
 
-const RegistedCourses = () => {
+const RegistedCourses = (props) => {
+  const userData = props.userData;
+  let str = `${BACKEND_URL}/courses/temporary/registered/${userData?.student?.id}/courses`;
+  const { data: registered, mutate:refetch } = useSWR(`${BACKEND_URL}/courses/temporary/registered/${userData?.student?.id}/courses`,fetcher);
+  console.log(registered)
+  
   return (
     <div className="table table-compact w-ful">
       <table className="table w-full">
@@ -15,10 +20,6 @@ const RegistedCourses = () => {
             <th></th>
             <th>Course</th>
             <th>Group</th>
-            <th>destiny</th>
-            <th>destiny</th>
-            <th>destiny</th>
-            <th>destiny</th>
             <th>destiny</th>
           </tr>
         </thead>

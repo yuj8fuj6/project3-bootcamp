@@ -32,14 +32,13 @@ const Landing = () => {
     <div>
       <Navbar />
       <div className="columns">
-        <Timetable courseIndex={courseIndex} />
+        <Timetable courseIndex={courseIndex} userData={userData} />
         <div className="rows">
           <CourseReg
-            studentData={userData}
             courseIndex={courseIndex}
             setCourseIndex={setCourseIndex}
           />
-          <RegistedCourses></RegistedCourses>
+          <RegistedCourses userData={userData}></RegistedCourses>
         </div>
       </div>
     </div>

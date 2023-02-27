@@ -15,13 +15,16 @@ const fetcher = (url) => axios.get(url).then((res) => res.data);
 const Timetable = (props) => {
   const indexes = Object.values(props.courseIndex).filter(x => x).join("+")
   const courses = Object.keys(props.courseIndex).filter(x => x).join("+");
-  const { userData } = useContext(UserContext);
-  const { data } = useSWR(indexes && courses ? `${BACKEND_URL}/courses/${courses}/${indexes}` : null, fetcher);
-  console.log(data)
+  const userData = props.userData
+  const { data: courseReg } = useSWR(indexes && courses ? `${BACKEND_URL}/courses/${courses}/${indexes}` : null, fetcher);
+  const { data: registered, mutate:refetch } = useSWR(`${BACKEND_URL}/courses/temporary/registered/${userData?.student?.id}/courses`,fetcher);
+  console.log(registered)
   let timetableData
-  if(data !== undefined){
-    console.log(data)
-    timetableData = data.map((course) => {
+  if(courseReg !== undefined){
+    // For later integration
+    // let combined = courseReg.map((ele) => ele.course_indices);
+    // console.log(combined);
+    timetableData = courseReg.map((course) => {
       const [day, start, end] = setTime(course.course_indices);
       console.log(start)
       let data = {
@@ -39,7 +42,6 @@ const Timetable = (props) => {
       return data;
     });
   }
-  console.log(timetableData)
   // roomId: dataItem.RoomID,
   // ownerID: dataItem.OwnerID,
   // personId: dataItem.OwnerID
@@ -61,6 +63,7 @@ export default Timetable
 
 function setTime(time){
   const baseDay = "2023-02-19"
+  //const day values to add to base day
   const dayValues = {
     Sunday: 0,
     Monday: 1,
