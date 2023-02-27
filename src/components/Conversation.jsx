@@ -1,7 +1,12 @@
 import React from "react";
 import "./conversation.css";
 
-export default function Conversation({ firstName, lastName, profilePic }) {
+export default function Conversation({
+  firstName,
+  lastName,
+  profilePic,
+  email,
+}) {
   return (
     <div className="conversation">
       <img
@@ -9,9 +14,12 @@ export default function Conversation({ firstName, lastName, profilePic }) {
         alt="conversation pic"
         className="conversationImage"
       />
-      <span className="conversationName">
-        {firstName} {lastName}
-      </span>
+      <div className="conversationWrapper">
+        <span className="conversationName">
+          {firstName} {lastName}
+        </span>
+        <span className="conversationEmail">{email}</span>
+      </div>
     </div>
   );
 }

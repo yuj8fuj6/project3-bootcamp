@@ -27,6 +27,10 @@ export default function Message({
   }, []);
 
   const sendMessage = async () => {
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes().toString().padStart(2, 0);
+    const time = `${hours}:${minutes}`;
     if (currentMessage) {
       const messageData = {
         message: currentMessage,
@@ -34,10 +38,7 @@ export default function Message({
         sender: email_address,
         name: `${firstName} ${lastName}`,
         profileDP: profilePic,
-        time:
-          new Date(Date.now()).getHours() +
-          ":" +
-          new Date(Date.now()).getMinutes(),
+        time: time,
       };
       await socket.emit("send_message", messageData);
       setCurrentMessage("");
@@ -60,7 +61,11 @@ export default function Message({
     getMessages();
   }, []);
 
-  console.log("HELLO", chatroomId);
+  /*
+  MAYBE CAN IMPLEMENT PROPERLY NEXT TIME
+  CURRENTLY CAN ONLY DELETE 1 SINGLE ENTRY,
+  THE CURRENT USER IN NO LONGER IN THE ROOM BUT
+  THE OTHER USER IS STILL IN THE ROOM
   const handleDelete = async () => {
     console.log("CHATROOM TO DELETE", chatroomId);
     await axios
@@ -75,6 +80,7 @@ export default function Message({
         alert("No conversation was deleted");
       });
   };
+  */
 
   const getMessages = async () => {
     console.log("inside getMessages");
@@ -106,9 +112,6 @@ export default function Message({
           </div>
         </div>
         <div className="messageButtonsWrapper">
-          <Button className="messageButtons" onClick={handleDelete}>
-            Delete chat
-          </Button>
           <Button className="messageButtons">Confirm Index Swap</Button>
         </div>
       </div>

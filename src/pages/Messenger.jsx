@@ -84,6 +84,7 @@ const Messenger = () => {
                   lastName={conversation.user.last_name}
                   profilePic={conversation.user.profile_pic_url}
                   chatroomName={conversation.chatroom.room}
+                  email={conversation.user.email_address}
                 />
               </div>
             ))}

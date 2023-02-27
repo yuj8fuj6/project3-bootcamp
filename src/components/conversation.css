@@ -8,6 +8,7 @@
 
 .conversation:hover {
   background-color: #98a0a3;
+  color: black;
 }
 
 .conversationImage {
@@ -18,7 +19,17 @@
   margin-right: 20px;
 }
 
+.conversationWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
 .conversationName {
   font-weight: bold;
   color: black;
+}
+
+.conversationEmail {
+  font-size: 13px;
+  padding-left: 10px;
 }
