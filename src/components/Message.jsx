@@ -14,6 +14,7 @@ export default function Message({
   lastName,
   profilePic,
   chatroomId,
+  recipientEmail,
 }) {
   const { isAuthenticated, loginWithRedirect } = useAuth0();
   const [currentMessage, setCurrentMessage] = useState("");
@@ -59,6 +60,22 @@ export default function Message({
     getMessages();
   }, []);
 
+  console.log("HELLO", chatroomId);
+  const handleDelete = async () => {
+    console.log("CHATROOM TO DELETE", chatroomId);
+    await axios
+      .post(`${BACKEND_URL}/conversations/deleteConversation`, {
+        chatroomId: chatroomId,
+      })
+      .then((res) => {
+        console.log("CHATROOM BE", chatroomId);
+      })
+      .catch((err) => {
+        console.log("ERROR", err);
+        alert("No conversation was deleted");
+      });
+  };
+
   const getMessages = async () => {
     console.log("inside getMessages");
     try {
@@ -85,11 +102,13 @@ export default function Message({
             <h1 className="userInfoName">
               {firstName} {lastName}
             </h1>
-            <h1>{email_address}</h1>
+            <h1>{recipientEmail}</h1>
           </div>
         </div>
         <div className="messageButtonsWrapper">
-          <Button className="messageButtons">Delete chat</Button>
+          <Button className="messageButtons" onClick={handleDelete}>
+            Delete chat
+          </Button>
           <Button className="messageButtons">Confirm Index Swap</Button>
         </div>
       </div>
@@ -115,7 +134,6 @@ export default function Message({
                   <div className="messageWrapper">
                     <div className="messageText">
                       <p>{allMessagesContent.message}</p>
-                      <p>{allMessagesContent.authorUser.first_name}</p>
                     </div>
                     <div className="messageMeta">
                       <p id="time">{allMessagesContent.time}</p>

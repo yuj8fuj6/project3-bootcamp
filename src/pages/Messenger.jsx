@@ -39,6 +39,7 @@ const Messenger = () => {
       `${BACKEND_URL}/conversations/${email_address}`
     );
     setAllConversations(conversations);
+    console.log("CONVERSATIONS", conversations);
   };
 
   useEffect(() => {
@@ -96,7 +97,8 @@ const Messenger = () => {
                   socket={socket}
                   chatroom={currentConversation.chatroom.room}
                   chatroomId={chatroomIndex}
-                  email_address={currentConversation.user.email_address}
+                  email_address={email_address}
+                  recipientEmail={currentConversation.user.email_address}
                   firstName={currentConversation.user.first_name}
                   lastName={currentConversation.user.last_name}
                   profilePic={currentConversation.user.profile_pic_url}

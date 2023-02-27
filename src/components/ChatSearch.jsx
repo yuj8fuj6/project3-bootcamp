@@ -67,7 +67,7 @@ const ChatSearch = ({ user, socket, email, setAllConversations }) => {
         <div className="searchInputs">
           <Input
             type="text"
-            placeholder="Search for friends"
+            placeholder="Search by email"
             value={filterState}
             onChange={handleFilter}
             size="large"
