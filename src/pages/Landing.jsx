@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import Timetable from "../components/Timetable";
 import CourseReg from "../components/CourseReg";
+import RegistedCourses from "../components/RegisteredCourse";
 import "../App.css";
 import axios from "axios";
 import Navbar from "../components/NavBar";
@@ -25,19 +26,17 @@ const Landing = () => {
       loginWithRedirect();
     }
   }, []);
-  console.log(courseIndex);
   return (
     <div>
       <Navbar />
       <div className="columns">
-        <Timetable courseIndex={courseIndex} />
+        <Timetable courseIndex={courseIndex} userData={userData} />
         <div className="rows">
           <CourseReg
-            studentData={data}
             courseIndex={courseIndex}
             setCourseIndex={setCourseIndex}
           />
-          <CourseReg studentData={data} courseIndex={setCourseIndex} />
+          <RegistedCourses userData={userData}></RegistedCourses>
         </div>
       </div>
     </div>
