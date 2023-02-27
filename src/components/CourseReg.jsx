@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Button from "../components/Button"
 import axios from "axios";
 import useSWR from "swr";
+import useSWRMutation from 'swr/mutation' 
 import { BACKEND_URL } from "../constants";
 const fetcher = (url) => axios.get(url).then((res) => res.data);
 let courses = "";
@@ -26,12 +27,63 @@ const CourseReg = (props) => {
     props.setCourseIndex(course_index)
   }
 
+  const deleteCourse = () =>{
+    let course_index = {
+      ...props.courseIndex,
+    };
+    let courses = Object.keys(props.courseIndex);
+    let course_code = prompt("Please enter course code", "");
+    if (!courses.length) {
+      alert("There is no courses to delete");
+    }
+    else if(courses.indexOf(course_code) !== -1 || course_code === ''){
+      delete course_index[course_code];
+      console.log(course_code)
+    }
+    else{
+      alert(`${course_code} is present in your current courses`);
+    }
+    props.setCourseIndex(course_index);
+    let a = courses.indexOf(course_code);
+    courses.splice(a,1)
+    setCourse(courses.join("+"))
+    console.log(courses)
+  }
+
   const handleChange = (e, course) =>{
     e.preventDefault()
     let course_index = {...props.courseIndex}
+    console.log(course_index);
     course_index[course.course_code] = course.course_indices[e.target.value].index_code;
+    //console.log(course_index);
     props.setCourseIndex(course_index)
     console.log(course_index)
+  }
+
+  const registerCourse = async(e) => {
+    e.preventDefault()
+    let indexes = Object.values(props.courseIndex);
+    let courses = Object.keys(props.courseIndex);
+
+    indexes = indexes.map((index,i) => {
+      let course = indexData.find(course => course.course_code === courses[i]);
+      let indice = course.course_indices.find(slot => slot.index_code === index)
+      return indice.id
+    })
+    if(indexes.length === 0){
+      console.log("it is empty")
+    }
+    else{
+      const data = await axios
+        .post(
+          `${BACKEND_URL}/courses/register/${studentData.id}/${studentData.student.id}`,
+          {
+            studentID: studentData.student.id,
+            indexes: indexes,
+          }
+        )
+        .catch((err) => console.log(err));
+    }
   }
   let element
   if(indexData !== undefined){
@@ -40,12 +92,10 @@ const CourseReg = (props) => {
       let options
       if (course.course_indices !== undefined) {
         options = course.course_indices.map((index, i) => {
-          let x = <option value={index.index_code}>{index.index_code}</option>;
+          let x = <option value={i}>{index.index_code}</option>;
           return x;
         });
       }
-      console.log(options)
-      //options.unshift(<option selected disabled> Choose</option>)
       return (
         <tr>
           <th>{i + 1}</th>
@@ -74,15 +124,16 @@ const CourseReg = (props) => {
         <thead>
           <tr>
             <th></th>
-            <th>Name</th>
-            <th>Job</th>
-            <th>Favorite Color</th>
+            <th>Course</th>
+            <th>Index</th>
+            <th>Vacancy</th>
           </tr>
           {element}
         </thead>
       </table>
       <Button onClick={addCourse}>Add Courses</Button>
-      {/* <Button onClick={registerCourse}>Register</Button> */}
+      <Button onClick={registerCourse}>Register</Button>
+      <Button onClick={deleteCourse}>Delete Course</Button>
     </div>
   );
 }
