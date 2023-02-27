@@ -41,6 +41,7 @@ const ForumSearch = () => {
     const newForumCourse = allCourseData.filter(
       (course) => course.course_code == values.code,
     )[0].id;
+    console.log(allCourseData)
     const newForum = {
       title: `${values.code} - ${values.name}`,
       description: `${values.content}`,

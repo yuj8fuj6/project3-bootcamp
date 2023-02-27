@@ -12,7 +12,6 @@ import { Route, Routes } from "react-router-dom";
 import { UserContextProvider } from "./contexts/UserContext";
 import { CourseContextProvider } from "./contexts/CourseContext";
 import { ForumContextProvider } from "./contexts/ForumContext";
-import { ForumContextProvider } from "./contexts/ForumContext";
 import ForumFeed from "./components/ForumFeed";
 import ForumFeedIndividual from "./components/ForumFeedIndividual";
 import MapFeed from "./components/MapFeed";
