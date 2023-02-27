@@ -5,7 +5,6 @@ import { BACKEND_URL } from "../constants.js";
 
 const MapFeed = () => {
   const [locationData, setLocationData] = useState([]);
-  // const [mapURL, setMapURL] = useState("");
 
   useEffect(() => {
     axios.get(`${BACKEND_URL}/locations`).then((res) => {
@@ -32,13 +31,15 @@ const MapFeed = () => {
       .join("|");
   }
 
-  console.log(locationArray)
-
   let mapURL = `https://developers.onemap.sg/commonapi/staticmap/getStaticImage?layerchosen=grey&lat=${mapOrigin.latitude}&lng=${mapOrigin.longitude}&zoom=${originZoom}&width=${width}&height=${height}&points=${locationArray}`;
 
   return (
     <div>
-      <img src={mapURL} alt="map" className="rounded-xl w-[850px] h-[650px] ml-36" />
+      <img
+        src={mapURL}
+        alt="map"
+        className="rounded-xl w-[850px] h-[630px] ml-10"
+      />
     </div>
   );
 };
