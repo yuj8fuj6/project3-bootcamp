@@ -5,7 +5,6 @@ import { BACKEND_URL } from "../constants.js";
 
 const MapFeedIndividual = () => {
   const [locationData, setLocationData] = useState([]);
-  // const [mapURL, setMapURL] = useState("");
 
   useEffect(() => {
     axios.get(`${BACKEND_URL}/locations`).then((res) => {
@@ -41,7 +40,7 @@ const MapFeedIndividual = () => {
       <img
         src={mapURL}
         alt="map"
-        className="rounded-xl w-[850px] h-[650px] ml-36"
+        className="rounded-xl w-[850px] h-[630px] ml-10"
       />
     </div>
   );
