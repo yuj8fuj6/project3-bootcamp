@@ -1,0 +1,23 @@
+.profilePicContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.profilePic {
+  width: 72;
+  height: 72;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.uploadPhotoButton {
+  cursor: pointer;
+  color: #ffe820;
+}
+
+.uploadPhotoButton:hover {
+  color: #98a0a3;
+}

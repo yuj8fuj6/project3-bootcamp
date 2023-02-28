@@ -1,0 +1,7 @@
+.courseCode {
+  cursor: pointer;
+}
+
+.courseCode:hover {
+  color: #ffe81f;
+}

@@ -1,39 +1,47 @@
-import { useState } from "react";
-import ModalBody from "./ModalBody";
-import { Modal, Button } from "antd";
 import "./courseModal.css";
 
-export default function CourseModal() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
+export default function CourseModal({ courseData }) {
+  console.log("COURSE CODE DATA", courseData);
+  let element = courseData[0].course_indices.map((index) => (
+    <p className="modalInfoDetails">
+      {index.index_code} - {index.type}
+    </p>
+  ));
 
   return (
     <>
-      <Button type="primary" onClick={showModal}>
-        Open Modal
-      </Button>
-      <Modal
-        title="Course Details"
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        width="30vw"
-        footer={null}
-        className="modalBody"
-      >
-        <ModalBody />
-        <div className="modalFooter">
-          <Button onClick={handleOk}>Exit</Button>
+      <div className="modalBody">
+        <div className="">
+          <div className="box">
+            <h1 className="modalTitle">Course Title</h1>
+            <div className="modalInfoBox">
+              <p className="modalInfoDetails">{courseData[0].course_name}</p>
+            </div>
+          </div>
+          <div className="box">
+            <h1 className="modalTitle">Course Code</h1>
+            <div className="modalInfoBox">
+              <p className="modalInfoDetails">{courseData[0].course_code}</p>
+            </div>
+          </div>
+          <div className="box">
+            <h1 className="modalTitle">Academic Unit</h1>
+            <div className="modalInfoBox">
+              <p className="modalInfoDetails">{courseData[0].academic_unit}</p>
+            </div>
+          </div>
+          <div className="box">
+            <h1 className="modalTitle">School</h1>
+            <div className="modalInfoBox">
+              <p className="modalInfoDetails">{courseData[0].school}</p>
+            </div>
+          </div>
+          <div className="box">
+            <h1 className="modalTitle">Course Indices</h1>
+            <div className="modalInfoBox">{element}</div>
+          </div>
         </div>
-      </Modal>
+      </div>
     </>
   );
 }

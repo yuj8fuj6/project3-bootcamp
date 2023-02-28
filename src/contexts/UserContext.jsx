@@ -33,7 +33,6 @@ export const UserContextProvider = (props) => {
       console.log("THIS IS REQUEST");
       try {
         axios.get(`${BACKEND_URL}/users`).then((response) => {
-          console.log("RESPONSE", response.error);
           setAllUserData(response.data);
         });
       } catch (error) {
@@ -43,9 +42,7 @@ export const UserContextProvider = (props) => {
   }, [isAuthenticated]);
 
   return (
-    <UserContext.Provider
-      value={{ userData, allUserData, setUserData }}
-    >
+    <UserContext.Provider value={{ userData, allUserData, setUserData }}>
       {props.children}
     </UserContext.Provider>
   );
