@@ -23,7 +23,7 @@ const Map = () => {
         <div>
           <MapSearch />
         </div>
-        <div className="col-span-2 p-3 flex flex-row justify-center content-center">
+        <div className="col-span-2 flex flex-row justify-center content-center">
           <Outlet />
         </div>
       </div>
