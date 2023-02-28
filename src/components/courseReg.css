@@ -5,3 +5,7 @@
 .courseCode:hover {
   color: #ffe81f;
 }
+
+.buttonWrapper {
+  display: flex;
+}

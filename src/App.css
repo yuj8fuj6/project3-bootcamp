@@ -12,10 +12,14 @@
 
 .columns {
   display: grid;
-  grid-template-columns: 2.3fr 1fr ;
+  grid-template-columns: 2.3fr 1fr;
 }
 
 .rows {
   display: grid;
   grid-template-rows: 1fr 1fr;
+}
+
+.sticky-header:first-child {
+  position: static !important;
 }

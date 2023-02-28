@@ -15,14 +15,14 @@ const data = [
   },
 ];
 const currentYear = new Date().getFullYear();
-export const displayDate = new Date(Date.UTC(currentYear, 5, 24));
-const parseAdjust = (eventDate) => { //adjust the time to current year
+export const displayDate = new Date(Date.UTC(currentYear, 2, 19));
+const parseAdjust = (eventDate) => {
+  //adjust the time to current year
   const date = new Date(eventDate);
   const d = new Date();
-  if(d.getMonth() == 11){
+  if (d.getMonth() == 11) {
     date.setFullYear(currentYear + 1);
-  }
-  else{
+  } else {
     date.setFullYear(currentYear);
   }
   return date;
