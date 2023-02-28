@@ -6,21 +6,25 @@ import Conversation from "../components/Conversation";
 import { useAuth0 } from "@auth0/auth0-react";
 import io from "socket.io-client";
 import { UserContext } from "../contexts/UserContext";
-import ChatSearch from "../components/ChatSearch";
+import ChatSearchInput from "../components/ChatSearchInput";
 import axios from "axios";
 import { BACKEND_URL } from "../constants.js";
+import ChatSearch from "../components/ChatSearch";
+import { Outlet, useOutlet } from "react-router-dom";
 
 const socket = io.connect(BACKEND_URL);
 
 const Messenger = () => {
   const { isAuthenticated, loginWithRedirect } = useAuth0();
-  const [chatroom, setChatroom] = useState(""); // chatroom name. used by socket
+  const [chatroomName, setChatroomName] = useState(""); // chatroom name. used by socket
+
   const user = useContext(UserContext);
   const { email_address, first_name, last_name } = user.userData; // logged in user
-  const [allConversations, setAllConversations] = useState([]); // list of conversations
+
   const [currentConversation, setCurrentConversation] = useState({}); // active conversation
-  const [currentChat, setCurrentChat] = useState(false); // boolean whether to display chat or not
+  const [currentChat, setCurrentChat] = useState(true); // boolean whether to display chat or not
   const [chatroomIndex, setChatroomIndex] = useState(""); // active chat room id
+  const outlet = useOutlet();
 
   socket.on("connect", () => {
     const userId = email_address;
@@ -33,32 +37,9 @@ const Messenger = () => {
     }
   });
 
-  const getConversations = async () => {
-    const { data: conversations } = await axios.get(
-      `${BACKEND_URL}/conversations/${email_address}`
-    );
-    setAllConversations(conversations);
-  };
-
-  useEffect(() => {
-    getConversations();
-  }, []);
-
-  const handleChatroom = (newChatroom) => {
-    setChatroom(newChatroom);
-  };
-
-  const startChat = async (conversation) => {
-    setCurrentConversation(conversation);
-    const chatRoomName = conversation.chatroom.room;
-    socket.emit("join_chatroom", chatRoomName);
-
-    const chatroomId = allConversations.filter(
-      (room) => chatRoomName === room.chatroom.room
-    )[0].chatroomId;
-    setCurrentChat(chatroomId);
-    setChatroomIndex(chatroomId);
-  };
+  console.log("CURRENT", currentConversation);
+  console.log("USER", user);
+  // console.log(email_address);
 
   return (
     <>
@@ -70,40 +51,30 @@ const Messenger = () => {
         <div className="chatInbox">
           <div className="chatInboxWrapper">
             <ChatSearch
-              user={user}
               socket={socket}
-              email={email_address}
-              onCreateChat={handleChatroom}
-              setAllConversations={setAllConversations}
+              setChatroomName={setChatroomName}
+              setCurrentConversation={setCurrentConversation}
+              setChatroomIndex={setChatroomIndex}
             />
-            {allConversations.map((conversation, index) => (
-              <div key={index} onClick={() => startChat(conversation)}>
-                <Conversation
-                  firstName={conversation.user.first_name}
-                  lastName={conversation.user.last_name}
-                  profilePic={conversation.user.profile_pic_url}
-                  chatroomName={conversation.chatroom.room}
-                  email={conversation.user.email_address}
-                />
-              </div>
-            ))}
           </div>
         </div>
         <div className="chatConversation">
           <div className="chatConversationWrapper">
             {currentChat ? (
               <>
-                <Message
-                  socket={socket}
-                  chatroom={currentConversation.chatroom.room}
-                  chatroomId={chatroomIndex}
-                  email_address={email_address}
-                  ownFirstName={first_name}
-                  ownLastName={last_name}
-                  recipientEmail={currentConversation.user.email_address}
-                  otherUserFirstName={currentConversation.user.first_name}
-                  otherUserLastName={currentConversation.user.last_name}
-                  profilePic={currentConversation.user.profile_pic_url}
+                <Outlet
+                  context={[
+                    socket,
+                    chatroomName,
+                    chatroomIndex,
+                    first_name,
+                    last_name,
+                    email_address,
+                    currentConversation?.user?.email_address,
+                    currentConversation?.user?.first_name,
+                    currentConversation?.user?.last_name,
+                    currentConversation?.user?.profile_pic_url,
+                  ]}
                 />
               </>
             ) : (

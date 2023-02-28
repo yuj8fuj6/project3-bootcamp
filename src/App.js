@@ -16,6 +16,7 @@ import ForumFeed from "./components/ForumFeed";
 import ForumFeedIndividual from "./components/ForumFeedIndividual";
 import MapFeed from "./components/MapFeed";
 import MapFeedIndividual from "./components/MapFeedIndividual";
+import Message from "./components/Message";
 
 const App = () => {
   return (
@@ -33,7 +34,9 @@ const App = () => {
                   <Route index={true} element={<ForumFeed />} />
                   <Route path=":id" element={<ForumFeedIndividual />} />
                 </Route>
-                <Route path="messenger" element={<Messenger />} />
+                <Route path="messenger" element={<Messenger />}>
+                  <Route path=":id" element={<Message />} />
+                </Route>
                 <Route path="contact" element={<Contact />} />
                 <Route path="map" element={<Map />}>
                   <Route index={true} element={<MapFeed />} />

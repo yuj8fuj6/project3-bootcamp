@@ -2,6 +2,11 @@ import "./courseModal.css";
 
 export default function CourseModal({ courseData }) {
   console.log("COURSE CODE DATA", courseData);
+  let element = courseData[0].course_indices.map((index) => (
+    <p className="modalInfoDetails">
+      {index.index_code} - {index.type}
+    </p>
+  ));
 
   return (
     <>
@@ -33,9 +38,7 @@ export default function CourseModal({ courseData }) {
           </div>
           <div className="box">
             <h1 className="modalTitle">Course Indices</h1>
-            <div className="modalInfoBox">
-              <p className="modalInfoDetails">fill later</p>
-            </div>
+            <div className="modalInfoBox">{element}</div>
           </div>
         </div>
       </div>

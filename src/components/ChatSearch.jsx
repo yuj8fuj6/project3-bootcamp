@@ -1,118 +1,77 @@
-import React, { useState } from "react";
-import { Input } from "antd";
-import "./chatSearch.css";
-import uuid from "react-uuid";
-import axios from "axios";
+import React, { useState, useEffect, useContext } from "react";
+import ChatSearchInput from "./ChatSearchInput";
+import Conversation from "./Conversation";
 import { BACKEND_URL } from "../constants";
-import { useAuth0 } from "@auth0/auth0-react";
+import axios from "axios";
+import { UserContext } from "../contexts/UserContext";
+import { Link } from "react-router-dom";
 
-const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
+export default function ChatSearch({
+  socket,
+  setChatroomName,
+  setCurrentConversation,
+  setChatroomIndex,
+}) {
+  const [allConversations, setAllConversations] = useState([]);
+  const [chatroom, setChatroom] = useState("");
+  // const [currentChat, setCurrentChat] = useState(""); // boolean whether to display chat or not
+  const user = useContext(UserContext);
+  const { email_address } = user.userData; // logged in user
 
-const ChatSearch = ({ user, socket, email, setAllConversations }) => {
-  const [filteredUsers, setFilteredUsers] = useState([]);
-  const [filterState, setFilterState] = useState("");
-  const [chatroom, setChatroom] = useState([]);
-  const [chatrooms, setChatrooms] = useState([]);
-  const { getAccessTokenSilently } = useAuth0();
-
-  const handleFilter = (e) => {
-    const searchUser = e.target.value;
-    setFilterState(searchUser);
-    const newFilter = user.allUserData.filter((value) => {
-      return value.email_address.includes(searchUser);
-      /*
-      HOW TO FILTER FOR ONLY STUDENTS
-      EXCLUDE '@ntu.edu.sg', OWN EMAIL AND ALREADY ACTIVE CONVERSATIONS
-      &&
-      !value.email_address.endsWith(`@ntu.edu.sg`)
-      */
-    });
-    if (searchUser === "") {
-      setFilteredUsers([]);
-    } else {
-      setFilteredUsers(newFilter);
-    }
+  const getConversations = async () => {
+    const { data: conversations } = await axios.get(
+      `${BACKEND_URL}/conversations/${email_address}`
+    );
+    setAllConversations(conversations);
   };
 
-  const handleCreateChat = async (recipientEmail) => {
-    const accessToken = await getAccessTokenSilently({
-      audience: `${audience}`,
-      scope: "read:current_user",
-    });
-    const room = uuid(); // to render uuid for chatroom name
-    const existingChatroom = chatrooms.find(
-      (c) => c.members.includes(email) && c.members.includes(recipientEmail)
-    );
-    if (!existingChatroom) {
-      socket.emit("create_room", {
-        room,
-        email,
-        email_address: recipientEmail,
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      console.log(
-        "HANDLE CREATE CHAT",
-        room,
-        email,
-        recipientEmail,
-        chatrooms,
-        accessToken
-      );
-      setChatrooms([
-        ...chatrooms,
-        { id: room, members: [email, recipientEmail] },
-      ]);
-      setFilteredUsers([]);
-      setFilterState([]);
-    } else {
-      console.log("CHATROOM ALREADY EXISTS", existingChatroom);
-      setChatroom(existingChatroom.id);
-    }
+  useEffect(() => {
+    getConversations();
+  }, []);
 
-    setTimeout(async () => {
-      const { data: conversations } = await axios.get(
-        `${BACKEND_URL}/conversations/${email}`
-      );
-      console.log("RESULT", conversations);
-      await setAllConversations(conversations);
-    }, 700);
+  const handleChatroom = (newChatroom) => {
+    setChatroom(newChatroom);
+  };
+
+  const startChat = async (conversation) => {
+    const chatRoomName = conversation.chatroom.room;
+    socket.emit("join_chatroom", chatRoomName);
+
+    const chatroomId = allConversations.filter(
+      (room) => chatRoomName === room.chatroom.room
+    )[0].chatroomId;
+    // setCurrentChat(chatroomId);
+    setChatroomIndex(chatroomId);
+    setChatroomName(chatRoomName);
+    setCurrentConversation(conversation);
+    console.log("CHATSEARCH", conversation);
+    console.log("hello", chatroomId);
   };
 
   return (
-    <>
-      <div className="search">
-        <div className="searchInputs">
-          <Input
-            type="text"
-            placeholder="Search by email"
-            value={filterState}
-            onChange={handleFilter}
-            size="large"
-            allowClear
+    <div>
+      <ChatSearchInput
+        user={user}
+        socket={socket}
+        email={email_address}
+        onCreateChat={handleChatroom}
+        setAllConversations={setAllConversations}
+      />
+      {allConversations.map((conversation, index) => (
+        <Link
+          to={`/messenger/${conversation.chatroom.room}`}
+          key={index}
+          onClick={() => startChat(conversation)}
+        >
+          <Conversation
+            firstName={conversation.user.first_name}
+            lastName={conversation.user.last_name}
+            profilePic={conversation.user.profile_pic_url}
+            chatroomName={conversation.chatroom.room}
+            email={conversation.user.email_address}
           />
-        </div>
-      </div>
-      {filteredUsers.length !== 0 && (
-        <div className="searchResult">
-          {filteredUsers.slice(0, 5).map((value) => {
-            return (
-              <div
-                className="searchItem"
-                key={value.id}
-                onClick={async () =>
-                  await handleCreateChat(value.email_address)
-                }
-              >
-                <p>{value.email_address}</p>
-              </div>
-            );
-          })}
-        </div>
-      )}
-    </>
+        </Link>
+      ))}
+    </div>
   );
-};
-
-export default ChatSearch;
+}

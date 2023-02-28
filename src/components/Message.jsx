@@ -7,25 +7,33 @@ import axios from "axios";
 import { BACKEND_URL } from "../constants";
 import IndexSwapModal from "../components/IndexSwapModal";
 import ViewProfileModal from "../components/ViewProfileModal";
+import { Link } from "react-router-dom";
+import { io } from "socket.io-client";
+import { useOutletContext } from "react-router-dom";
 
 const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
+const socket = io.connect(BACKEND_URL);
 
-export default function Message({
-  socket,
-  chatroom,
-  email_address,
-  ownFirstName,
-  ownLastName,
-  profilePic,
-  chatroomId,
-  recipientEmail,
-  otherUserFirstName,
-  otherUserLastName,
-}) {
+export default function Message() {
   const { isAuthenticated, loginWithRedirect, getAccessTokenSilently } =
     useAuth0();
   const [currentMessage, setCurrentMessage] = useState("");
   const [allMessages, setAllMessages] = useState([]);
+  // const [chatroomName, setChatroomName] = useState("");
+
+  const [
+    socket,
+    chatroomName,
+    chatroomIndex,
+    first_name,
+    last_name,
+    email_address,
+    recipientEmail,
+    otherUserFirstName,
+    otherUserLastName,
+    profilePic,
+  ] = useOutletContext();
+  console.log("CHATROOM INDEX", chatroomIndex);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -45,9 +53,9 @@ export default function Message({
     if (currentMessage) {
       const messageData = {
         message: currentMessage,
-        room: chatroom,
+        room: chatroomName,
         sender: email_address,
-        name: `${ownFirstName} ${ownLastName}`,
+        name: `${first_name} ${last_name}`,
         profileDP: profilePic,
         time: time,
         headers: {
@@ -62,58 +70,41 @@ export default function Message({
   };
 
   useEffect(() => {
+    console.log("USE EFFECT CHATID", chatroomIndex);
     socket.on("receive_message", async (data) => {
-      console.log("RECEIVED");
-      await getMessages();
+      console.log("RECEIVED", data);
+      await getMessages(chatroomIndex);
     });
   }, [socket]);
 
   useEffect(() => {
     console.log("USE EFFECT 1");
     getMessages();
-  }, [chatroom]);
+  }, [chatroomName]);
 
   useEffect(() => {
     console.log("USE EFFECT 2");
     getMessages();
   }, []);
 
-  /*
-  MAYBE CAN IMPLEMENT PROPERLY NEXT TIME
-  CURRENTLY CAN ONLY DELETE 1 SINGLE ENTRY,
-  THE CURRENT USER IN NO LONGER IN THE ROOM BUT
-  THE OTHER USER IS STILL IN THE ROOM
-  const handleDelete = async () => {
-    console.log("CHATROOM TO DELETE", chatroomId);
-    await axios
-      .post(`${BACKEND_URL}/conversations/deleteConversation`, {
-        chatroomId: chatroomId,
-      })
-      .then((res) => {
-        console.log("CHATROOM BE", chatroomId);
-      })
-      .catch((err) => {
-        console.log("ERROR", err);
-        alert("No conversation was deleted");
+  const getMessages = async (chatroomID) => {
+    console.log("SEND CHATROOM ID", chatroomID);
+    console.log(chatroomID);
+    console.log(chatroomIndex);
+    const response = await axios
+      .get(
+        `${BACKEND_URL}/conversations/messages/${chatroomIndex}`
+        // "http://localhost:3000/conversations/messages/14b88b81-7d99-4b91-bfb2-339eed17b447"
+      )
+      .then((response) => {
+        setAllMessages(response.data);
       });
-  };
-  */
-
-  const getMessages = async () => {
-    try {
-      const response = await axios.get(
-        `${BACKEND_URL}/conversations/messages/${chatroomId}`
-      );
-      setAllMessages(response.data);
-    } catch (err) {
-      console.log("ERROR", err);
-    }
   };
 
   console.log("ALL MESSAGES", allMessages);
 
   return (
-    <div className="message">
+    <Link to={`/messenger/${chatroomName}`} className="message">
       <div className="messageUser">
         <div className="messengerInfoContainer">
           <img
@@ -182,6 +173,6 @@ export default function Message({
           onKeyPress={(e) => e.key === "Enter" && sendMessage()}
         />
       </div>
-    </div>
+    </Link>
   );
 }
