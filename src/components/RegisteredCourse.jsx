@@ -1,23 +1,24 @@
-import React, { useEffect, useState, useContext} from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Button from "../components/Button";
 import axios from "axios";
 import useSWR from "swr";
 import { UserContext } from "../contexts/UserContext";
 import { BACKEND_URL } from "../constants";
 const fetcher = (url) => axios.get(url).then((res) => res.data);
-
 const RegistedCourses = (props) => {
   const userData = props.userData;
   let str = `${BACKEND_URL}/courses/temporary/registered/${userData?.student?.id}/courses`;
-  const { data: registered, mutate:refetch } = useSWR(`${BACKEND_URL}/courses/registered/user/${userData?.student?.id}/courses`,fetcher);
-
-  
+  const { data: registered, mutate: refetch } = useSWR(
+    `${BACKEND_URL}/courses/registered/user/${userData?.student?.id}/courses`,
+    fetcher
+  );
+  console.log(registered);
   let element;
-  if(registered !== undefined){
+  if (registered !== undefined) {
     element = registered.map((row, i) => {
       let ele = (
         <tr>
-          <th>{i + 1}</th>
+          <td>{i + 1}</td>
           <td>{row.course.course_code}</td>
           <td>{row.type}</td>
           <td>{row.group}</td>
@@ -27,16 +28,17 @@ const RegistedCourses = (props) => {
           <td>{row.location}</td>
         </tr>
       );
-      return ele
-    })
+      return ele;
+    });
   }
+  console.log(element);
   return (
-      <>
-        <div className="table-auto overflow-scroll h-full max-h-80">
+    <>
+      <div className="table-auto overflow-scroll h-full max-h-80">
         <table className="table h-full">
           <thead className="sticky top-0">
             <tr>
-              <th>Num</th>
+              <th className="sticky-header">Num</th>
               <th>Course</th>
               <th>Class Type</th>
               <th>Group</th>
@@ -48,11 +50,9 @@ const RegistedCourses = (props) => {
           </thead>
           <tbody>{element}</tbody>
         </table>
-
       </div>
       <Button>Print Timetable</Button>
     </>
   );
-}
-
-export default RegistedCourses
+};
+export default RegistedCourses;

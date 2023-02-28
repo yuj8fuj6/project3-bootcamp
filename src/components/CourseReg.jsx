@@ -7,11 +7,15 @@ import { BACKEND_URL } from "../constants";
 import { Modal } from "antd";
 import CourseModal from "./CourseModal";
 import "./courseReg.css";
+import { useAuth0 } from "@auth0/auth0-react";
+
+const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
 
 const fetcher = (url) => axios.get(url).then((res) => res.data);
 let courses = "";
 
 const CourseReg = (props) => {
+  const { getAccessTokenSilently } = useAuth0();
   const studentData = props.studentData;
   const [courses, setCourse] = useState(""); //used as a query param
   const { data: indexData } = useGetIndexData(courses);
@@ -68,6 +72,10 @@ const CourseReg = (props) => {
 
   const registerCourse = async (e) => {
     e.preventDefault();
+    const accessToken = await getAccessTokenSilently({
+      audience: `${audience}`,
+      scope: "read:current_user",
+    });
     let indexes = Object.values(props.courseIndex);
     let courses = Object.keys(props.courseIndex);
 
@@ -91,6 +99,11 @@ const CourseReg = (props) => {
           {
             studentID: studentData.student.id,
             indexes: indexes,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
           }
         )
         .catch((err) => console.log(err));
@@ -170,7 +183,7 @@ const CourseReg = (props) => {
       <table className="table w-full">
         <thead>
           <tr>
-            <th></th>
+            <th>Num</th>
             <th>Course</th>
             <th>Index</th>
             <th>Vacancy</th>
@@ -178,9 +191,11 @@ const CourseReg = (props) => {
           {element}
         </thead>
       </table>
-      <Button onClick={addCourse}>Add Courses</Button>
-      <Button onClick={registerCourse}>Register</Button>
-      <Button onClick={deleteCourse}>Delete Course</Button>
+      <div className="buttonWrapper">
+        <Button onClick={addCourse}>Add Courses</Button>
+        <Button onClick={registerCourse}>Register Courses</Button>
+        <Button onClick={deleteCourse}>Delete Course</Button>
+      </div>
     </div>
   );
 };
