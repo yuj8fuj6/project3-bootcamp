@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import Message from "../components/Message";
 import "./messenger.css";
-import { Button } from "antd";
 import Navbar from "../components/NavBar";
 import Conversation from "../components/Conversation";
 import { useAuth0 } from "@auth0/auth0-react";

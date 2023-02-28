@@ -138,6 +138,11 @@ const CourseReg = (props) => {
             className="modalBody"
           >
             <CourseModal courseData={courseData} />
+            <div className="modalFooter">
+              <Button onClick={handleOk} className="modalBtn">
+                Exit
+              </Button>
+            </div>
           </Modal>
           <select
             className="select select-bordered w-full max-w-xs"
