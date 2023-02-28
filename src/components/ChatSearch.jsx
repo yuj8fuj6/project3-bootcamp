@@ -76,7 +76,7 @@ const ChatSearch = ({ user, socket, email, setAllConversations }) => {
         `${BACKEND_URL}/conversations/${email}`
       );
       console.log("RESULT", conversations);
-      setAllConversations(conversations);
+      await setAllConversations(conversations);
     }, 700);
   };
 

@@ -16,7 +16,7 @@ const Messenger = () => {
   const { isAuthenticated, loginWithRedirect } = useAuth0();
   const [chatroom, setChatroom] = useState(""); // chatroom name. used by socket
   const user = useContext(UserContext);
-  const { email_address } = user.userData; // logged in user
+  const { email_address, first_name, last_name } = user.userData; // logged in user
   const [allConversations, setAllConversations] = useState([]); // list of conversations
   const [currentConversation, setCurrentConversation] = useState({}); // active conversation
   const [currentChat, setCurrentChat] = useState(false); // boolean whether to display chat or not
@@ -48,23 +48,24 @@ const Messenger = () => {
     setChatroom(newChatroom);
   };
 
-  const startChat = (conversation) => {
+  const startChat = async (conversation) => {
     setCurrentConversation(conversation);
     const chatRoomName = conversation.chatroom.room;
     socket.emit("join_chatroom", chatRoomName);
-    setCurrentChat(true);
+
     const chatroomId = allConversations.filter(
       (room) => chatRoomName === room.chatroom.room
     )[0].chatroomId;
+    setCurrentChat(chatroomId);
     setChatroomIndex(chatroomId);
   };
-
-  console.log("CURRENT CONVERSATION", currentConversation);
-  console.log("ALL CONVERSATION", allConversations);
 
   return (
     <>
       <Navbar />
+      <div className="px-20 pt-10 font-extrabold text-2xl text-yellow">
+        Messenger
+      </div>
       <div className="messenger">
         <div className="chatInbox">
           <div className="chatInboxWrapper">
@@ -74,7 +75,6 @@ const Messenger = () => {
               email={email_address}
               onCreateChat={handleChatroom}
               setAllConversations={setAllConversations}
-              setCurrentChat={setCurrentChat}
             />
             {allConversations.map((conversation, index) => (
               <div key={index} onClick={() => startChat(conversation)}>
@@ -98,9 +98,11 @@ const Messenger = () => {
                   chatroom={currentConversation.chatroom.room}
                   chatroomId={chatroomIndex}
                   email_address={email_address}
+                  ownFirstName={first_name}
+                  ownLastName={last_name}
                   recipientEmail={currentConversation.user.email_address}
-                  firstName={currentConversation.user.first_name}
-                  lastName={currentConversation.user.last_name}
+                  otherUserFirstName={currentConversation.user.first_name}
+                  otherUserLastName={currentConversation.user.last_name}
                   profilePic={currentConversation.user.profile_pic_url}
                 />
               </>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./message.css";
-import { Input } from "antd";
+import { Button, Input } from "antd";
 import { useAuth0 } from "@auth0/auth0-react";
 import ScrollToBottom from "react-scroll-to-bottom";
 import axios from "axios";
@@ -14,11 +14,13 @@ export default function Message({
   socket,
   chatroom,
   email_address,
-  firstName,
-  lastName,
+  ownFirstName,
+  ownLastName,
   profilePic,
   chatroomId,
   recipientEmail,
+  otherUserFirstName,
+  otherUserLastName,
 }) {
   const { isAuthenticated, loginWithRedirect, getAccessTokenSilently } =
     useAuth0();
@@ -45,7 +47,7 @@ export default function Message({
         message: currentMessage,
         room: chatroom,
         sender: email_address,
-        name: `${firstName} ${lastName}`,
+        name: `${ownFirstName} ${ownLastName}`,
         profileDP: profilePic,
         time: time,
         headers: {
@@ -53,8 +55,9 @@ export default function Message({
         },
       };
       await socket.emit("send_message", messageData);
-      setCurrentMessage("");
-      console.log("SENT", messageData, accessToken);
+      await setCurrentMessage("");
+      await getMessages();
+      console.log(messageData);
     }
   };
 
@@ -66,10 +69,12 @@ export default function Message({
   }, [socket]);
 
   useEffect(() => {
+    console.log("USE EFFECT 1");
     getMessages();
   }, [chatroom]);
 
   useEffect(() => {
+    console.log("USE EFFECT 2");
     getMessages();
   }, []);
 
@@ -95,7 +100,6 @@ export default function Message({
   */
 
   const getMessages = async () => {
-    console.log("inside getMessages");
     try {
       const response = await axios.get(
         `${BACKEND_URL}/conversations/messages/${chatroomId}`
@@ -105,6 +109,7 @@ export default function Message({
       console.log("ERROR", err);
     }
   };
+
   console.log("ALL MESSAGES", allMessages);
 
   return (
@@ -118,7 +123,7 @@ export default function Message({
           />
           <div className="userInfoContainer">
             <h1 className="userInfoName">
-              {firstName} {lastName}
+              {otherUserFirstName} {otherUserLastName}
             </h1>
             <h1>{recipientEmail}</h1>
           </div>
