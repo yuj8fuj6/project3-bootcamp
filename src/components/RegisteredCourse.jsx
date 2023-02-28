@@ -10,42 +10,48 @@ const RegistedCourses = (props) => {
   const userData = props.userData;
   let str = `${BACKEND_URL}/courses/temporary/registered/${userData?.student?.id}/courses`;
   const { data: registered, mutate:refetch } = useSWR(`${BACKEND_URL}/courses/registered/user/${userData?.student?.id}/courses`,fetcher);
-  console.log(registered)
+
   
+  let element;
+  if(registered !== undefined){
+    element = registered.map((row, i) => {
+      let ele = (
+        <tr>
+          <th>{i + 1}</th>
+          <td>{row.course.course_code}</td>
+          <td>{row.type}</td>
+          <td>{row.group}</td>
+          <td>{row.day}</td>
+          <td>{row.start_time}</td>
+          <td>{row.end_time}</td>
+          <td>{row.location}</td>
+        </tr>
+      );
+      return ele
+    })
+  }
   return (
-    <div className="table table-compact w-ful">
-      <table className="table w-full">
-        <thead>
-          <tr>
-            <th></th>
-            <th>Course</th>
-            <th>Group</th>
-            <th>destiny</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th>1</th>
-            <td>Cy Ganderton</td>
-            <td>Quality Control Specialist</td>
-            <td>Blue</td>
-          </tr>
-          <tr>
-            <th>2</th>
-            <td>Hart Hagerty</td>
-            <td>Desktop Support Technician</td>
-            <td>Purple</td>
-          </tr>
-          <tr>
-            <th>3</th>
-            <td>Brice Swyre</td>
-            <td>Tax Accountant</td>
-            <td>Red</td>
-          </tr>
-        </tbody>
-      </table>
+      <>
+        <div className="table-auto overflow-scroll h-full max-h-80">
+        <table className="table h-full">
+          <thead className="sticky top-0">
+            <tr>
+              <th>Num</th>
+              <th>Course</th>
+              <th>Class Type</th>
+              <th>Group</th>
+              <th>Day</th>
+              <th>Start</th>
+              <th>End</th>
+              <th>Location</th>
+            </tr>
+          </thead>
+          <tbody>{element}</tbody>
+        </table>
+
+      </div>
       <Button>Print Timetable</Button>
-    </div>
+    </>
   );
 }
 

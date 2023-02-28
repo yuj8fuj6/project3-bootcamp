@@ -80,9 +80,11 @@ const CourseReg = (props) => {
       );
       return indice.id;
     });
+
     if (indexes.length === 0) {
       console.log("it is empty");
     } else {
+      console.log(studentData);
       const data = await axios
         .post(
           `${BACKEND_URL}/courses/register/${studentData.id}/${studentData.student.id}`,
@@ -93,6 +95,7 @@ const CourseReg = (props) => {
         )
         .catch((err) => console.log(err));
     }
+    window.location.reload();
   };
 
   const handleOpenCourse = async () => {
