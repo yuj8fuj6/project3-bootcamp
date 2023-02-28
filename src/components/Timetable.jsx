@@ -8,7 +8,6 @@ import axios from 'axios';
 import { Day } from "@progress/kendo-date-math";
 import { sampleData, displayDate } from "./sampleData";
 import { BACKEND_URL } from '../constants';
-import { UserContext } from '../contexts/UserContext';
 import moment from 'moment';
 const fetcher = (url) => axios.get(url).then((res) => res.data);
 
