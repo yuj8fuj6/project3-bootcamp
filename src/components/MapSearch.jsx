@@ -51,7 +51,7 @@ const MapSearch = () => {
                             .includes(e.target.value) ||
                           location.index_code
                             .toString()
-                            .includes(e.target.value),
+                            .includes(e.target.value)
                       );
                       setFilteredLocations(search);
                       setFilterState(true);
@@ -67,7 +67,7 @@ const MapSearch = () => {
                       onClick={() => {
                         formikProps.resetForm();
                         setFilterState(false);
-                        navigate("/map")
+                        navigate("/map");
                       }}
                     >
                       Reset

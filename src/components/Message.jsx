@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import "./message.css";
-import { Button, Input } from "antd";
+import { Input } from "antd";
 import { useAuth0 } from "@auth0/auth0-react";
 import ScrollToBottom from "react-scroll-to-bottom";
 import axios from "axios";
 import { BACKEND_URL } from "../constants";
 import IndexSwapModal from "../components/IndexSwapModal";
 import ViewProfileModal from "../components/ViewProfileModal";
+
+const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
 
 export default function Message({
   socket,
@@ -18,7 +20,8 @@ export default function Message({
   chatroomId,
   recipientEmail,
 }) {
-  const { isAuthenticated, loginWithRedirect } = useAuth0();
+  const { isAuthenticated, loginWithRedirect, getAccessTokenSilently } =
+    useAuth0();
   const [currentMessage, setCurrentMessage] = useState("");
   const [allMessages, setAllMessages] = useState([]);
 
@@ -29,6 +32,10 @@ export default function Message({
   }, []);
 
   const sendMessage = async () => {
+    const accessToken = await getAccessTokenSilently({
+      audience: `${audience}`,
+      scope: "read:current_user",
+    });
     const now = new Date();
     const hours = now.getHours();
     const minutes = now.getMinutes().toString().padStart(2, 0);
@@ -41,10 +48,13 @@ export default function Message({
         name: `${firstName} ${lastName}`,
         profileDP: profilePic,
         time: time,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       };
       await socket.emit("send_message", messageData);
       setCurrentMessage("");
-      console.log("SENT", messageData);
+      console.log("SENT", messageData, accessToken);
     }
   };
 

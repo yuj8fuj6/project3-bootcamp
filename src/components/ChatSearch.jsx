@@ -4,12 +4,16 @@ import "./chatSearch.css";
 import uuid from "react-uuid";
 import axios from "axios";
 import { BACKEND_URL } from "../constants";
+import { useAuth0 } from "@auth0/auth0-react";
+
+const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
 
 const ChatSearch = ({ user, socket, email, setAllConversations }) => {
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [filterState, setFilterState] = useState("");
   const [chatroom, setChatroom] = useState([]);
   const [chatrooms, setChatrooms] = useState([]);
+  const { getAccessTokenSilently } = useAuth0();
 
   const handleFilter = (e) => {
     const searchUser = e.target.value;
@@ -30,7 +34,11 @@ const ChatSearch = ({ user, socket, email, setAllConversations }) => {
     }
   };
 
-  const handleCreateChat = (recipientEmail) => {
+  const handleCreateChat = async (recipientEmail) => {
+    const accessToken = await getAccessTokenSilently({
+      audience: `${audience}`,
+      scope: "read:current_user",
+    });
     const room = uuid(); // to render uuid for chatroom name
     const existingChatroom = chatrooms.find(
       (c) => c.members.includes(email) && c.members.includes(recipientEmail)
@@ -40,8 +48,18 @@ const ChatSearch = ({ user, socket, email, setAllConversations }) => {
         room,
         email,
         email_address: recipientEmail,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       });
-      console.log("HANDLE CREATE CHAT", room, email, recipientEmail, chatrooms);
+      console.log(
+        "HANDLE CREATE CHAT",
+        room,
+        email,
+        recipientEmail,
+        chatrooms,
+        accessToken
+      );
       setChatrooms([
         ...chatrooms,
         { id: room, members: [email, recipientEmail] },
