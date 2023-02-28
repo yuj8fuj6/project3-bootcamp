@@ -35,8 +35,9 @@ const Timetable = (props) => {
       courseRegData = courseReg.map((data) => {
       let ele = {
         course_code: data.course_code,
-        ...data.course_indices,
+        ...data.course_indices[0],
       };
+      ele = { ...ele}
       return ele;
     });
   }
@@ -53,16 +54,29 @@ const Timetable = (props) => {
       return ele
     });
   }
-  console.log(courseRegData)
-  console.log(registeredCourseData)
+  //
+  let combined
+  if(courseRegData  && registeredCourseData){
+    combined = courseRegData.concat(registeredCourseData)
+  }
+  else if (courseRegData === undefined) {
+    combined = registeredCourseData
+  }
+  else if (registeredCourseData === undefined){
+    combined = courseRegData
+  }
+  else{
+    console.log("gg.com")
+  }
+  console.log(combined);
   
-  if (courseReg !== undefined) {
+  
+  if (combined !== undefined) {
     // For later integration
     // let combined = courseReg.map((ele) => ele.course_indices);
     // console.log(combined);
-    timetableData = courseReg.map((course) => {
-      const [day, start, end] = setTime(course.course_indices);
-      console.log(start);
+    timetableData = combined.map((course) => {
+      const [day, start, end] = setTime(course);
       let data = {
         id: userData.id,
         start: new Date(start),
@@ -78,9 +92,6 @@ const Timetable = (props) => {
       return data;
     });
   }
-  // roomId: dataItem.RoomID,
-  // ownerID: dataItem.OwnerID,
-  // personId: dataItem.OwnerID
 
   return (
     //need to disable allday
@@ -108,9 +119,9 @@ function setTime(time){
     Friday: 5,
     Saturday: 6
   }
-  let day = moment(baseDay, "YYYY-MM-DD").add(dayValues[time[0].day], 'days').format()
-  let day_start = moment(baseDay + ` ${time[0].start_time}`, "YYYY-MM-DD hh:mm").add(dayValues[time[0].day], 'days').format()
-  let day_end =  moment(baseDay + ` ${time[0].end_time}`, "YYYY-MM-DD hh:mm").add(dayValues[time[0].day], 'days').format()
+  let day = moment(baseDay, "YYYY-MM-DD").add(dayValues[time.day], 'days').format()
+  let day_start = moment(baseDay + ` ${time.start_time}`, "YYYY-MM-DD hh:mm").add(dayValues[time.day], 'days').format()
+  let day_end =  moment(baseDay + ` ${time.end_time}`, "YYYY-MM-DD hh:mm").add(dayValues[time.day], 'days').format()
   return [day, day_start, day_end];
 }
 

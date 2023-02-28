@@ -10,8 +10,8 @@ const RegistedCourses = (props) => {
   const userData = props.userData;
   let str = `${BACKEND_URL}/courses/temporary/registered/${userData?.student?.id}/courses`;
   const { data: registered, mutate:refetch } = useSWR(`${BACKEND_URL}/courses/registered/user/${userData?.student?.id}/courses`,fetcher);
-  console.log(registered)
 
+  
   let element;
   if(registered !== undefined){
     element = registered.map((row, i) => {
@@ -30,7 +30,6 @@ const RegistedCourses = (props) => {
       return ele
     })
   }
-  console.log(element)
   return (
       <>
         <div className="table-auto overflow-scroll h-full max-h-80">
