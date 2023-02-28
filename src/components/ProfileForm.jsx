@@ -5,6 +5,7 @@ import axios from "axios";
 import { storage } from "../firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { BACKEND_URL } from "../constants.js";
+import "./profileForm.css";
 
 const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
 
@@ -66,7 +67,7 @@ const ProfileForm = ({
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
-        },
+        }
       )
       .then((res) => {
         console.log(res.data.phone_number);
@@ -114,7 +115,7 @@ const ProfileForm = ({
           setProfilePhotoURL(downloadURL);
           // console.log(profilePhotoURL);
           return downloadURL;
-        }),
+        })
     );
     await axios
       .put(
@@ -127,7 +128,7 @@ const ProfileForm = ({
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
-        },
+        }
       )
       .then((res) => {
         console.log(res.data.profile_pic_url);
@@ -322,14 +323,14 @@ const ProfileForm = ({
             </>
           )}
         </div>
-        <div className="grid grid-cols-1 ml-48 h-[350px]">
+        <div className="profilePicContainer">
           <img
             src={updatedPhotoFileURL}
             alt="profile pic"
-            className="h-72 w-72 rounded-full object-cover"
+            className="profilePic"
           />
           <label className="flex justify-center mt-5">
-            <p className="text-yellow hover:text-blue-400">Upload Photo</p>
+            <p className="uploadPhotoButton">Upload Photo</p>
             <input
               type="file"
               className="hidden"
