@@ -1,7 +1,7 @@
 import "./courseModal.css";
 
 export default function CourseModal({ courseData }) {
-  console.log("COURSE CODE DATA", courseData);
+// can courseData be an empty array? if yes, you got a bug here trying to access course_indices of undefined
   let element = courseData[0].course_indices.map((index) => (
     <p className="modalInfoDetails">
       {index.index_code} - {index.type}

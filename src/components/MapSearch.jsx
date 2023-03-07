@@ -37,6 +37,7 @@ const MapSearch = () => {
                       formikProps.handleChange(e);
                       const search = locationData.filter(
                         (location) =>
+                        // 5 loops for every location. very inefficient. We should utilize our BE/API better to return the data in the right format for the FE to consume
                           location.course_code
                             .toLowerCase()
                             .includes(e.target.value) ||

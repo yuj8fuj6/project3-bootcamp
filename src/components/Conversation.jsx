@@ -1,6 +1,8 @@
 import React from "react";
 import "./conversation.css";
 
+// this doesn't seem like a whole conversation for me?
+
 export default function Conversation({
   firstName,
   lastName,

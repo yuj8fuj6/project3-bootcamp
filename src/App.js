@@ -21,7 +21,7 @@ import Message from "./components/Message";
 const App = () => {
   return (
     <>
-      {/* <Navbar /> */}
+      {/* <Navbar /> can remove this? */}
       <div className="App">
         <UserContextProvider>
           <CourseContextProvider>

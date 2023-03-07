@@ -4,6 +4,10 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { BACKEND_URL } from "../constants.js";
 
+const originZoom = 18;
+const width = 512;
+const height = 412;
+
 const MapFeedIndividual = () => {
   const [locationData, setLocationData] = useState([]);
 
@@ -16,16 +20,9 @@ const MapFeedIndividual = () => {
     });
   }, []);
 
-  const originZoom = 18;
-  const width = 512;
-  const height = 412;
-
-  let locationArray;
-  if (locationData) {
-    locationArray = locationData.filter(
-      (location) => location.id == param.id,
-    )[0];
-  }
+  const locationArray = locationData.filter(
+    (location) => location.id == param.id,
+  )[0] || null
 
   let mapURL;
   if (locationData && locationArray) {

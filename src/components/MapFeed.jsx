@@ -3,6 +3,14 @@ import axios from "axios";
 
 import { BACKEND_URL } from "../constants.js";
 
+const originZoom = 17;
+const width = 512;
+const height = 412;
+const mapOrigin = {
+  latitude: 1.3431959893186116,
+  longitude: 103.68110593275408,
+};
+
 const MapFeed = () => {
   const [locationData, setLocationData] = useState([]);
 
@@ -11,14 +19,6 @@ const MapFeed = () => {
       setLocationData(res.data);
     });
   }, []);
-
-  const originZoom = 17;
-  const width = 512;
-  const height = 412;
-  const mapOrigin = {
-    latitude: 1.3431959893186116,
-    longitude: 103.68110593275408,
-  };
 
   let locationArray;
   if (locationData) {

@@ -14,6 +14,8 @@ import { BACKEND_URL } from "../constants.js";
 const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
 const { Item } = Menu;
 
+const initialValues = { code: "", name: "", content: "" };
+
 const ForumSearch = () => {
   const { getAccessTokenSilently } = useAuth0();
   const { allForumData, setAllForumData } = useContext(ForumContext);
@@ -24,8 +26,6 @@ const ForumSearch = () => {
   const [filteredCourses, setFilteredCourses] = useState([]);
 
   const handleClick = () => setOpenModal(true);
-
-  const initialValues = { code: "", name: "", content: "" };
 
   useEffect(() => {
     axios.get(`${BACKEND_URL}/forums/filteredCourses`).then((response) => {
@@ -38,17 +38,19 @@ const ForumSearch = () => {
       audience: `${audience}`,
       scope: "read:current_user",
     });
+
     const newForumCourse = allCourseData.filter(
       (course) => course.course_code == values.code,
     )[0].id;
-    console.log(allCourseData)
-    const newForum = {
+
+    const payload = {
       title: `${values.code} - ${values.name}`,
       description: `${values.content}`,
       course_id: newForumCourse,
     };
+    // some line breaks are helpful for readability
     await axios
-      .post(`${BACKEND_URL}/forums/newForum`, newForum, {
+      .post(`${BACKEND_URL}/forums/newForum`, payload, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -60,10 +62,12 @@ const ForumSearch = () => {
         console.log(err);
         alert("No forum was created!");
       });
-    alert("New forum has been successfully created!");
+    alert("New forum has been successfully created!"); // don't use alerts
     setOpenModal(false);
   };
 
+  // I think overall it would be nice to create multiple form components that are used within here. The text area etc.
+  // That would give the code, which is hard to read, a name and we would know what we are mapping for etc.
   return (
     <div>
       <Menu
@@ -129,6 +133,7 @@ const ForumSearch = () => {
                       <label className="text-sm font-bold mt-4">
                         Course Title
                       </label>
+                      {/* Maybe we could create a generic select component that accepts multiple props and options, just like the Button? */}
                       <select
                         type="text"
                         id="name"

@@ -19,7 +19,6 @@ export default function Message() {
     useAuth0();
   const [currentMessage, setCurrentMessage] = useState("");
   const [allMessages, setAllMessages] = useState([]);
-  // const [chatroomName, setChatroomName] = useState("");
 
   const [
     socket,
@@ -33,7 +32,6 @@ export default function Message() {
     otherUserLastName,
     profilePic,
   ] = useOutletContext();
-  console.log("CHATROOM INDEX", chatroomIndex);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -65,43 +63,32 @@ export default function Message() {
       await socket.emit("send_message", messageData);
       await setCurrentMessage("");
       await getMessages();
-      console.log(messageData);
     }
   };
 
   useEffect(() => {
-    console.log("USE EFFECT CHATID", chatroomIndex);
     socket.on("receive_message", async (data) => {
-      console.log("RECEIVED", data);
       await getMessages(chatroomIndex);
     });
   }, [socket]);
 
   useEffect(() => {
-    console.log("USE EFFECT 1");
     getMessages();
   }, [chatroomName]);
 
   useEffect(() => {
-    console.log("USE EFFECT 2");
     getMessages();
   }, []);
 
   const getMessages = async (chatroomID) => {
-    console.log("SEND CHATROOM ID", chatroomID);
-    console.log(chatroomID);
-    console.log(chatroomIndex);
     const response = await axios
       .get(
         `${BACKEND_URL}/conversations/messages/${chatroomIndex}`
-        // "http://localhost:3000/conversations/messages/14b88b81-7d99-4b91-bfb2-339eed17b447"
       )
       .then((response) => {
         setAllMessages(response.data);
       });
   };
-
-  console.log("ALL MESSAGES", allMessages);
 
   return (
     <Link to={`/messenger/${chatroomName}`} className="message">

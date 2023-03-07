@@ -9,23 +9,28 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { UserContext } from "../contexts/UserContext";
 import useSWR from "swr";
 import { BACKEND_URL } from "../constants";
-// worry next time, need to relate to user
+
+// place such static functions outside of components
+const fetcher = (url) => axios.get(url).then((res) => res.data);
+
+// worry next time, need to relate to user // comments like these are quite useless, should remove. No other dev will understand what is meant here
 const Landing = () => {
   const [course, setCourse] = useState([]);
   const [courseIndex, setCourseIndex] = useState([]); //courseIndex is an array of dictionary with the key being the courses and the value being the index
   const { userData } = useContext(UserContext);
-  const fetcher = (url) => axios.get(url).then((res) => res.data);
+  const { isAuthenticated, loginWithRedirect } = useAuth0();
+
   const { data } = useSWR(
     `${BACKEND_URL}/users/${userData.email_address}`,
     fetcher
   );
-  //call once when initialise
-  const { isAuthenticated, loginWithRedirect } = useAuth0();
+
   useEffect(() => {
     if (!isAuthenticated) {
       loginWithRedirect();
     }
   }, []);
+
   return (
     <div>
       <Navbar />

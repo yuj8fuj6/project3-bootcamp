@@ -15,7 +15,7 @@ import axios from "axios";
 
 import { BACKEND_URL } from "../constants.js";
 
-const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
+const initialValues = { content: "" };
 
 const ForumFeedIndividual = () => {
   const param = useParams();
@@ -30,11 +30,9 @@ const ForumFeedIndividual = () => {
   const forum = allForumData.filter((forum) => forum.id === param.id)[0];
   const currentUserStudentID = userData.student.id;
 
-  const initialValues = { content: "" };
-
   const handleSubmit = async (values) => {
     const accessToken = await getAccessTokenSilently({
-      audience: `${audience}`,
+      audience: process.env.REACT_APP_AUTH0_AUDIENCE,
       scope: "read:current_user",
     });
     const newPost = {
@@ -122,6 +120,7 @@ const ForumFeedIndividual = () => {
     <div className="h-full rounded-lg">
       <div className="p-1">
         {allForumData && (
+          // I think we could possibly use a component for this div wave
           <div className="bg-white rounded-lg mt-2 pt-2 pl-5 grid grid-cols-1 content-start">
             <div className="flex flex-row">
               <div className="bg-darkgrey rounded-lg text-yellow text-sm font-bold w-[500px] h-fit py-1 indent-4 ">
