@@ -1,3 +1,7 @@
+/* I think this could just be placed in the App.css
+
+  if you want a own file, i'd recommend making a Login subfolder to place the css and jsx file into
+*/
 .loginLogo {
   height: 1/3;
   padding-bottom: 5;

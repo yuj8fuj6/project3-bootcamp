@@ -1,6 +1,7 @@
 import React from "react";
 import "./indexSwapModalBody.css";
 
+// nice, this is a good example of breaking up a bigger component into multiple smaller pieces
 export default function IndexSwapModalBody() {
   return (
     <div className="modalBody">

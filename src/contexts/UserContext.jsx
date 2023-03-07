@@ -30,7 +30,6 @@ export const UserContextProvider = (props) => {
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
-      console.log("THIS IS REQUEST");
       try {
         axios.get(`${BACKEND_URL}/users`).then((response) => {
           setAllUserData(response.data);

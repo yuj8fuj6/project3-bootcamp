@@ -6,7 +6,7 @@ import { UserContext } from "../contexts/UserContext";
 
 const Profile = () => {
   const { isAuthenticated, loginWithRedirect } = useAuth0();
-  const user = useContext(UserContext);
+  const { userData, setUserData } = useContext(UserContext);
   const {
     id,
     admin,
@@ -18,10 +18,7 @@ const Profile = () => {
     updatedAt,
     profile_pic_url,
     phone_number,
-  } = user.userData;
-
-  const setUserData = user.setUserData;
-  const userData = user.userData;
+  } = userData;
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -67,15 +64,16 @@ const Profile = () => {
         Note: Only the contact phone no. field and profile picture are editable.
       </div>
       <ProfileForm
-        lastName={last_name}
-        firstName={first_name}
-        email={email_address}
-        phone={phone_number}
-        url={profile_pic_url}
-        updatedAt={updatedAt}
-        student={student}
-        professor={professor}
-        id={id}
+        // lastName={last_name}
+        // firstName={first_name}
+        // email={email_address}
+        // phone={phone_number}
+        // url={profile_pic_url}
+        // updatedAt={updatedAt}
+        // student={student}
+        // professor={professor}
+        // id={id}
+        // aren't all these props above already in userData?
         setUserData={setUserData}
         userData={userData}
       />

@@ -29,6 +29,28 @@ export default function Navbar() {
         <Logo />
       </Link>
       <ul className="menu menu-horizontal px-1">
+        {/* This seems to repeat itself nicely. Why not create an array of objects to map here?
+        
+        // this can be defined outside of the component
+          const navbarMenuItems = [
+            {
+              url: "/main",
+              icon: <HomeSVG />
+              label: "Home"
+            }
+          ]
+
+          {navbarMenuItems.map((item) => {
+            return (
+              <li>
+                <Link to={item.url} className="justify-center-link">
+                  {item.icon}
+                  {item.label}
+                </Link>
+              </li>
+            )
+          })}
+        */}
         <li>
           <Link to="/main" className="justify-center-link">
             <HomeSVG />

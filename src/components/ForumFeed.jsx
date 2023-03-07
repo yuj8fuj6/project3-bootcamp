@@ -9,12 +9,10 @@ const ForumFeed = () => {
   const { userData, allUserData, setUserData } = useContext(UserContext);
   const allStudentData = allUserData.filter((user) => user.student);
 
-  // console.log(allForumData);
-  // console.log(allStudentData);
-
   return (
     <div className="h-full rounded-lg">
       <div className="overflow-auto p-1 h-[600px]">
+        {/* if allForumData's default value is [], then you don't need to conditional render here as the map would return [] */}
         {allForumData &&
           allForumData.map((forum) => (
             <div
@@ -23,6 +21,7 @@ const ForumFeed = () => {
             >
               <Link to={`/forum/${forum.id}`}>
                 <div className="bg-darkgrey rounded-lg text-yellow text-sm font-bold w-[800px] py-1 indent-4">
+                  {/* room for bugs here without checking if course exists */}
                   {forum.course.course_code} - {forum.course.course_name}
                 </div>
                 <div className="grid grid-flow-col grid-cols-8 justify-start mt-2">
@@ -36,13 +35,16 @@ const ForumFeed = () => {
                   <div className="text-darkgrey text-lg col-span-7 font-extrabold">
                     <p>Latest Post:</p>
                     <p className="text-sm">
+                      {/* I would conditionally render the whole p tag. Otherwise you might have an empty p tag rendered */}
                       {forum.posts.length != 0 &&
                         `${forum.posts[forum.posts.length - 1].content}`}
                     </p>
                     <p className="text-sm font-normal">by </p>
                     <p className="text-sm font-normal">
+                      {/* also here, apply condition on p tag if you got a condition */}
                       {allUserData &&
                         forum.posts.length != 0 &&
+                        // Running filter 3 times seems redundant to me. Why not store the result in a variable before the return statement, and then access the different properties here.
                         `${
                           allStudentData.filter(
                             (user) =>

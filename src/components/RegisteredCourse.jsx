@@ -12,9 +12,9 @@ const RegistedCourses = (props) => {
     `${BACKEND_URL}/courses/registered/user/${userData?.student?.id}/courses`,
     fetcher
   );
-  console.log(registered);
   let element;
-  if (registered !== undefined) {
+  if (registered) {
+    // don't name variables element if it is an array of table rows
     element = registered.map((row, i) => {
       let ele = (
         <tr>
@@ -31,7 +31,6 @@ const RegistedCourses = (props) => {
       return ele;
     });
   }
-  console.log(element);
   return (
     <>
       <div className="table-auto overflow-scroll h-full max-h-80">

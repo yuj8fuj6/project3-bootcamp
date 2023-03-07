@@ -36,6 +36,7 @@ const ProfileForm = ({
   };
 
   useEffect(() => {
+    // what is the difference? better naming would be good here
     if (phoneContact == phone) {
       setChangedState(false);
     }
@@ -83,21 +84,6 @@ const ProfileForm = ({
     setChangedState(false);
   };
 
-  // const uploadPhoto = async (updatedPhotoFile) => {
-  //   const profilePhotoRef = ref(storage, `${lastName} ${firstName}`);
-  //   if (updatedPhotoFile) {
-  //     const photoURL = uploadBytes(profilePhotoRef, updatedPhotoFile)
-  //       .then((snapshot) => {
-  //         return getDownloadURL(profilePhotoRef);
-  //       })
-  //       .then((url) => {
-  //         setProfilePhotoURL(url);
-  //         return url;
-  //       });
-  //     return photoURL;
-  //   }
-  // };
-
   const handlePhotoSubmit = async (e) => {
     e.preventDefault();
     const accessToken = await getAccessTokenSilently({
@@ -106,14 +92,12 @@ const ProfileForm = ({
     });
 
     // const photoURL = await uploadPhoto(updatedPhotoFile);
-    // Do not know why this code below only works after 2 clicks.
+    // Do not know why this code below only works after 2 clicks. // I won't be able to answer that without knowing the app. WHat doesn't work? When you do what? Is there an error in the console or network tab?
     const profilePhotoRef = ref(storage, `${lastName} ${firstName}`);
     const photoURL = await uploadBytes(profilePhotoRef, updatedPhotoFile).then(
       () =>
         getDownloadURL(profilePhotoRef).then((downloadURL) => {
-          // console.log(downloadURL);
           setProfilePhotoURL(downloadURL);
-          // console.log(profilePhotoURL);
           return downloadURL;
         })
     );
@@ -131,16 +115,15 @@ const ProfileForm = ({
         }
       )
       .then((res) => {
-        console.log(res.data.profile_pic_url);
         setUpdatedPhotoFileURL(res.data.profile_pic_url);
         setUserData({ ...userData, profile_pic_url: res.data.profile_pic_url });
       })
       .catch((err) => {
         console.log(err);
-        alert("Profile photo upload is unsuccessful.");
+        alert("Profile photo upload is unsuccessful."); // grrrrr
       });
 
-    alert("Profile photo has been successfully uploaded!");
+    alert("Profile photo has been successfully uploaded!"); // grrrrr
     setProfilePhotoURL("");
     setChangedPhoto(false);
   };
@@ -182,30 +165,30 @@ const ProfileForm = ({
           )}
           {student && (
             <>
-              <label>
-                <p className="text-left text-yellow text-xl font-bold mt-2">
-                  Current Degree Program:
-                </p>
-              </label>
-              <textarea
-                className="mt-2 w-full border text-darkgrey font-bold border-neutral-300 rounded-lg text-left indent-1"
-                value={student.degree}
-                readOnly
-              />
-            </>
-          )}
-          {student && (
-            <>
-              <label>
-                <p className="text-left text-yellow text-xl font-bold mt-2">
-                  School:
-                </p>
-              </label>
-              <textarea
-                className="mt-2 w-full border text-darkgrey font-bold border-neutral-300 rounded-lg text-left indent-1"
-                value={student.school}
-                readOnly
-              />
+              <>
+                <label>
+                  <p className="text-left text-yellow text-xl font-bold mt-2">
+                    Current Degree Program:
+                  </p>
+                </label>
+                <textarea
+                  className="mt-2 w-full border text-darkgrey font-bold border-neutral-300 rounded-lg text-left indent-1"
+                  value={student.degree}
+                  readOnly
+                />
+              </>
+              <>
+                <label>
+                  <p className="text-left text-yellow text-xl font-bold mt-2">
+                    School:
+                  </p>
+                </label>
+                <textarea
+                  className="mt-2 w-full border text-darkgrey font-bold border-neutral-300 rounded-lg text-left indent-1"
+                  value={student.school}
+                  readOnly
+                />
+              </>
             </>
           )}
           {professor && (
@@ -238,7 +221,9 @@ const ProfileForm = ({
           )}
         </div>
         <div>
+          {/* I think we could make this a component */}
           {student && (
+          <>
             <>
               <label>
                 <p className="text-left text-yellow text-xl font-bold mt-2">
@@ -251,8 +236,6 @@ const ProfileForm = ({
                 readOnly
               />
             </>
-          )}
-          {student && (
             <>
               <label>
                 <p className="text-left text-yellow text-xl font-bold mt-2">
@@ -265,22 +248,19 @@ const ProfileForm = ({
                 readOnly
               />
             </>
-          )}
-          {student && (
-            <>
-              <label>
-                <p className="text-left text-yellow text-xl font-bold mt-2">
-                  Completed Academic Units:
-                </p>
-              </label>
-              <input
-                className="mt-2 w-full border text-darkgrey font-bold border-neutral-300 rounded-lg text-left indent-1"
-                value={student.completed_unit}
-                readOnly
-              />
-            </>
-          )}
-          {student && (
+
+              <>
+                <label>
+                  <p className="text-left text-yellow text-xl font-bold mt-2">
+                    Completed Academic Units:
+                  </p>
+                </label>
+                <input
+                  className="mt-2 w-full border text-darkgrey font-bold border-neutral-300 rounded-lg text-left indent-1"
+                  value={student.completed_unit}
+                  readOnly
+                />
+              </>
             <>
               <label>
                 <p className="text-left text-yellow text-xl font-bold mt-2">
@@ -293,8 +273,6 @@ const ProfileForm = ({
                 readOnly
               />
             </>
-          )}
-          {student && (
             <>
               <label>
                 <p className="text-left text-yellow text-xl font-bold mt-2">
@@ -307,8 +285,6 @@ const ProfileForm = ({
                 readOnly
               />
             </>
-          )}
-          {student && (
             <>
               <label>
                 <p className="text-left text-yellow text-xl font-bold mt-2">
@@ -320,6 +296,7 @@ const ProfileForm = ({
                 value="To be filled!"
                 readOnly
               />
+            </>
             </>
           )}
         </div>

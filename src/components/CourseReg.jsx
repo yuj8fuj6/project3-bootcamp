@@ -9,9 +9,8 @@ import CourseModal from "./CourseModal";
 import "./courseReg.css";
 import { useAuth0 } from "@auth0/auth0-react";
 
-const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
-
 const fetcher = (url) => axios.get(url).then((res) => res.data);
+// what is this variable for? :D
 let courses = "";
 
 const CourseReg = (props) => {
@@ -24,13 +23,12 @@ const CourseReg = (props) => {
   const [courseData, setCourseData] = useState({});
   // add course function: add courses to query to backend and add it to courseIndex to be transferred to other components
   const addCourse = () => {
-    let course_code = prompt("Please enter course code", "");
-    if (courses.length === 0) {
-      setCourse(course_code);
-    } else {
-      setCourse(courses + `+${course_code}`);
-    }
-    let course_index = {
+    // We should not use prompt in a React app as it blocks website interaction and React's goal is to let the user interact as much and fluent as possible. If we need user input, use an html input.
+    const course_code = prompt("Please enter course code", "");
+    setCourse(courses.length ? courses + `+${course_code}` : course_code)
+
+    const course_index = {
+      // could maybe destructure your props in line 16 instead of accessing props.* over and over
       ...props.courseIndex,
     };
     course_index[course_code] = undefined;
@@ -39,63 +37,62 @@ const CourseReg = (props) => {
   };
 
   const deleteCourse = () => {
-    let course_index = {
+    // I find this whole function a bit messy to be honest. Some refactoring would do quite good here. Seems like a good case of rushing to get things done, but in the end creating a lot of confusion as well with it.
+    const course_index = {
       ...props.courseIndex,
     };
-    let courses = Object.keys(props.courseIndex);
-    let course_code = prompt("Please enter course code", "");
+    const courses = Object.keys(props.courseIndex);
+    const course_code = prompt("Please enter course code", "");
     if (!courses.length) {
+      // alert same as with prompt, ideally use a modal here instead of alert. Or even better a snackbar/toast or something.
       alert("There is no courses to delete");
     } else if (courses.indexOf(course_code) !== -1 || course_code === "") {
       delete course_index[course_code];
-      console.log(course_code);
     } else {
       alert(`${course_code} is present in your current courses`);
     }
+
     props.setCourseIndex(course_index);
-    let a = courses.indexOf(course_code);
+    const a = courses.indexOf(course_code);
     courses.splice(a, 1);
     setCourse(courses.join("+"));
-    console.log(courses);
   };
 
   const handleChange = (e, course) => {
     e.preventDefault();
-    let course_index = { ...props.courseIndex };
-    console.log(course_index);
+    const course_index = { ...props.courseIndex };
+    // some comment to explain would be good here
     course_index[course.course_code] =
       course.course_indices[e.target.value].index_code;
-    //console.log(course_index);
     props.setCourseIndex(course_index);
-    console.log(course_index);
   };
 
   const registerCourse = async (e) => {
     e.preventDefault();
     const accessToken = await getAccessTokenSilently({
-      audience: `${audience}`,
+      audience: process.env.REACT_APP_AUTH0_AUDIENCE,
       scope: "read:current_user",
     });
-    let indexes = Object.values(props.courseIndex);
-    let courses = Object.keys(props.courseIndex);
+    const indexes = Object.values(props.courseIndex);
+    const courses = Object.keys(props.courseIndex);
 
+    // ideally we don't overwrite existing variables, but create new ones
+    // this here is extremely inefficient, should be O(n * k*2)
+    // is there a way to retrieve this data from the BE? the FE should not handle such calculation intensive tasks
     indexes = indexes.map((index, i) => {
-      let course = indexData.find(
+      const course = indexData.find(
         (course) => course.course_code === courses[i]
       );
-      let indice = course.course_indices.find(
+      const indice = course.course_indices.find(
         (slot) => slot.index_code === index
       );
       return indice.id;
     });
 
-    if (indexes.length === 0) {
-      console.log("it is empty");
-    } else {
-      console.log(studentData);
+    if (indexes.length) {
       const data = await axios
         .post(
-          `${BACKEND_URL}/courses/register/${studentData.id}/${studentData.student.id}`,
+          `${BACKEND_URL}/courses/register/${studentData.id}/${studentData.student.id}`, // this route seems quite odd to me
           {
             studentID: studentData.student.id,
             indexes: indexes,
@@ -108,13 +105,11 @@ const CourseReg = (props) => {
         )
         .catch((err) => console.log(err));
     }
-    window.location.reload();
+    window.location.reload(); // we should not do a reload on a react page, this defeats the whole purpose of react
   };
 
   const handleOpenCourse = async () => {
     await axios.get(`${BACKEND_URL}/courses/${courseName}`).then((response) => {
-      console.log("OPEN COURSE", response);
-      console.log("OPEN COURSE DATA", response.data);
       setCourseData(response.data);
     });
     setIsModalOpen(true);
@@ -127,15 +122,15 @@ const CourseReg = (props) => {
     setIsModalOpen(false);
   };
 
-  let element;
-  if (indexData !== undefined) {
+  let element; // element is a not a good variable name
+  if (indexData.length) {
     element = indexData.map((course, i) => {
-      //console.log(course.course_indices.find(ele => ele.index_code === 320671).vacancy)
       let options;
       if (course.course_indices !== undefined) {
+        // map in a map, either a bad data structure decision, or a bad implementation decision
+        // We could probably use lodash to create an object where the key is the course id and the value is the indices so we could avoid doing this nested looping
         options = course.course_indices.map((index, i) => {
-          let x = <option value={i}>{index.index_code}</option>;
-          return x;
+          return <option value={i}>{index.index_code}</option>;
         });
       }
       return (
@@ -167,7 +162,7 @@ const CourseReg = (props) => {
             {options}
           </select>
           <td>
-            {props.courseIndex[course.course_code] === undefined
+            {!props.courseIndex[course.course_code]
               ? "--"
               : course.course_indices.find(
                   (ele) =>

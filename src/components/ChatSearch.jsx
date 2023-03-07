@@ -13,10 +13,9 @@ export default function ChatSearch({
   setChatroomIndex,
 }) {
   const [allConversations, setAllConversations] = useState([]);
-  const [chatroom, setChatroom] = useState("");
-  // const [currentChat, setCurrentChat] = useState(""); // boolean whether to display chat or not
+  const [chatroom, setChatroom] = useState(""); // is chatrooom a string? This seems wrong. chatRoom should be an object.
   const user = useContext(UserContext);
-  const { email_address } = user.userData; // logged in user
+  const { email_address } = user.userData;
 
   const getConversations = async () => {
     const { data: conversations } = await axios.get(
@@ -37,15 +36,16 @@ export default function ChatSearch({
     const chatRoomName = conversation.chatroom.room;
     socket.emit("join_chatroom", chatRoomName);
 
+    // this filter could easily break if room.chatroom or room.chatroom.room is undefined.
+    // You should be careful with chaining so many object keys
+    // Why is the first item in the array the one of which you need the Id?
+    // Also, why is there an object called room, that has a chatroom property, which has a room property? This seems like a bad data structure decision. One room is an object
     const chatroomId = allConversations.filter(
       (room) => chatRoomName === room.chatroom.room
     )[0].chatroomId;
-    // setCurrentChat(chatroomId);
     setChatroomIndex(chatroomId);
     setChatroomName(chatRoomName);
     setCurrentConversation(conversation);
-    console.log("CHATSEARCH", conversation);
-    console.log("hello", chatroomId);
   };
 
   return (
@@ -64,6 +64,7 @@ export default function ChatSearch({
           onClick={() => startChat(conversation)}
         >
           <Conversation
+            // I think can just pass down the conversation as a whole
             firstName={conversation.user.first_name}
             lastName={conversation.user.last_name}
             profilePic={conversation.user.profile_pic_url}

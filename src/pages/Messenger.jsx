@@ -16,14 +16,14 @@ const socket = io.connect(BACKEND_URL);
 
 const Messenger = () => {
   const { isAuthenticated, loginWithRedirect } = useAuth0();
-  const [chatroomName, setChatroomName] = useState(""); // chatroom name. used by socket
+  const [chatroomName, setChatroomName] = useState("");
 
   const user = useContext(UserContext);
-  const { email_address, first_name, last_name } = user.userData; // logged in user
+  const { email_address, first_name, last_name } = user.userData;
 
-  const [currentConversation, setCurrentConversation] = useState({}); // active conversation
-  const [currentChat, setCurrentChat] = useState(true); // boolean whether to display chat or not
-  const [chatroomIndex, setChatroomIndex] = useState(""); // active chat room id
+  const [currentConversation, setCurrentConversation] = useState({});
+  const [displayChat, setdisplayChat] = useState(true);
+  const [activeChatroomId, setactiveChatroomId] = useState("");
   const outlet = useOutlet();
 
   socket.on("connect", () => {
@@ -36,10 +36,6 @@ const Messenger = () => {
       loginWithRedirect();
     }
   });
-
-  console.log("CURRENT", currentConversation);
-  console.log("USER", user);
-  // console.log(email_address);
 
   return (
     <>
@@ -67,13 +63,15 @@ const Messenger = () => {
                     socket,
                     chatroomName,
                     chatroomIndex,
-                    first_name,
-                    last_name,
-                    email_address,
-                    currentConversation?.user?.email_address,
-                    currentConversation?.user?.first_name,
-                    currentConversation?.user?.last_name,
-                    currentConversation?.user?.profile_pic_url,
+                    // first_name,
+                    // last_name,
+                    // email_address,
+                    user.userData, // why not pass down the whole user object?
+                    // currentConversation?.user?.email_address,
+                    // currentConversation?.user?.first_name,
+                    // currentConversation?.user?.last_name,
+                    // currentConversation?.user?.profile_pic_url,
+                    currentConversation.user, // why not just pass down the whole conversation?
                   ]}
                 />
               </>

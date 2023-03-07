@@ -11,14 +11,15 @@ import { BACKEND_URL } from '../constants';
 import moment from 'moment';
 const fetcher = (url) => axios.get(url).then((res) => res.data);
 
-const Timetable = (props) => {
-  const indexes = Object.values(props.courseIndex)
+// this is how you can destructure props
+const Timetable = ({ courseIndex, userData }) => {
+  const indexes = Object.values(courseIndex)
     .filter((x) => x)
     .join("+");
-  const courses = Object.keys(props.courseIndex)
+  const courses = Object.keys(courseIndex)
     .filter((x) => x)
     .join("+");
-  const userData = props.userData;
+
   const { data: courseReg } = useSWR(
     indexes && courses ? `${BACKEND_URL}/courses/${courses}/${indexes}` : null,
     fetcher
@@ -27,11 +28,9 @@ const Timetable = (props) => {
     `${BACKEND_URL}/courses/registered/user/${userData?.student?.id}/courses`,
     fetcher
   );
-  let timetableData;
-  console.log(courseReg);
-  console.log(registered);
+
   let courseRegData;
-  if(courseReg !== undefined){
+  if(courseReg){
       courseRegData = courseReg.map((data) => {
       let ele = {
         course_code: data.course_code,
@@ -43,7 +42,7 @@ const Timetable = (props) => {
   }
 
   let registeredCourseData;
-  if(registered !== undefined){
+  if(registered){
       registeredCourseData = registered.map(data => {
       let course_code = data.course.course_code
       let ele = {
@@ -54,27 +53,24 @@ const Timetable = (props) => {
       return ele
     });
   }
-  //
+  // I highly dislike this let, followed by if statements pattern.
+  // for multiple if statements like so, you can use a switch statement
+  // you could also refactor this kind of code into a function, so you can give a name to what you are doing here.
+  // comments would also be highly appreciated by anyone reading code like such
+
   let combined
-  if(courseRegData  && registeredCourseData){
+  if(courseRegData && registeredCourseData){
     combined = courseRegData.concat(registeredCourseData)
   }
-  else if (courseRegData === undefined) {
+  else if (!courseRegData) {
     combined = registeredCourseData
   }
-  else if (registeredCourseData === undefined){
+  else if (!registeredCourseData){
     combined = courseRegData
   }
-  else{
-    console.log("gg.com")
-  }
-  console.log(combined);
   
-  
-  if (combined !== undefined) {
-    // For later integration
-    // let combined = courseReg.map((ele) => ele.course_indices);
-    // console.log(combined);
+  let timetableData;
+  if (combined) {
     timetableData = combined.map((course) => {
       const [day, start, end] = setTime(course);
       let data = {
